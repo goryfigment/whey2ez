@@ -1,0 +1,26 @@
+<div id="settings-scroll-wrapper">
+    <div>
+        <div class="settings-title">Inventory Order</div>
+        <div class="settings-description">Default order when opening the inventory page.</div>
+        <div id="order-by-wrapper">
+            <select id="order-by-input">
+                <option value="none" >None</option>
+                {{#each columns}}
+                    <option value="{{this}}" {{#ifCond ../settings.order_by "==" this}}selected{{/ifCond}}>{{this}}</option>
+                {{/each}}
+            </select>
+            <input type="checkbox" id="reverse-checkbox" data-type="columns" class="checkbox-input" style="display: none" {{#if settings.reverse}}checked{{/if}}/>
+            <label for="reverse-checkbox" class="check-box-wrapper">
+                <span class="check-box">
+                    <svg width="12px" height="10px">
+                        <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                    </svg>
+                </span>
+                <span class="check-box-label">Reverse</span>
+            </label>
+        </div>
+    </div>
+</div>
+<div id="save-wrapper">
+    <button id="inventory-settings-submit" class="add">Save Settings</button>
+</div>

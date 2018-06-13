@@ -1,0 +1,52 @@
+{{#if columns}}
+    <div id="search-wrapper">
+        <input id="search-input" data-table="#inventory-table" />
+        <div class="search-filter-wrapper">
+            {{#each columns}}
+                <span class="check-box-container">
+                    <input type="checkbox" id="{{this}}-checkbox" data-type="columns" class="checkbox-input column-filter" value="{{this}}" style="display: none" checked />
+                    <label for="{{this}}-checkbox" class="check-box-wrapper">
+                        <span class="check-box">
+                            <svg width="12px" height="10px">
+                                <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                            </svg>
+                        </span>
+                        <span class="check-box-label">{{this}}</span>
+                    </label>
+                </span>
+            {{/each}}
+        </div>
+    </div>
+
+
+    <table id="inventory-table" class="table-container">
+            <thead>
+                <tr>
+                    <th class="action">Action</th>
+                    {{#each columns}}
+                        <th class="custom-column" data-value="{{this}}"><span class="column-text">{{this}}</span><span class="inline action"><span class="edit-column-button"><i class="fas fa-pencil-alt"></i></span><span class="column-delete-button"><i class="far fa-trash-alt"></i></span></span></th>
+                    {{/each}}
+                </tr>
+            </thead>
+
+            <tbody>
+                {{#each trans}}
+                    <tr data-id="{{@key}}">
+                        <td class="action"><span class="edit-item-button"><i class="fas fa-pencil-alt"></i></span><span class="delete-item-button"><i class="far fa-trash-alt"></i></span></td>
+                        {{tableHandler this ../columns}}
+                    </tr>
+                {{/each}}
+
+                {{#each inventory}}
+                    <tr data-id="{{this.[0]}}">
+                        <td class="action"><span class="edit-item-button"><i class="fas fa-pencil-alt"></i></span><span class="delete-item-button"><i class="far fa-trash-alt"></i></span></td>
+                        {{tableHandler this.[1] ../columns}}
+                    </tr>
+                {{/each}}
+            </tbody>
+    </table>
+{{else}}
+    <div id="empty-inventory-wrapper">
+        <span id="empty-inventory-icon"><i class="fas fa-database"></i></span> Inventory is empty!
+    </div>
+{{/if}}

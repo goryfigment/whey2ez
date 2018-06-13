@@ -1,0 +1,6 @@
+{{#each item}}
+    <tr class="added" data-id="{{@key}}">
+        <td class="action"><span class="edit-item-button"><i class="fas fa-pencil-alt"></i></span><span class="delete-item-button"><i class="far fa-trash-alt"></i></span></td>
+        {{tableHandler this ../columns}}
+    </tr>
+{{/each}}

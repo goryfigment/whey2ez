@@ -1,0 +1,302 @@
+<div id="operation-popup-wrapper">
+    {{#ifCond type '==' 'employee_type'}}
+    <div class="operation-popup-container">
+        <div class="operation-title">Employee Type</div>
+        <div class="operation-description">Define a user's title and permissions.</div>
+
+        <div class="permission-input-container">
+            <label for="assign-store-input">User type Name</label>
+            <div class="input-description" data-type="all">Admin, Manager, etc.</div>
+            <input id="employee-type-input" />
+        </div>
+
+        <div id="permission-wrapper">
+
+            <div class="operation-title">Inventory Permissions</div>
+
+            <div class="operation-subtitle">Columns</div>
+
+            <input type="checkbox" id="add-columns-input" data-name="add_column" class="checkbox-input" checked style="display: none" />
+            <label for="add-columns-input" class="check-box-wrapper">
+                <span class="check-box">
+                    <svg width="12px" height="10px">
+                        <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                    </svg>
+                </span>
+                <span class="check-box-label">Add Columns</span>
+            </label>
+
+            <input type="checkbox" id="edit-columns-input" data-name="edit_column" class="checkbox-input" checked style="display: none" />
+            <label for="edit-columns-input" class="check-box-wrapper">
+                <span class="check-box">
+                    <svg width="12px" height="10px">
+                        <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                    </svg>
+                </span>
+                <span class="check-box-label">Edit Columns</span>
+            </label>
+
+            <input type="checkbox" id="delete-columns-input" data-name="delete_column" class="checkbox-input" checked style="display: none" />
+            <label for="delete-columns-input" class="check-box-wrapper">
+                <span class="check-box">
+                    <svg width="12px" height="10px">
+                        <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                    </svg>
+                </span>
+                <span class="check-box-label">Delete Columns</span>
+            </label>
+
+            <div class="operation-subtitle">Items</div>
+
+            <input type="checkbox" id="add-items-input" data-name="add_item" class="checkbox-input" checked style="display: none" />
+            <label for="add-items-input" class="check-box-wrapper">
+                <span class="check-box">
+                    <svg width="12px" height="10px">
+                        <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                    </svg>
+                </span>
+                <span class="check-box-label">Add Items</span>
+            </label>
+
+            <input type="checkbox" id="edit-items-input" data-name="edit_item" class="checkbox-input" checked style="display: none" />
+            <label for="edit-items-input" class="check-box-wrapper">
+                <span class="check-box">
+                    <svg width="12px" height="10px">
+                        <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                    </svg>
+                </span>
+                <span class="check-box-label">Edit Items</span>
+            </label>
+
+            <input type="checkbox" id="delete-items-input" data-name="delete_item" class="checkbox-input" checked style="display: none" />
+            <label for="delete-items-input" class="check-box-wrapper">
+                <span class="check-box">
+                    <svg width="12px" height="10px">
+                        <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                    </svg>
+                </span>
+                <span class="check-box-label">Delete Items</span>
+            </label>
+
+            <div class="operation-subtitle">Other Actions</div>
+
+            <input type="checkbox" id="import-input" data-name="import" class="checkbox-input" checked style="display: none" />
+            <label for="import-input" class="check-box-wrapper">
+                <span class="check-box">
+                    <svg width="12px" height="10px">
+                        <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                    </svg>
+                </span>
+                <span class="check-box-label">Import</span>
+            </label>
+
+            <input type="checkbox" id="export-input" data-name="export" class="checkbox-input" checked style="display: none" />
+            <label for="export-input" class="check-box-wrapper">
+                <span class="check-box">
+                    <svg width="12px" height="10px">
+                        <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                    </svg>
+                </span>
+                <span class="check-box-label">Export</span>
+            </label>
+
+            <input type="checkbox" id="drop-table-input" data-name="drop_table" class="checkbox-input" checked style="display: none" />
+            <label for="drop-table-input" class="check-box-wrapper">
+                <span class="check-box">
+                    <svg width="12px" height="10px">
+                        <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                    </svg>
+                </span>
+                <span class="check-box-label">Drop Table</span>
+            </label>
+
+            <div class="operation-subtitle">Operations</div>
+
+            <input type="checkbox" id="receive-input" data-name="receive" class="checkbox-input" checked style="display: none" />
+            <label for="receive-input" class="check-box-wrapper">
+                <span class="check-box">
+                    <svg width="12px" height="10px">
+                        <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                    </svg>
+                </span>
+                <span class="check-box-label">Receive</span>
+            </label>
+
+            <input type="checkbox" id="damage-input" data-name="damage" class="checkbox-input" checked style="display: none" />
+            <label for="damage-input" class="check-box-wrapper">
+                <span class="check-box">
+                    <svg width="12px" height="10px">
+                        <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                    </svg>
+                </span>
+                <span class="check-box-label">Damage</span>
+            </label>
+
+            <input type="checkbox" id="reset-price-input" data-name="reset_price" class="checkbox-input" checked style="display: none" />
+            <label for="reset-price-input" class="check-box-wrapper">
+                <span class="check-box">
+                    <svg width="12px" height="10px">
+                        <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                    </svg>
+                </span>
+                <span class="check-box-label">Reset Price</span>
+            </label>
+
+            <input type="checkbox" id="reset-cost-input" data-name="reset_cost" class="checkbox-input" checked style="display: none" />
+            <label for="reset-cost-input" class="check-box-wrapper">
+                <span class="check-box">
+                    <svg width="12px" height="10px">
+                        <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                    </svg>
+                </span>
+                <span class="check-box-label">Reset Cost</span>
+            </label>
+
+            <div class="operation-subtitle">Visible Columns</div>
+            {{#each columns}}
+                <input type="checkbox" id="{{this}}-input" data-name="{{this}}" data-type="columns" class="checkbox-input" checked style="display: none" />
+                <label for="{{this}}-input" class="check-box-wrapper">
+                    <span class="check-box">
+                        <svg width="12px" height="10px">
+                            <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                        </svg>
+                    </span>
+                    <span class="check-box-label">{{this}}</span>
+                </label>
+            {{/each}}
+
+            <div class="operation-title">Transaction Permissions</div>
+
+            <input type="checkbox" id="create-transaction-input" data-name="create_transaction" class="checkbox-input" checked style="display: none" />
+            <label for="create-transaction-input" class="check-box-wrapper">
+                <span class="check-box">
+                    <svg width="12px" height="10px">
+                        <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                    </svg>
+                </span>
+                <span class="check-box-label">Create Transaction</span>
+            </label>
+
+            <input type="checkbox" id="edit-transaction-settings-input" data-name="edit_transaction_settings" class="checkbox-input" checked style="display: none" />
+            <label for="edit-transaction-settings-input" class="check-box-wrapper">
+                <span class="check-box">
+                    <svg width="12px" height="10px">
+                        <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                    </svg>
+                </span>
+                <span class="check-box-label">Edit Transaction Settings</span>
+            </label>
+
+            <div class="operation-title">Store</div>
+
+            <input type="checkbox" id="create-store-input" data-name="create_store" class="checkbox-input" checked style="display: none" />
+            <label for="create-store-input" class="check-box-wrapper">
+                <span class="check-box">
+                    <svg width="12px" height="10px">
+                        <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                    </svg>
+                </span>
+                <span class="check-box-label">Create Store</span>
+            </label>
+
+            <input type="checkbox" id="edit-store-input" data-name="edit_store" class="checkbox-input" checked style="display: none" />
+            <label for="edit-store-input" class="check-box-wrapper">
+                <span class="check-box">
+                    <svg width="12px" height="10px">
+                        <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                    </svg>
+                </span>
+                <span class="check-box-label">Edit Store</span>
+            </label>
+
+            <input type="checkbox" id="delete-store-input" data-name="delete_store" class="checkbox-input" checked style="display: none" />
+            <label for="delete-store-input" class="check-box-wrapper">
+                <span class="check-box">
+                    <svg width="12px" height="10px">
+                        <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                    </svg>
+                </span>
+                <span class="check-box-label">Delete Store</span>
+            </label>
+
+            <div class="operation-title">Creating Users</div>
+
+            <input type="checkbox" id="create-user-type-input" data-name="create_user_type" class="checkbox-input" checked style="display: none" />
+            <label for="create-user-type-input" class="check-box-wrapper">
+                <span class="check-box">
+                    <svg width="12px" height="10px">
+                        <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                    </svg>
+                </span>
+                <span class="check-box-label">Create User Types</span>
+            </label>
+
+            <input type="checkbox" id="create-new-users-input" data-name="create_user" class="checkbox-input" checked style="display: none" />
+            <label for="create-new-users-input" class="check-box-wrapper">
+                <span class="check-box">
+                    <svg width="12px" height="10px">
+                        <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                    </svg>
+                </span>
+                <span class="check-box-label">Create New Users</span>
+            </label>
+
+            <input type="checkbox" id="edit-user-permissions-input" data-name="edit_permissions" class="checkbox-input" checked style="display: none" />
+            <label for="edit-user-permissions-input" class="check-box-wrapper">
+                <span class="check-box">
+                    <svg width="12px" height="10px">
+                        <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                    </svg>
+                </span>
+                <span class="check-box-label">Edit Users Permissions</span>
+            </label>
+        </div>
+
+        <div class="operation-button-wrapper">
+            <button class="add" id="create-user-type-submit">Create User Type</button>
+        </div>
+    </div>
+    {{/ifCond}}
+
+
+    {{#ifCond type '==' 'create_employee'}}
+        <div class="operation-title">Create an Employee Account</div>
+        <div class="operation-description">Create a user to connected to your account.</div>
+        <div id="create-user-wrapper">
+            <label for="assign-store-input">User Type</label>
+            <select class="select-input" id="user-type-input">
+                {{#each user_types}}
+                    <option value="{{this.id}}">{{this.name}}</option>
+                {{/each}}
+            </select>
+
+            <label for="assign-store-input">Store Assignment</label>
+            <div class="input-description-wrapper">
+                <div class="input-description active" data-type="all">This user will be connected every store and main inventory.</div>
+                <div class="input-description" data-type="main">This user will only be connected to just the main inventory.</div>
+                <div class="input-description" data-type="store">This user will only be connected to one store.</div>
+            </div>
+            <select class="select-input" id="assign-store-input">
+                <option value="all">All</option>
+                <option value="main">Main</option>
+                {{#each stores}}
+                    <option value="{{this.id}}">{{this.name}}</option>
+                {{/each}}
+            </select>
+
+            <label for="assign-store-input">First Name</label>
+            <input class="operation-text-input" id="first-name-input" />
+
+            <label for="assign-store-input">Last Name</label>
+            <input class="operation-text-input" id="last-name-input" />
+
+            <label for="assign-store-input">Username</label>
+            <input class="operation-text-input" id="username-input" />
+
+            <label for="assign-store-input">Password</label>
+            <input type="password" class="operation-text-input" id="password-input" />
+
+            <button class="add" id="create-employee-submit">Create Employee</button>
+        </div>
+    {{/ifCond}}
+</div>

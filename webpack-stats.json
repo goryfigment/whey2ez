@@ -1,0 +1,1 @@
+{"status":"error","publicPath":"/templates/bundle/","error":"ModuleNotFoundError","message":"Module not found: Error: Can't resolve 'fs' in 'C:\\Users\\Gory\\pycharmprojects\\whey2ez\\node_modules\\handlebars\\lib'"}

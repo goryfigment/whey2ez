@@ -1,0 +1,49 @@
+<div id="settings-wrapper">
+    <div>
+        <div class="settings-title">Date Range</div>
+        <div class="settings-description">Default date range when opening the transaction page.</div>
+        <div id="settings-date-range-wrapper">
+            <select id="date-range-input" data-type="{{type}}">
+                <option value="all" {{#ifCond date_range '==' '*'}}selected{{/ifCond}}>All</option>
+                <option value="1" {{#ifCond date_range '==' '1'}}selected{{/ifCond}}>1 Day</option>
+                <option value="7" {{#ifCond date_range '==' '7'}}selected{{/ifCond}}>7 Days</option>
+            </select>
+        </div>
+    </div>
+
+    <div>
+        <div class="settings-title">Transaction Filter</div>
+        <div class="settings-description">Allow transactions to be searchable by the following columns: </div>
+        <div id="settings-filter-wrapper">
+            {{#each column}}
+                <input type="checkbox" id="{{this}}-input" data-name="{{this}}" data-type="columns" class="checkbox-input" {{#if (contains ../settings.filter this)}}checked{{/if}} style="display: none" />
+                <label for="{{this}}-input" class="check-box-wrapper">
+                    <span class="check-box">
+                        <svg width="12px" height="10px">
+                            <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                        </svg>
+                    </span>
+                    <span class="check-box-label">{{this}}</span>
+                </label>
+            {{/each}}
+        </div>
+    </div>
+
+    <div>
+        <div class="settings-title">Tax</div>
+        <div class="settings-description">Apply tax to business and different stores.</div>
+        <div id="tax-wrapper">
+            <div class="business-item">
+                <div class="tax-title"> Business: {{business_name}}</div>
+                <input class="business-tax" value="{{settings.business_tax}}"/> %
+            </div>
+
+            {{#each stores}}
+                <div class="store-item">
+                    <div class="tax-title"> Store: {{name}}</div>
+                    <input class="store-tax" data-id="{{id}}" /> %
+                </div>
+            {{/each}}
+        </div>
+    </div>
+</div>

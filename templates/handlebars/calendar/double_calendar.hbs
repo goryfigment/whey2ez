@@ -1,0 +1,105 @@
+<div class="month-wrapper" id="left-calendar">
+    <div class="month-header">
+        <div class="side-arrow left-arrow" data-month="{{previous.subtract}}"><i class="fa fa-chevron-left"></i></div>
+        <div><span class="month" data-month="{{previous.month_number}}">{{previous.month}}</span> <span class="year">{{previous.year}}</span></div>
+    </div>
+    <table class="month-calendar">
+        <thead class="day-of-week">
+            <tr>
+                <th scope="col">S</th>
+                <th scope="col">M</th>
+                <th scope="col">T</th>
+                <th scope="col">W</th>
+                <th scope="col">Th</th>
+                <th scope="col">F</th>
+                <th scope="col">S</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                {{#calendar 1 previous.starting_day previous.month_length}}
+                    <td {{#ifCond '' '==' this}}class="nonSelectable"{{/ifCond}}>{{this}}</td>
+                {{/calendar}}
+            </tr>
+            <tr>
+                {{#calendar 2 previous.starting_day previous.month_length}}
+                    <td {{#ifCond '' '==' this}}class="nonSelectable"{{/ifCond}}>{{this}}</td>
+                {{/calendar}}
+            </tr>
+            <tr>
+                {{#calendar 3 previous.starting_day previous.month_length}}
+                    <td {{#ifCond '' '==' this}}class="nonSelectable"{{/ifCond}}>{{this}}</td>
+                {{/calendar}}
+            </tr>
+            <tr>
+                {{#calendar 4 previous.starting_day previous.month_length}}
+                    <td {{#ifCond '' '==' this}}class="nonSelectable"{{/ifCond}}>{{this}}</td>
+                {{/calendar}}
+            </tr>
+            <tr>
+                {{#calendar 5 previous.starting_day previous.month_length}}
+                    <td {{#ifCond '' '==' this}}class="nonSelectable"{{/ifCond}}>{{this}}</td>
+                {{/calendar}}
+            </tr>
+            <tr>
+                {{#calendar 6 previous.starting_day previous.month_length}}
+                    <td {{#ifCond '' '==' this}}class="nonSelectable"{{/ifCond}}>{{this}}</td>
+                {{/calendar}}
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="month-wrapper" id="right-calendar">
+    <div class="month-header">
+        <div><span class="month" data-month="{{current.month_number}}">{{current.month}}</span> <span class="year">{{current.year}}</span></div>
+        <div class="side-arrow right-arrow" data-month="{{current.subtract}}"><i class="fa fa-chevron-right"></i></div>
+    </div>
+    <table class="month-calendar">
+        <thead class="day-of-week">
+            <tr>
+                <th scope="col">S</th>
+                <th scope="col">M</th>
+                <th scope="col">T</th>
+                <th scope="col">W</th>
+                <th scope="col">Th</th>
+                <th scope="col">F</th>
+                <th scope="col">S</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                {{#calendar 1 current.starting_day current.month_length}}
+                    <td {{#ifCond ../current_day '<' this}}class="nonSelectable"{{/ifCond}} {{#ifCond '' '==' this}}class="nonSelectable"{{/ifCond}} {{#ifCond ../current_day '==' this}}id="currentDay"{{/ifCond}}>{{this}}</td>
+                {{/calendar}}
+            </tr>
+            <tr>
+                {{#calendar 2 current.starting_day current.month_length}}
+                    <td {{#ifCond ../current_day '<' this}}class="nonSelectable"{{/ifCond}} {{#ifCond '' '==' this}}class="nonSelectable"{{/ifCond}} {{#ifCond ../current_day '==' this}}id="currentDay"{{/ifCond}}>{{this}}</td>
+                {{/calendar}}
+            </tr>
+            <tr>
+                {{#calendar 3 current.starting_day current.month_length}}
+                    <td {{#ifCond ../current_day '<' this}}class="nonSelectable"{{/ifCond}} {{#ifCond '' '==' this}}class="nonSelectable"{{/ifCond}} {{#ifCond ../current_day '==' this}}id="currentDay"{{/ifCond}}>{{this}}</td>
+                {{/calendar}}
+            </tr>
+            <tr>
+                {{#calendar 4 current.starting_day current.month_length}}
+                    <td {{#ifCond ../current_day '<' this}}class="nonSelectable"{{/ifCond}} {{#ifCond '' '==' this}}class="nonSelectable"{{/ifCond}} {{#ifCond ../current_day '==' this}}id="currentDay"{{/ifCond}}>{{this}}</td>
+                {{/calendar}}
+            </tr>
+            <tr>
+                {{#calendar 5 current.starting_day current.month_length}}
+                    <td {{#ifCond ../current_day '<' this}}class="nonSelectable"{{/ifCond}} {{#ifCond '' '==' this}}class="nonSelectable"{{/ifCond}} {{#ifCond ../current_day '==' this}}id="currentDay"{{/ifCond}}>{{this}}</td>
+                {{/calendar}}
+            </tr>
+            <tr>
+                {{#calendar 6 current.starting_day current.month_length}}
+                    <td {{#ifCond ../current_day '<' this}}class="nonSelectable"{{/ifCond}} {{#ifCond '' '==' this}}class="nonSelectable"{{/ifCond}} {{#ifCond ../current_day '==' this}}id="currentDay"{{/ifCond}}>{{this}}</td>
+                {{/calendar}}
+            </tr>
+        </tbody>
+    </table>
+</div>

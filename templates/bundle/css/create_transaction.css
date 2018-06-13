@@ -1,0 +1,333 @@
+.active {
+    display: block !important;
+}
+
+#main-wrapper {
+    margin: 20px;
+    height: calc(100% - 40px);
+}
+
+#create-transaction-title {
+    font-size: 20px;
+}
+
+#create-transaction-wrapper {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: center;
+        justify-content: center;
+}
+
+#details-section {
+    position: relative;
+}
+
+#search-input {
+    border-radius: 2px;
+    background: #f2f2f2;
+    margin: 35px 0 12px;
+    height: 45px;
+    outline: 0;
+    width: 300px;
+    border: none;
+    font-size: 18px;
+    padding: 0 8px;
+    color: #000000;
+}
+
+#search-popup {
+    display: none;
+    width: 300px;
+    background: #fff;
+    position: absolute;
+    top: 103px;
+    right: 0;
+    left: -1px;
+    margin: auto;
+    border: solid 1px #aaa;
+    font-size: 19px;
+    border-radius: 1px;
+    cursor: default;
+    max-height: 211px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#search-popup.active {
+    display: block;
+}
+
+.search-item {
+    color: #000000;
+    padding: 4px;
+    font-family: initial;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.search-item.selected {
+    background: #DADADA;
+}
+
+#select-payment-title {
+    font-size: 18px;
+    margin: 15px 0;
+}
+
+#select-payment-wrapper {
+    font-size: 35px;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: distribute;
+        justify-content: space-around;
+    -ms-flex-align: center;
+        align-items: center;
+}
+
+.payment-type {
+    cursor: pointer;
+    padding: 2px 4px;
+    color: #d9d9d9;
+}
+
+.payment-type:hover {
+    color: #ffffff;
+    transition: color 0.2s ease;
+}
+
+.payment-type.selected {
+    border: #54abc5 solid 2px;
+    background: #454545;
+}
+
+.payment-type.selected[data-payment_type="Cash"] {
+    color: #50d250;
+}
+
+.payment-type.selected[data-payment_type="American Express"] {
+    color: #d9e691;
+}
+
+.payment-type.selected[data-payment_type="Discover"] {
+    color: #f4b14e;;
+}
+
+.payment-type.selected[data-payment_type="MasterCard"] {
+    color: #e16535;
+}
+
+.payment-type.selected[data-payment_type="Visa"] {
+    color: #00d0ff;
+}
+
+#receipt-section {
+    min-width: 400px;
+    padding: 15px;
+    background: #393939;
+    margin-left: 10px;
+}
+
+#receipt-header {
+    margin: 10px;
+    font-size: 20px;
+    text-align: center;
+}
+
+#receipt-item-container {
+    height: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 4px;
+}
+
+#receipt-item-container::-webkit-scrollbar {
+  width: 5px;
+}
+
+#receipt-item-container::-webkit-scrollbar-track {
+  background: #ddd;
+}
+
+#receipt-item-container::-webkit-scrollbar-thumb {
+  background: #666;
+}
+
+.transaction-heading {
+    display: -ms-flexbox;
+    display: flex;
+}
+
+.transaction-item {
+    position: relative;
+    margin: 15px 0;
+}
+
+.delete-button {
+    position: absolute;
+    color: #f44b4b;
+    right: -10px;
+    top: 17px;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.transaction-name {
+    margin-right: auto;
+}
+
+.transaction-quantity {
+    padding: 7px;
+}
+
+.discount-button {
+    width: 102px;
+    padding: 3px 7px;
+    margin-left: 6px;
+    cursor: pointer;
+    color: #d8e2ee;
+    font-size: 14px;
+    background: #414141;
+    display: none;
+}
+
+.discount-button:hover {
+    background: #4f4f4f;
+}
+
+.discount-plus-icon {
+    color: #4789b0;
+}
+
+.quantity-input, .discount-money-input, .discount-percent-input {
+    margin: 0 3px;
+    border: none;
+    outline: none;
+    width: 39px;
+    padding: 3px;
+    text-align: center;
+    background: #474747;
+    color: #05fc51;
+}
+
+.quantity-input {
+    color: #05fc51;
+}
+
+#receipt-result-wrapper {
+    border-top: 2px solid #afb1b2;
+    padding: 5px;
+}
+
+#subtotal-wrapper, #tax-wrapper, #total-wrapper {
+    display: -ms-flexbox;
+    display: flex;
+}
+
+#total-wrapper {
+    font-size: 26px;
+    margin: 22px 0 0 0;
+}
+
+#subtotal, #tax, #total {
+    margin-left: auto;
+}
+
+#tax-rate {
+    margin-left: 4px;
+}
+
+#discount-submit-wrapper {
+    padding: 7px;
+    text-align: center;
+    border: 2px #9cb49a solid;
+    margin-bottom: 7px;
+    display: none;
+}
+
+.discount-submit, .discount-cancel {
+    cursor: pointer;
+    padding: 4px;
+    background: #2a2a2a;
+}
+
+.discount-submit:hover, .discount-cancel:hover {
+    background: #222;
+}
+
+.discount-submit {
+    margin-left: 16px;
+    margin-right: 5px;
+    color: #008000;
+}
+
+.discount-cancel {
+    color: #ff0000;
+}
+
+.discount-item {
+    display: -ms-flexbox;
+    display: flex;
+    position: relative;
+    padding: 0 25px;
+    margin-bottom: 10px;
+    background: #515151;
+    color: #dfdf99;
+}
+
+.discount {
+    display: none;
+    margin: 0 20px 0 auto;
+}
+
+span.discount {
+    display: inline-block;
+}
+
+.discount-delete {
+    position: absolute;
+    top: -2px;
+    left: 1px;
+    padding: 4px;
+    font-size: 14px;
+    color: #ed6565ad;
+    cursor: pointer;
+}
+
+.discount-delete:hover {
+    color: #ed6565;
+}
+
+#memo-title {
+    display: block;
+    font-size: 18px;
+    margin: 16px 0;
+}
+
+#memo-input {
+    width: 288px;
+    resize: none;
+    height: 120px;
+    line-height: 17px;
+    background: #262626;
+    color: #7bd0ea;
+    padding: 5px;
+    outline: none;
+}
+
+#memo-input::-webkit-input-placeholder {
+    color: #b3baba;
+}
+
+#transaction-submit-button {
+    width: 300px;
+    color: #f6f6f6;
+    background: #2b8f37;
+    border: solid 2px #979797;
+    outline: none;
+    border-radius: 2px;
+    height: 50px;
+    margin: 20px 0;
+    font-size: 20px;
+    cursor: pointer;
+}

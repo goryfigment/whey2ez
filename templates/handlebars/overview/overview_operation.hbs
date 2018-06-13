@@ -1,0 +1,64 @@
+<div id="operation-popup-wrapper">
+    {{#ifCond type '==' 'price'}}
+        <div id="edit-column-wrapper">
+            <div class="operation-title">Link Price</div>
+            <div class="operation-description">Link the price, that is being sold to the consumer.</div>
+            <div id="operation-link-column-wrapper">
+                <select id="link-column-input" data-type="{{type}}">
+                    {{#each columns}}
+                        {{#unless (lookup link_columns this)}}
+                            <option value="{{this}}">{{this}}</option>
+                        {{/unless}}
+                    {{/each}}
+                </select>
+                <button class="operation-submit add" id="link-column-submit">Link Column</button>
+            </div>
+        </div>
+    {{/ifCond}}
+
+    {{#ifCond type '==' 'cost'}}
+        <div id="edit-column-wrapper">
+            <div class="operation-title">Link Cost</div>
+            <div class="operation-description">Link the cost, to accurately calculate profit.</div>
+            <div id="operation-link-column-wrapper">
+                <select id="link-column-input" data-type="{{type}}">
+                    {{#each columns}}
+                        {{#unless (lookup link_columns this)}}
+                            <option value="{{this}}">{{this}}</option>
+                        {{/unless}}
+                    {{/each}}
+                </select>
+                <button class="operation-submit add" id="link-column-submit">Link Column</button>
+            </div>
+        </div>
+    {{/ifCond}}
+
+    {{#ifCond type '==' 'quantity'}}
+        <div id="edit-column-wrapper">
+            <div class="operation-title">Link Quantity</div>
+            <div class="operation-description">Link the quantity, to maintain inventory after transaction.</div>
+            <div id="operation-link-column-wrapper">
+                <select id="link-column-input" data-type="{{type}}">
+                    {{#each columns}}
+                        {{#unless (lookup link_columns this)}}
+                            <option value="{{this}}">{{this}}</option>
+                        {{/unless}}
+                    {{/each}}
+                </select>
+                <button class="operation-submit add" id="link-column-submit">Link Column</button>
+            </div>
+        </div>
+    {{/ifCond}}
+
+    {{#ifCond type '==' 'name'}}
+        <div id="edit-column-wrapper">
+            <div class="operation-title">Link Name</div>
+            <div class="operation-description">Link the name of the product that you would like to appear on the receipt.</div>
+            <div id="operation-link-column-wrapper">
+                <input id="link-column-input" data-type="{{type}}" />
+                <button class="operation-submit add" id="link-column-submit">Link Column</button>
+                <p class="name-description">Use curly brace to capture column names ex. \{{name}}</p>
+            </div>
+        </div>
+    {{/ifCond}}
+</div>

@@ -1,0 +1,541 @@
+<div id="operation-popup-wrapper">
+    {{#ifCond type '==' 'add'}}
+        <div id="operation-tab-wrapper">
+            <span class="operation-tab {{#unless columns}}active{{/unless}}" id="add-column-tab" data-wrapper="#add-column-wrapper">Add Column</span>
+            <span class="operation-tab {{#if columns}}active{{else}}disabled{{/if}}" id="add-item-tab" data-wrapper="#add-item-wrapper">Add Item</span>
+        </div>
+
+        <div class="operation-body-wrapper">
+            <div id="add-item-wrapper" class="operation-body-container {{#if columns}}active{{/if}}">
+                <div class="operation-title">Add Item</div>
+                <div class="operation-description">Create a new item.</div>
+                <div class="operation-add-item-wrapper">
+                    {{#each columns}}
+                        <div id="add-item-container">
+                            <label for="add-item-input">{{this}}:</label>
+                            <input class="operation-text-input add-item-input" data-column="{{this}}" />
+                        </div>
+                    {{/each}}
+                    <div class="operation-button-wrapper">
+                        <button class="operation-submit add" id="add-item-submit">Add Item</button>
+                    </div>
+                </div>
+            </div>
+            <div id="add-column-wrapper" class="operation-body-container {{#unless columns}}active{{/unless}}">
+                <div class="operation-title">Add Column</div>
+                <div class="operation-description">Create a new column.</div>
+                <div class="operation-add-column-wrapper">
+                    <label for="add-column-input">Column Name:</label>
+                    <input class="operation-text-input" id="add-column-input" />
+                    <button class="operation-submit add" id="add-column-submit">Add Column</button>
+                </div>
+            </div>
+        </div>
+    {{/ifCond}}
+
+    {{#ifCond type '==' 'edit'}}
+        <div id="operation-tab-wrapper">
+            <span class="operation-tab {{#unless inventory_length}}active{{/unless}}{{#unless columns}}disabled{{/unless}}" id="edit-column-tab" data-wrapper="#edit-column-wrapper">Edit Column</span>
+            <span class="operation-tab {{#if inventory_length}}active{{else}}disabled{{/if}}" id="edit-item-tab" data-wrapper="#edit-item-wrapper">Edit Item</span>
+        </div>
+
+        <div class="operation-body-wrapper">
+            <div id="edit-item-wrapper" class="operation-body-container {{#if inventory_length}}active{{/if}}">
+                <div class="operation-title">Edit Item</div>
+                <div class="active" id="edit-step-1">
+                    <div class="operation-description">Pick an item to edit.</div>
+                    <div id="search-wrapper">
+                        <input id="operation-search-input" data-table="#operation-table"/>
+                        <div class="search-filter-wrapper">
+                            {{#each columns}}
+                                <span class="check-box-container">
+                                    <input type="checkbox" id="{{this}}-operation-checkbox" data-type="columns" class="checkbox-input column-filter" value="{{this}}" style="display: none" checked />
+                                    <label for="{{this}}-operation-checkbox" class="check-box-wrapper">
+                                        <span class="check-box">
+                                            <svg width="12px" height="10px">
+                                                <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                                            </svg>
+                                        </span>
+                                        <span class="check-box-label">{{this}}</span>
+                                    </label>
+                                </span>
+                            {{/each}}
+                        </div>
+                    </div>
+                    <div class="table-scroll-wrapper">
+                        <table id="operation-table" class="table-container edit">
+                            <thead>
+                                <tr>
+                                    <th class="action">Action</th>
+                                    {{#each columns}}
+                                        <th class="custom-column" data-value="{{this}}"><span class="column-text">{{this}}</span><span class="inline action"><span class="edit-column-button"><i class="fas fa-pencil-alt"></i></span><span class="column-delete-button"><i class="far fa-trash-alt"></i></span></span></th>
+                                    {{/each}}
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {{#each inventory}}
+                                    <tr data-id="{{this.[0]}}">
+                                        <td class="action"><span class="edit-item-button"><i class="fas fa-pencil-alt"></i></span><span class="delete-item-button"><i class="far fa-trash-alt"></i></span></td>
+                                        {{tableHandler this.[1] ../columns}}
+                                    </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="edit-step-2">
+                    <div class="operation-description">Edit an existing item.</div>
+                    <div class="operation-edit-item-wrapper">
+                        {{#each columns}}
+                            <div id="edit-item-container">
+                                <label for="edit-item-input">{{this}}:</label>
+                                <input class="operation-text-input edit-item-input" data-column="{{this}}" />
+                            </div>
+                        {{/each}}
+                        <div class="operation-button-wrapper">
+                            <button id="edit-back-button">Back</button>
+                            <button class="operation-submit edit" id="edit-item-submit">Edit Item</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="edit-column-wrapper" class="operation-body-container {{#unless inventory}}active{{/unless}}">
+                <div class="operation-title">Edit Column</div>
+                <div class="operation-description">Edit an existing column.</div>
+                <div id="operation-edit-column-wrapper">
+                    <select id="edit-prev-column-input">
+                        {{#each columns}}
+                            <option value="{{this}}">{{this}}</option>
+                        {{/each}}
+                    </select> to
+                    <input class="operation-text-input" id="edit-column-input" />
+                </div>
+                <div class="operation-button-wrapper">
+                    <button class="operation-submit edit" id="edit-column-submit">Edit Column</button>
+                </div>
+            </div>
+        </div>
+    {{/ifCond}}
+
+    {{#ifCond type '==' 'delete'}}
+        <div id="operation-tab-wrapper">
+            <span class="operation-tab {{#unless inventory_length}}active{{/unless}}{{#unless columns}}disabled{{/unless}}" id="delete-column-tab" data-wrapper="#delete-column-wrapper">Delete Column</span>
+            <span class="operation-tab {{#if inventory_length}}active{{else}}disabled{{/if}}" id="delete-item-tab" data-wrapper="#delete-item-wrapper">Delete Item</span>
+        </div>
+
+        <div class="operation-body-wrapper">
+            <div id="delete-item-wrapper" class="operation-body-container {{#if inventory_length}}active{{/if}}">
+                <div class="operation-title">Delete Item</div>
+                <div class="active" id="delete-step-1">
+                    <div class="operation-description">Pick an item to delete.</div>
+                    <div id="search-wrapper">
+                        <input id="operation-search-input" data-table="#operation-table"/>
+                        <div class="search-filter-wrapper">
+                            {{#each columns}}
+                                <span class="check-box-container">
+                                    <input type="checkbox" id="{{this}}-operation-checkbox" data-type="columns" class="checkbox-input column-filter" value="{{this}}" style="display: none" checked />
+                                    <label for="{{this}}-operation-checkbox" class="check-box-wrapper">
+                                        <span class="check-box">
+                                            <svg width="12px" height="10px">
+                                                <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                                            </svg>
+                                        </span>
+                                        <span class="check-box-label">{{this}}</span>
+                                    </label>
+                                </span>
+                            {{/each}}
+                        </div>
+                    </div>
+                    <div class="table-scroll-wrapper">
+                        <table id="operation-table" class="table-container delete">
+                            <thead>
+                                <tr>
+                                    <th class="action">Action</th>
+                                    {{#each columns}}
+                                        <th class="custom-column" data-value="{{this}}"><span class="column-text">{{this}}</span><span class="inline action"><span class="edit-column-button"><i class="fas fa-pencil-alt"></i></span><span class="column-delete-button"><i class="far fa-trash-alt"></i></span></span></th>
+                                    {{/each}}
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {{#each inventory}}
+                                    <tr data-id="{{this.[0]}}">
+                                        <td class="action"><span class="edit-item-button"><i class="fas fa-pencil-alt"></i></span><span class="delete-item-button"><i class="far fa-trash-alt"></i></span></td>
+                                        {{tableHandler this.[1] ../columns}}
+                                    </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="delete-step-2">
+                    <div class="operation-description">Delete an existing item.</div>
+                    <div class="operation-delete-item-wrapper">
+                        <table id="delete-item-container" class="table-container">
+
+                        </table>
+                        <div class="operation-button-wrapper">
+                            <button id="delete-back-button">Back</button>
+                            <button class="operation-submit delete" id="delete-item-submit">Delete Item</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="delete-column-wrapper" class="operation-body-container {{#unless inventory_length}}active{{/unless}}">
+                <div class="operation-title">Delete Column</div>
+                <div class="operation-description">Delete an existing column.</div>
+                <div id="operation-delete-column-wrapper">
+                    <select id="delete-column-input">
+                        {{#each columns}}
+                            <option value="{{this}}">{{this}}</option>
+                        {{/each}}
+                    </select>
+                    <button class="operation-submit delete" id="delete-column-submit">Delete Column</button>
+                </div>
+            </div>
+        </div>
+    {{/ifCond}}
+
+    {{#ifCond type '==' 'import'}}
+        <div class="operation-body-wrapper">
+            <div class="operation-title">Import</div>
+            <p class="operation-description">Import a excel or csv file.</p>
+            <div id="file-upload-wrapper">
+                <a id="file-upload-link">Choose a file</a>
+                <input type="file" id="file-upload" />
+            </div>
+        </div>
+    {{/ifCond}}
+
+    {{#ifCond type '==' 'export'}}
+        <div class="operation-title">Export</div>
+        <p class="operation-description">Export as a excel file, csv file, or json.</p>
+
+        <div id="file-upload-wrapper">
+            <select class="select-input" id="export-type-input">
+                <option value="json">json</option>
+                <option value="excel">excel</option>
+                <option value="csv">csv</option>
+            </select>
+            <button id="export-submit">Export</button>
+            <a id="export-download"></a>
+        </div>
+    {{/ifCond}}
+
+    {{#ifCond type '==' 'import2'}}
+        <div class="operation-title">Confirm data</div>
+        <p class="operation-description">Map each column to an existing field or add a new field.</p>
+        <div class="table-scroll-wrapper import">
+            <table id="import-table" class="table-container">
+                <thead>
+                    <tr>
+                        {{#each import_data.headers}}
+                            <th><input class="header-input" value="{{this}}" data-column="{{@index}}"/></th>
+                        {{/each}}
+                    </tr>
+                    <tr>
+                        {{#each import_data.headers}}
+                            <th><input class="include-input" type="checkbox" data-column="{{@index}}" checked /> Include</th>
+                        {{/each}}
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each import_data.data}}
+                        <tr>
+                            {{#each this}}
+                                <td class="included">{{this}}</td>
+                            {{/each}}
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+        <div class="operation-button-wrapper">
+            <button id="import-submit-button" class="add">Submit</button>
+        <div>
+    {{/ifCond}}
+
+    {{#ifCond type '==' 'drop_table'}}
+        <div class="operation-title">Drop Table</div>
+        <p class="operation-description">Delete ALL data/columns</p>
+        <p class="operation-description">This can't be UNDONE!</p>
+        <div class="operation-button-wrapper">
+            <button class="delete" id="delete-table-submit">DELETE TABLE</button>
+        </div>
+    {{/ifCond}}
+
+    {{#ifCond type '==' 'received'}}
+        <div class="operation-body-wrapper">
+            <div id="received-item-wrapper" class="operation-body-container {{#if inventory_length}}active{{/if}}">
+                <div class="operation-title">Received</div>
+                <div class="active" id="received-step-1">
+                    <div class="operation-description">Pick an item that was received.</div>
+                    <div id="search-wrapper">
+                        <input id="operation-search-input" data-table="#operation-table"/>
+                        <div class="search-filter-wrapper">
+                            {{#each columns}}
+                                <span class="check-box-container">
+                                    <input type="checkbox" id="{{this}}-operation-checkbox" data-type="columns" class="checkbox-input column-filter" value="{{this}}" style="display: none" checked />
+                                    <label for="{{this}}-operation-checkbox" class="check-box-wrapper">
+                                        <span class="check-box">
+                                            <svg width="12px" height="10px">
+                                                <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                                            </svg>
+                                        </span>
+                                        <span class="check-box-label">{{this}}</span>
+                                    </label>
+                                </span>
+                            {{/each}}
+                        </div>
+                    </div>
+                    <div class="table-scroll-wrapper">
+                        <table id="operation-table" class="table-container add">
+                            <thead>
+                                <tr>
+                                    <th class="action">Action</th>
+                                    {{#each columns}}
+                                        <th class="custom-column" data-value="{{this}}"><span class="column-text">{{this}}</span><span class="inline action"><span class="edit-column-button"><i class="fas fa-pencil-alt"></i></span><span class="column-delete-button"><i class="far fa-trash-alt"></i></span></span></th>
+                                    {{/each}}
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {{#each inventory}}
+                                    <tr data-id="{{this.[0]}}">
+                                        <td class="action"><span class="edit-item-button"><i class="fas fa-pencil-alt"></i></span><span class="delete-item-button"><i class="far fa-trash-alt"></i></span></td>
+                                        {{tableHandler this.[1] ../columns}}
+                                    </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="received-step-2">
+                    <div class="operation-description">How many have you received?</div>
+                    <div class="operation-received-item-wrapper">
+                        <table id="received-item-container" class="table-container">
+
+                        </table>
+                        <div class="operation-button-wrapper">
+                            <label for="details-input">Quantity Received:</label>
+                            <input type="number" id="received-input" min="1" class="operation-text-input" />
+                            <label for="details-input">Extra Details:</label>
+                            <textarea id="details-input" class="operation-textarea-input"></textarea>
+                        </div>
+                        <div class="operation-button-wrapper">
+                            <button id="received-back-button">Back</button>
+                            <button class="operation-submit add" id="received-item-submit">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/ifCond}}
+
+    {{#ifCond type '==' 'damaged'}}
+        <div class="operation-body-wrapper">
+            <div id="damaged-item-wrapper" class="operation-body-container {{#if inventory_length}}active{{/if}}">
+                <div class="operation-title">Damaged</div>
+                <div class="active" id="damaged-step-1">
+                    <div class="operation-description">Pick an item that was damaged.</div>
+                    <div id="search-wrapper">
+                        <input id="operation-search-input" data-table="#operation-table"/>
+                        <div class="search-filter-wrapper">
+                            {{#each columns}}
+                                <span class="check-box-container">
+                                    <input type="checkbox" id="{{this}}-operation-checkbox" data-type="columns" class="checkbox-input column-filter" value="{{this}}" style="display: none" checked />
+                                    <label for="{{this}}-operation-checkbox" class="check-box-wrapper">
+                                        <span class="check-box">
+                                            <svg width="12px" height="10px">
+                                                <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                                            </svg>
+                                        </span>
+                                        <span class="check-box-label">{{this}}</span>
+                                    </label>
+                                </span>
+                            {{/each}}
+                        </div>
+                    </div>
+                    <div class="table-scroll-wrapper">
+                        <table id="operation-table" class="table-container delete">
+                            <thead>
+                                <tr>
+                                    <th class="action">Action</th>
+                                    {{#each columns}}
+                                        <th class="custom-column" data-value="{{this}}"><span class="column-text">{{this}}</span><span class="inline action"><span class="edit-column-button"><i class="fas fa-pencil-alt"></i></span><span class="column-delete-button"><i class="far fa-trash-alt"></i></span></span></th>
+                                    {{/each}}
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {{#each inventory}}
+                                    <tr data-id="{{this.[0]}}">
+                                        <td class="action"><span class="edit-item-button"><i class="fas fa-pencil-alt"></i></span><span class="delete-item-button"><i class="far fa-trash-alt"></i></span></td>
+                                        {{tableHandler this.[1] ../columns}}
+                                    </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="damaged-step-2">
+                    <div class="operation-description">How many are damaged?</div>
+                    <div class="operation-damaged-item-wrapper">
+                        <table id="damaged-item-container" class="table-container">
+
+                        </table>
+                        <div class="operation-button-wrapper">
+                            <label for="details-input">Quantity Damaged:</label>
+                            <input type="number" id="damaged-input" min="1" class="operation-text-input" />
+                            <label for="details-input">Extra Details:</label>
+                            <textarea id="details-input" class="operation-textarea-input"></textarea>
+                        </div>
+                        <div class="operation-button-wrapper">
+                            <button id="damaged-back-button">Back</button>
+                            <button class="operation-submit delete" id="damaged-item-submit">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/ifCond}}
+
+    {{#ifCond type '==' 'reset_cost'}}
+        <div class="operation-body-wrapper">
+            <div id="reset-cost-item-wrapper" class="operation-body-container {{#if inventory_length}}active{{/if}}">
+                <div class="operation-title">Reset Cost</div>
+                <div class="active" id="reset-cost-step-1">
+                    <div class="operation-description">Pick an item to reset the cost.</div>
+                    <div id="search-wrapper">
+                        <input id="operation-search-input" data-table="#operation-table"/>
+                        <div class="search-filter-wrapper">
+                            {{#each columns}}
+                                <span class="check-box-container">
+                                    <input type="checkbox" id="{{this}}-operation-checkbox" data-type="columns" class="checkbox-input column-filter" value="{{this}}" style="display: none" checked />
+                                    <label for="{{this}}-operation-checkbox" class="check-box-wrapper">
+                                        <span class="check-box">
+                                            <svg width="12px" height="10px">
+                                                <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                                            </svg>
+                                        </span>
+                                        <span class="check-box-label">{{this}}</span>
+                                    </label>
+                                </span>
+                            {{/each}}
+                        </div>
+                    </div>
+                    <div class="table-scroll-wrapper">
+                        <table id="operation-table" class="table-container edit">
+                            <thead>
+                                <tr>
+                                    <th class="action">Action</th>
+                                    {{#each columns}}
+                                        <th class="custom-column" data-value="{{this}}"><span class="column-text">{{this}}</span><span class="inline action"><span class="edit-column-button"><i class="fas fa-pencil-alt"></i></span><span class="column-delete-button"><i class="far fa-trash-alt"></i></span></span></th>
+                                    {{/each}}
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {{#each inventory}}
+                                    <tr data-id="{{this.[0]}}">
+                                        <td class="action"><span class="edit-item-button"><i class="fas fa-pencil-alt"></i></span><span class="delete-item-button"><i class="far fa-trash-alt"></i></span></td>
+                                        {{tableHandler this.[1] ../columns}}
+                                    </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="reset-cost-step-2">
+                    <div class="operation-description">Edit the cost</div>
+                    <div class="operation-reset-cost-item-wrapper">
+                        <table id="reset-cost-item-container" class="table-container">
+
+                        </table>
+                        <div class="operation-button-wrapper">
+                            <label for="details-input">New Cost:</label>
+                            <input type="number" id="reset-cost-input" min="1" class="operation-text-input" />
+                            <label for="details-input">Extra Details:</label>
+                            <textarea id="details-input" class="operation-textarea-input"></textarea>
+                        </div>
+                        <div class="operation-button-wrapper">
+                            <button id="reset-cost-back-button">Back</button>
+                            <button class="operation-submit edit" id="reset-cost-item-submit">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/ifCond}}
+
+    {{#ifCond type '==' 'reset_price'}}
+        <div class="operation-body-wrapper">
+            <div id="reset-price-item-wrapper" class="operation-body-container {{#if inventory_length}}active{{/if}}">
+                <div class="operation-title">Reset Price</div>
+                <div class="active" id="reset-price-step-1">
+                    <div class="operation-description">Pick an item to reset the price.</div>
+                    <div id="search-wrapper">
+                        <input id="operation-search-input" data-table="#operation-table"/>
+                        <div class="search-filter-wrapper">
+                            {{#each columns}}
+                                <span class="check-box-container">
+                                    <input type="checkbox" id="{{this}}-operation-checkbox" data-type="columns" class="checkbox-input column-filter" value="{{this}}" style="display: none" checked />
+                                    <label for="{{this}}-operation-checkbox" class="check-box-wrapper">
+                                        <span class="check-box">
+                                            <svg width="12px" height="10px">
+                                                <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                                            </svg>
+                                        </span>
+                                        <span class="check-box-label">{{this}}</span>
+                                    </label>
+                                </span>
+                            {{/each}}
+                        </div>
+                    </div>
+                    <div class="table-scroll-wrapper">
+                        <table id="operation-table" class="table-container edit">
+                            <thead>
+                                <tr>
+                                    <th class="action">Action</th>
+                                    {{#each columns}}
+                                        <th class="custom-column" data-value="{{this}}"><span class="column-text">{{this}}</span><span class="inline action"><span class="edit-column-button"><i class="fas fa-pencil-alt"></i></span><span class="column-delete-button"><i class="far fa-trash-alt"></i></span></span></th>
+                                    {{/each}}
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {{#each inventory}}
+                                    <tr data-id="{{this.[0]}}">
+                                        <td class="action"><span class="edit-item-button"><i class="fas fa-pencil-alt"></i></span><span class="delete-item-button"><i class="far fa-trash-alt"></i></span></td>
+                                        {{tableHandler this.[1] ../columns}}
+                                    </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="reset-price-step-2">
+                    <div class="operation-description">Edit the price.</div>
+                    <div class="operation-reset-price-item-wrapper">
+                        <table id="reset-price-item-container" class="table-container">
+
+                        </table>
+                        <div class="operation-button-wrapper">
+                            <label for="details-input">New Price:</label>
+                            <input type="number" id="reset-price-input" min="1" class="operation-text-input" />
+                            <label for="details-input">Extra Details:</label>
+                            <textarea id="details-input" class="operation-textarea-input"></textarea>
+                        </div>
+                        <div class="operation-button-wrapper">
+                            <button id="reset-price-back-button">Back</button>
+                            <button class="operation-submit edit" id="reset-price-item-submit">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/ifCond}}
+</div>

@@ -1,0 +1,275 @@
+/* SIDE BAR */
+.business-name {
+    cursor: pointer;
+    font-size: 20px;
+    padding: 10px;
+    color: #eaeaea;
+}
+
+.business-name.active {
+    background: #6577cf;
+}
+
+.create-transaction-button {
+    padding: 4px 0 4px 0;
+    color: #ffffff;
+    text-align: center;
+    background: #368d5a;
+    cursor: pointer;
+}
+
+.create-transaction-button svg {
+    font-size: 14px;
+}
+/* SIDE BAR */
+
+
+/*OPERATION OVERLAY*/
+.name-description {
+    font-size: 13px;
+    color: #adbbff;
+}
+/*OPERATION OVERLAY*/
+
+
+/* EMPTY USERS */
+#empty-transaction-wrapper {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#empty-transaction-icon {
+    font-size: 260px;
+    padding: 20px;
+    color: #6c7fdb;
+}
+
+#empty-container {
+    text-align: center;
+    margin-left: 20px;
+}
+
+.get-started-text {
+    margin: 35px 0 10px 0;
+    text-align: center;
+}
+
+#empty-container a {
+    display: block;
+    margin: 4px 0;
+}
+
+#operation-link-column-wrapper {
+    text-align: center;
+}
+/* EMPTY USERS */
+
+/* TRANSACTION TABLE */
+#transaction-wrapper {
+    display: none;
+}
+
+#transaction-wrapper.active {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#settings-wrapper {
+    display: none;
+}
+
+#settings-wrapper.active {
+    display: flex;
+    flex-direction: column;
+}
+
+#table-scroll-wrapper, #settings-scroll-wrapper {
+    overflow-y: auto;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.minus-sign {
+    font-size: 8px;
+    color: red;
+    padding-right: 2px;
+}
+
+table.table-container {
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.15);
+    background-color: #393939;
+    margin: 0 auto;
+    min-width: 788px;
+}
+
+table.table-container thead {
+    font-family: Lato-Bold;
+    font-size: 15px;
+    color: #00ad5f;
+    line-height: 1.4;
+    background-color: #2d2c2c;
+}
+
+table.table-container tbody {
+    font-family: Lato-Regular;
+    font-size: 15px;
+    color: #a5a5a5;
+    line-height: 1.4;
+    background-color: #151515;
+}
+
+table.table-container tbody td {
+    display: table-cell;
+    padding: 8px;
+}
+
+.number-column {
+    text-align: center;
+}
+
+#time-range {
+    color: #97a8ff;
+    text-align: center;
+    font-weight: bold;
+    font-size: 20px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+#total-wrapper, #save-wrapper {
+    display: flex;
+    width: 100%;
+    height: 70px;
+    font-size: 17px;
+    overflow: hidden;
+    white-space: nowrap;
+    justify-content: space-around;
+    margin-top: auto;
+    align-items: center;
+    border-top: #494949 solid 1px;
+}
+
+#save-wrapper {
+    border-top: #a5aea9 solid 1px;
+}
+/* TRANSACTION TABLE */
+
+/* SETTINGS */
+.settings-title {
+    text-align: center;
+    font-size: 20px;
+}
+
+.settings-description {
+    text-align: center;
+    font-style: italic;
+    font-size: 14px;
+    margin: 5px 0 10px;
+}
+
+#settings-date-range-wrapper {
+    text-align: center;
+}
+
+#settings-filter-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+#tax-wrapper {
+    text-align: center;
+}
+
+.business-tax {
+    width: 44px;
+    padding-right: 0;
+    min-height: 30px;
+    font-size: 16px;
+    line-height: 30px;
+}
+
+#transaction-filter-wrapper {
+    margin: 20px;
+}
+
+#start-date-wrapper {
+    margin-bottom: 20px;
+}
+/* SETTINGS */
+
+/*TEST*/
+.check-box-wrapper {
+    user-select: none;
+    cursor: pointer;
+	padding: 10px;
+}
+
+.check-box-wrapper span {
+	display: inline-block;
+	vertical-align: middle;
+	transform: translate3d(0, 0, 0);
+}
+
+.check-box-wrapper .check-box {
+	position: relative;
+    width: 18px;
+    background: #ffffff;
+    height: 18px;
+    border-radius: 3px;
+    transform: scale(1);
+    vertical-align: middle;
+    border: 1px solid #d1c9c9;
+    transition: all .2s ease;
+}
+
+.check-box-wrapper .check-box svg {
+	position: absolute;
+	top: 4px;
+	left: 3px;
+	fill: none;
+	stroke: #FFFFFF;
+	stroke-width: 2;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	stroke-dasharray: 16px;
+	stroke-dashoffset: 16px;
+	transition: all .3s ease;
+	transition-delay: .1s;
+	transform: translate3d(0, 0, 0);
+}
+
+.check-box-wrapper .check-box-label {
+	padding-left: 3px;
+}
+
+.check-box-wrapper:hover .check-box {
+	border-color: #506EEC;
+}
+
+.checkbox-input:checked + .check-box-wrapper .check-box {
+	background: #506EEC;
+	border-color: #506EEC;
+	animation: wave .4s ease;
+}
+
+.checkbox-input:checked + .check-box-wrapper .check-box svg {
+	stroke-dashoffset: 0;
+}
+
+.checkbox-input:checked + .check-box-wrapper .check-box:before {
+	transform: scale(3.5);
+	opacity: 0;
+	transition: all .6s ease;
+}
+
+@keyframes wave {
+	50% {
+		transform: scale(0.9);
+	}
+}
+/*TEST*/
