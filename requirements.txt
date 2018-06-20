@@ -5,3 +5,4 @@ mysqlclient==1.3.12
 bcrypt
 django-mysql==2.2.2
 python-escpos
+pandas==0.21.0

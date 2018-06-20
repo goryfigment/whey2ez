@@ -35,7 +35,7 @@ if DEBUG:
     HOST_PORT = '8000'
     BASE_URL = HTTPS + '://' + HOST_NAME + ':' + HOST_PORT
 else:
-    BASE_URL = 'https://www.whey2ez.com'
+    BASE_URL = 'https://whey2ez.pythonanywhere.com'
 
 # Application definition
 
