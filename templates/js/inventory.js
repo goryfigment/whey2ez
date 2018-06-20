@@ -176,7 +176,11 @@ $(document).ready(function() {
                 globals.inventory = response['inventory'];
             },
             error: function (response) {
-                console.log(JSON.stringify(response.responseJSON['error_msg']));
+                if(response.status && response.status == 403) {
+                    $('#add-column-wrapper').find('.error').text('Permission Denied').show();
+                } else {
+                    $('#add-column-wrapper').find('.error').text(response.responseText).show();
+                }
             }
         });
     });
@@ -209,7 +213,23 @@ $(document).ready(function() {
                 globals.inventory = response['inventory'];
             },
             error: function (response) {
-                console.log(JSON.stringify(response.responseJSON['error_msg']));
+                var $wrapper = $('#add-item-wrapper');
+
+                $wrapper.find('.error').each(function() {
+                    $(this).hide();
+                });
+
+                if(response.status && response.status == 403) {
+                    $wrapper.find('.error.permission').text('Permission Denied').show();
+                } else {
+                    var errorList = JSON.parse(response.responseText);
+                    for (var i = 0; i < errorList.length; i++) {
+                        var columnName = errorList[i][0];
+                        var errorMsg = errorList[i][1];
+
+                        $wrapper.find(".error[data-column='" + columnName + "']").text(errorMsg).show();
+                    }
+                }
             }
         });
     });
@@ -257,7 +277,11 @@ $(document).ready(function() {
                 globals.columns = response['columns']
             },
             error: function (response) {
-                console.log(JSON.stringify(response.responseJSON['error_msg']));
+                if(response.status && response.status == 403) {
+                    $('#edit-column-wrapper').find('.error').text('Permission Denied').show();
+                } else {
+                    $('#edit-column-wrapper').find('.error').text(response.responseText).show();
+                }
             }
         });
     });
@@ -267,7 +291,17 @@ $(document).ready(function() {
     //EDIT ITEM FUNCTIONS//
     $(document).on('click', '#operation-table.edit tbody tr', function () {
         var itemId = $(this).attr('data-id');
-        var item = globals.json_inventory[itemId];
+        var inventoryJson = globals.inventory;
+        var item = null;
+
+        for (var i = 0; i < inventoryJson.length; i++) {
+            var current_item = inventoryJson[i];
+            if (current_item[0] == itemId) {
+                item = current_item[1];
+                break;
+            }
+        }
+
         var $editStep2 = $('#edit-step-2');
 
         for (var key in item) {
@@ -322,7 +356,23 @@ $(document).ready(function() {
                 globals.inventory = response['inventory'];
             },
             error: function (response) {
-                console.log(JSON.stringify(response.responseJSON['error_msg']));
+                var $wrapper = $('#edit-item-wrapper');
+
+                $wrapper.find('.error').each(function() {
+                    $(this).hide();
+                });
+
+                if(response.status && response.status == 403) {
+                    $wrapper.find('.error.permission').text('Permission Denied').show();
+                } else {
+                    var errorList = JSON.parse(response.responseText);
+                    for (var i = 0; i < errorList.length; i++) {
+                        var columnName = errorList[i][0];
+                        var errorMsg = errorList[i][1];
+
+                        $wrapper.find(".error[data-column='" + columnName + "']").text(errorMsg).show();
+                    }
+                }
             }
         });
     });
@@ -375,7 +425,11 @@ $(document).ready(function() {
                 }
             },
             error: function (response) {
-                console.log(JSON.stringify(response.responseJSON['error_msg']));
+                if(response.status && response.status == 403) {
+                    $('#delete-column-wrapper').find('.error').text('Permission Denied').show();
+                } else {
+                    $('#delete-column-wrapper').find('.error').text(response.responseText).show();
+                }
             }
         });
     });
@@ -428,6 +482,25 @@ $(document).ready(function() {
                 $operationOverlay.removeClass('active');
                 $('#inventory-table [data-id="' + itemId + '"]').remove();
                 globals.inventory = response['inventory'];
+            },
+            error: function (response) {
+                var $wrapper = $('#delete-item-wrapper');
+
+                $wrapper.find('.error').each(function() {
+                    $(this).hide();
+                });
+
+                if(response.status && response.status == 403) {
+                    $wrapper.find('.error.permission').text('Permission Denied').show();
+                } else {
+                    var errorList = JSON.parse(response.responseText);
+                    for (var i = 0; i < errorList.length; i++) {
+                        var columnName = errorList[i][0];
+                        var errorMsg = errorList[i][1];
+
+                        $wrapper.find(".error[data-column='" + columnName + "']").text(errorMsg).show();
+                    }
+                }
             }
         });
     });
@@ -535,6 +608,13 @@ $(document).ready(function() {
                 $inventoryWrapper.append(inventoryTemplate(response));
                 globals.inventory = response['inventory'];
                 globals.columns = response['columns'];
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    $('#import-wrapper').find('.error').text('Permission Denied').show();
+                } else {
+                    $('#import-wrapper').find('.error').text(response.responseText).show();
+                }
             }
         });
     });
@@ -549,8 +629,9 @@ $(document).ready(function() {
     $(document).on('click', '#export-submit', function () {
         var fileType = $('#export-type-input').val();
         var exportLink = document.getElementById('export-download');
-        var inventory = globals.json_inventory;
+        var inventory = globals.inventory;
         var columns = globals.columns;
+        var valid = false;
 
         var inventoryJson = [];
 
@@ -558,39 +639,71 @@ $(document).ready(function() {
             inventoryJson.push(inventory[key]);
         }
 
-        if(fileType == 'csv') {
-            var csvFile = '';
-
-            for (var i = 0; i < columns.length; i++) {
-                if(i == columns.length - 1) {
-                    csvFile += columns[i] + '\r\n';
-                } else {
-                    csvFile += columns[i] + ',';
-                }
-            }
-
-            for (var p = 0; p < inventoryJson.length; p++) {
-                var currentRow = inventoryJson[p];
-                for (var c = 0; c < columns.length; c++) {
-                    if(c == columns.length - 1) {
-                        csvFile += '"' + currentRow[columns[c]] + '"\r\n';
-                    } else {
-                        csvFile += '"' + currentRow[columns[c]] + '",';
+        if(fileType == 'csv' || fileType == 'json') {
+            $.ajax({
+                headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
+                url: globals.base_url + '/inventory/export_submit/',
+                data: JSON.stringify({'columns': {}, 'inventory': {}, 'type': fileType}),
+                dataType: 'json',
+                type: "POST",
+                success: function (response) {
+                    valid = true;
+                    callback();
+                },
+                error: function (response) {
+                    if(response.status && response.status == 403) {
+                        $('#export-wrapper').find('.error').text('Permission Denied').show();
                     }
                 }
-            }
+            });
+        }
 
-            var blob = new Blob([csvFile], {type: 'text/csv;charset=utf-8;'});
-            var url = URL.createObjectURL(blob);
-            exportLink.setAttribute("href", url);
-            exportLink.setAttribute("download", "inventory.csv");
-            exportLink.click();
-        } else if(fileType == 'json') {
+        if(fileType == 'json') {
             var tab = window.open();
-            tab.document.open();
-            tab.document.write('<pre style="background:#000; color:#fff; margin: -8px;">' + JSON.stringify({'inventory': inventoryJson}, null, 2) + '</pre>');
-            tab.document.close();
-        } else if(fileType == 'excel') {
+        }
+
+        function callback() {
+            if (valid && fileType == 'csv') {
+                var csvFile = '';
+
+                for (var i = 0; i < columns.length; i++) {
+                    if (i == columns.length - 1) {
+                        csvFile += columns[i] + '\r\n';
+                    } else {
+                        csvFile += columns[i] + ',';
+                    }
+                }
+
+                for (var p = 0; p < inventoryJson.length; p++) {
+                    var currentRow = inventoryJson[p][1];
+                    for (var c = 0; c < columns.length; c++) {
+                        if (c == columns.length - 1) {
+                            csvFile += '"' + currentRow[columns[c]] + '"\r\n';
+                        } else {
+                            csvFile += '"' + currentRow[columns[c]] + '",';
+                        }
+                    }
+                }
+
+                var blob = new Blob([csvFile], {type: 'text/csv;charset=utf-8;'});
+                var url = URL.createObjectURL(blob);
+                exportLink.setAttribute("href", url);
+                exportLink.setAttribute("download", "inventory.csv");
+                exportLink.click();
+            } else if (valid && fileType == 'json') {
+                var newJsonInventory = [];
+
+                for (var j = 0; j < inventoryJson.length; j++) {
+                    newJsonInventory.push(inventoryJson[j][1])
+                }
+
+                tab.document.open();
+                tab.document.write('<pre style="background:#000; color:#fff; margin: -8px;">' + JSON.stringify({'inventory': newJsonInventory}, null, 2) + '</pre>');
+                tab.document.close();
+            }
+        }
+
+        if(fileType == 'excel') {
             var xmlHttp = createXmlHttpRequestObject();
             xmlHttp.open('POST', '/inventory/export_submit/', true);
             xmlHttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
@@ -604,9 +717,11 @@ $(document).ready(function() {
                     exportLink.setAttribute("href", window.URL.createObjectURL(new Blob([blob], {type: contentTypeHeader})));
                     exportLink.setAttribute("download", "inventory.xlsx");
                     exportLink.click();
-               }
+                } else if (xmlHttp.status === 403) {
+                    $('#export-wrapper').find('.error').text('Permission Denied').show();
+                }
            };
-           xmlHttp.send(JSON.stringify({'columns': columns, 'inventory': inventoryJson}));
+           xmlHttp.send(JSON.stringify({'columns': columns, 'inventory': inventoryJson, 'type': fileType}));
         }
     });
     //EXPORT FILE FUNCTIONS//
@@ -616,7 +731,7 @@ $(document).ready(function() {
         popupHandler(e, {type: "drop_table"});
     });
 
-    $(document).on('click', '#delete-table-submit', function () {
+    $(document).on('click', '#drop-table-submit', function () {
         var $activeInventory = $('.establishment.active');
         var postData = {
             drop_table: true,
@@ -640,6 +755,11 @@ $(document).ready(function() {
                 var $inventoryWrapper = $('#inventory-wrapper');
                 $inventoryWrapper.empty();
                 $inventoryWrapper.append(inventoryTemplate({'columns': globals.columns, 'inventory': globals.inventory}));
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    $('#drop-table-wrapper').find('.error').text('Permission Denied').show();
+                }
             }
         });
     });
@@ -649,7 +769,7 @@ $(document).ready(function() {
     //RECIEVED FUNCTIONS//
     $(document).on('click', '#receiving-button', function (e) {
         if(!globals.link_columns['quantity']){
-            popupHandler(e, {type: "cost", columns: globals.columns, link_columns: globals.link_columns}, operationTemplate);
+            popupHandler(e, {type: "quantity", columns: globals.columns, link_columns: globals.link_columns}, operationTemplate);
         } else if(!globals.link_columns['name']) {
             popupHandler(e, {type: "name", columns: globals.columns, link_columns: globals.link_columns}, operationTemplate);
         } else {
@@ -711,6 +831,13 @@ $(document).ready(function() {
                 $logWrapper.append(itemLogTemplate({'item_log': globals.item_log}));
 
                 tabHandler($('#log-tab'));
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    $('#received-step-2').find('.error').text('Permission Denied').show();
+                } else {
+                    $('#received-step-2').find('.error').text(response.responseText).show();
+                }
             }
         });
     });
@@ -780,6 +907,13 @@ $(document).ready(function() {
                 $logWrapper.append(itemLogTemplate({'item_log': globals.item_log}));
 
                 tabHandler($('inventory-tab'));
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    $('#damaged-step-2').find('.error').text('Permission Denied').show();
+                } else {
+                    $('#damaged-step-2').find('.error').text(response.responseText).show();
+                }
             }
         });
     });
@@ -849,6 +983,13 @@ $(document).ready(function() {
                 $logWrapper.append(itemLogTemplate({'item_log': globals.item_log}));
 
                 tabHandler($('inventory-tab'));
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    $('#reset-cost-step-2').find('.error').text('Permission Denied').show();
+                } else {
+                    $('#reset-cost-step-2').find('.error').text(response.responseText).show();
+                }
             }
         });
     });
@@ -856,8 +997,8 @@ $(document).ready(function() {
 
     //RESET PRICE FUNCTIONS//
     $(document).on('click', '#reset-price-button', function (e) {
-        if(!globals.link_columns['cost']){
-            popupHandler(e, {type: "cost", columns: globals.columns, link_columns: globals.link_columns}, operationTemplate);
+        if(!globals.link_columns['price']){
+            popupHandler(e, {type: "price", columns: globals.columns, link_columns: globals.link_columns}, operationTemplate);
         } else if(!globals.link_columns['name']) {
             popupHandler(e, {type: "name", columns: globals.columns, link_columns: globals.link_columns}, operationTemplate);
         } else {
@@ -918,6 +1059,13 @@ $(document).ready(function() {
                 $logWrapper.append(itemLogTemplate({'item_log': globals.item_log}));
 
                 tabHandler($('inventory-tab'));
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    $('#reset-price-step-2').find('.error').text('Permission Denied').show();
+                } else {
+                    $('#reset-price-step-2').find('.error').text(response.responseText).show();
+                }
             }
         });
     });
@@ -977,7 +1125,23 @@ $(document).ready(function() {
                 var $inventoryWrapper = $('#inventory-wrapper');
                 $inventoryWrapper.empty();
                 $inventoryWrapper.append(inventoryTemplate({'columns': globals.columns, 'inventory': globals.inventory}));
-                //console.log(JSON.stringify(response));
+
+                var $settingResult = $('#settings-result');
+                $settingResult.removeClass('denied');
+                $settingResult.addClass('success');
+                $settingResult.text('Saved!');
+                $settingResult.show();
+                $settingResult.fadeOut(2000);
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    var $settingResult = $('#settings-result');
+                    $settingResult.removeClass('success');
+                    $settingResult.addClass('denied');
+                    $settingResult.text('Permission Denied');
+                    $settingResult.show();
+                    $settingResult.fadeOut(2000);
+                }
             }
         });
     });
@@ -1010,12 +1174,11 @@ $(document).ready(function() {
                 globals.link_columns = response;
             },
             error: function (response) {
-                console.log(JSON.stringify(response.responseJSON['error_msg']));
+                if(response.status && response.status == 403) {
+                    $('#link-column-wrapper').find('.error').text('Permission Denied').show();
+                }
             }
         });
     });
     // LINK COLUMN //
-
-
-
 });

@@ -65,7 +65,7 @@ def transaction_total(transactions):
         trans['date'] = epoch_strftime(trans['date'], '%b %#d, %Y %I:%M%p')
 
         for item in trans['items']['list']:
-            item_discount += item['discount']
+            item_discount += float(item['discount'])
 
         # Calculations
         trans_tax = round(float(trans['tax'])*float(trans['subtotal'])*100)/100

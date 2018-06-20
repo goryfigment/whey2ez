@@ -1,5 +1,34 @@
 webpackJsonp([3],[
 /* 0 */
+/***/ (function(module, exports) {
+
+module.exports = function(v1, operator, v2, options) {
+    switch (operator) {
+        case '==':
+            return (v1 == v2) ? options.fn(this) : options.inverse(this);
+        case '===':
+            return (v1 === v2) ? options.fn(this) : options.inverse(this);
+        case '<':
+            return (v1 < v2) ? options.fn(this) : options.inverse(this);
+        case '<=':
+            return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+        case '>':
+            return (v1 > v2) ? options.fn(this) : options.inverse(this);
+        case '>=':
+            return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+        case '&&':
+            return (v1 && v2) ? options.fn(this) : options.inverse(this);
+        case '||':
+            return (v1 || v2) ? options.fn(this) : options.inverse(this);
+        case '!=':
+            return (v1 != v2) ? options.fn(this) : options.inverse(this);
+        default:
+            return options.inverse(this);
+    }
+};
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -130,35 +159,6 @@ function appendContextPath(contextPath, id) {
 
 
 /***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-module.exports = function(v1, operator, v2, options) {
-    switch (operator) {
-        case '==':
-            return (v1 == v2) ? options.fn(this) : options.inverse(this);
-        case '===':
-            return (v1 === v2) ? options.fn(this) : options.inverse(this);
-        case '<':
-            return (v1 < v2) ? options.fn(this) : options.inverse(this);
-        case '<=':
-            return (v1 <= v2) ? options.fn(this) : options.inverse(this);
-        case '>':
-            return (v1 > v2) ? options.fn(this) : options.inverse(this);
-        case '>=':
-            return (v1 >= v2) ? options.fn(this) : options.inverse(this);
-        case '&&':
-            return (v1 && v2) ? options.fn(this) : options.inverse(this);
-        case '||':
-            return (v1 || v2) ? options.fn(this) : options.inverse(this);
-        case '!=':
-            return (v1 != v2) ? options.fn(this) : options.inverse(this);
-        default:
-            return options.inverse(this);
-    }
-};
-
-/***/ }),
 /* 2 */,
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -242,7 +242,7 @@ exports.HandlebarsEnvironment = HandlebarsEnvironment;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 var _exception = __webpack_require__(3);
 
@@ -372,7 +372,7 @@ var _handlebarsException = __webpack_require__(3);
 
 var _handlebarsException2 = _interopRequireDefault(_handlebarsException);
 
-var _handlebarsUtils = __webpack_require__(0);
+var _handlebarsUtils = __webpack_require__(1);
 
 var Utils = _interopRequireWildcard(_handlebarsUtils);
 
@@ -514,7 +514,7 @@ function registerDefaultHelpers(instance) {
 
 exports.__esModule = true;
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 exports['default'] = function (instance) {
   instance.registerHelper('blockHelperMissing', function (context, options) {
@@ -563,7 +563,7 @@ exports.__esModule = true;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 var _exception = __webpack_require__(3);
 
@@ -693,7 +693,7 @@ module.exports = exports['default'];
 
 exports.__esModule = true;
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 exports['default'] = function (instance) {
   instance.registerHelper('if', function (conditional, options) {
@@ -781,7 +781,7 @@ module.exports = exports['default'];
 
 exports.__esModule = true;
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 exports['default'] = function (instance) {
   instance.registerHelper('with', function (context, options) {
@@ -844,7 +844,7 @@ function registerDefaultDecorators(instance) {
 
 exports.__esModule = true;
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 exports['default'] = function (instance) {
   instance.registerDecorator('inline', function (fn, props, container, options) {
@@ -880,7 +880,7 @@ module.exports = exports['default'];
 
 exports.__esModule = true;
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 var logger = {
   methodMap: ['debug', 'info', 'warn', 'error'],
@@ -969,7 +969,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 var Utils = _interopRequireWildcard(_utils);
 
@@ -1368,11 +1368,30 @@ function upAndDownPopups(keyCode, $popup, $options, scroll) {
     }
 }
 
+function currencyFormat(cents) {
+    cents = Math.round(cents);
+
+    if (cents == 0) {
+        return cents.toFixed(2);
+    } else if(cents < 100){
+        if (cents > 0 || cents > -100) {
+            return (cents/100).toFixed(2);
+        } else {
+            cents = cents.toString();
+            return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
+        }
+    }else {
+        cents = cents.toString();
+        return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
+    }
+}
+
 module.exports = {
     numberCommaFormat: numberCommaFormat,
     replaceAll: replaceAll,
     scrollToElement: scrollToElement,
-    upAndDownPopups: upAndDownPopups
+    upAndDownPopups: upAndDownPopups,
+    currencyFormat: currencyFormat
 };
 
 /***/ }),
@@ -1418,21 +1437,23 @@ module.exports = {
 /* 64 */,
 /* 65 */,
 /* 66 */,
-/* 67 */
+/* 67 */,
+/* 68 */,
+/* 69 */,
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(25);
-__webpack_require__(68);
+__webpack_require__(71);
 __webpack_require__(9);
 
 var $ = __webpack_require__(6);
 var helper = __webpack_require__(24);
 
 //handlebars
-var searchItemTemplate = __webpack_require__(69);
-var resultItemTemplate = __webpack_require__(70);
-var discountItemTemplate = __webpack_require__(71);
-var receiptTemplate = __webpack_require__(74);
+var searchItemTemplate = __webpack_require__(72);
+var resultItemTemplate = __webpack_require__(73);
+var discountItemTemplate = __webpack_require__(74);
 
 
 function init() {
@@ -1456,13 +1477,35 @@ function calculateTotal() {
         subtotal += parseFloat($(this).find('.transaction-price').text());
     });
 
-    var tax = Math.round(subtotal*taxRate*100)/100;
-    var total = subtotal + tax;
+    subtotal = helper.currencyFormat(subtotal*100);
+
+
+
+    var tax = helper.currencyFormat((Math.round(subtotal*taxRate*100)/100)*100);
+    var total = helper.currencyFormat(subtotal*100 + tax*100);
 
     var $receiptResultWrapper = $('#receipt-result-wrapper');
-    $receiptResultWrapper.find('#subtotal').html(subtotal.toFixed(2));
-    $receiptResultWrapper.find('#tax').html(tax.toFixed(2));
-    $receiptResultWrapper.find('#total').html(total.toFixed(2));
+    $receiptResultWrapper.find('#subtotal').html(subtotal);
+    $receiptResultWrapper.find('#tax').html(tax);
+    $receiptResultWrapper.find('#total').html(total);
+}
+
+function getReceipt(data) {
+    $.ajax({
+        headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
+        url: globals.base_url + '/transaction/receipt/',
+        data: JSON.stringify({'transaction': data}),
+        dataType: 'json',
+        type: "POST",
+        success: function (response) {
+            if(response['success']){
+                console.log(JSON.stringify(response));
+            }
+        },
+        error: function (response) {
+            alert('ERROR CREATING RECEIPT')
+        }
+    });
 }
 
 $(document).ready(function() {
@@ -1549,9 +1592,9 @@ $(document).ready(function() {
         $searchPopup.removeClass('active');
         $searchInput.val(itemData['name']);
 
-        var generatedHtml = resultItemTemplate(itemData);
-
-        $resultContainer.append(generatedHtml);
+        var $generatedHtml = $(resultItemTemplate(itemData));
+        $generatedHtml.data('item', itemData);
+        $resultContainer.append($generatedHtml);
 
         calculateTotal();
     });
@@ -1588,9 +1631,36 @@ $(document).ready(function() {
         var $quantityInput = $(this);
         var $transactionItem = $quantityInput.closest('.transaction-item');
         var $transactionPrice = $transactionItem.find('.transaction-price');
-        var price = parseFloat($quantityInput.attr('data-each'))*parseInt($quantityInput.val());
+        var $discountItem = $transactionItem.find('.discount-item');
+        var $eachText = $quantityInput.siblings('.each-text');
+        var quantity = parseInt($quantityInput.val());
+        var itemSubtotal = (parseFloat($transactionItem.data('item')['price'])*100)*quantity;
 
-        $transactionPrice.html(price.toFixed(2));
+        if (quantity == 0) {
+            quantity = 1
+        }
+
+        if($discountItem.attr('data-type') == 'percent') {
+
+            var discount = parseFloat($discountItem.attr('data-percent'))/100 * itemSubtotal;
+            $discountItem.find('.discount').text(helper.currencyFormat(discount)+'-');
+            var itemTotal = itemSubtotal - discount;
+            var eachDiscountedItem = helper.currencyFormat(itemTotal/quantity);
+            $quantityInput.attr('data-each', eachDiscountedItem);
+            $eachText.text('@ ' + eachDiscountedItem + ' ea)');
+        } else if($discountItem.attr('data-type') == 'dollar') {
+            discount = parseFloat($discountItem.find('.discount-delete').attr('data-discount'))*100;
+            itemTotal = itemSubtotal - discount;
+            eachDiscountedItem = helper.currencyFormat(Math.ceil(itemTotal/quantity));
+            $quantityInput.attr('data-each', eachDiscountedItem);
+            $eachText.text('@ ' + eachDiscountedItem + ' ea)');
+        } else {
+            itemTotal = itemSubtotal;
+        }
+
+        var price = helper.currencyFormat(itemTotal);
+
+        $transactionPrice.text(helper.currencyFormat(itemTotal));
         calculateTotal();
     });
 
@@ -1611,6 +1681,13 @@ $(document).ready(function() {
         var $discountSubmitWrapper = $discountWrapper.siblings('#discount-submit-wrapper');
         var $transactionPrice = $transactionItem.find('.transaction-price');
         var transactionPrice = parseFloat($transactionPrice.text());
+        var $quantityInput = $transactionItem.find('.quantity-input');
+        var quantity = parseInt($quantityInput.val());
+        if(quantity == 0){
+            quantity = 1;
+        }
+
+        var $eachText = $quantityInput.siblings('.each-text');
 
         if(moneyValue != '') {
             if(numberRegex.test(moneyValue)) {
@@ -1619,7 +1696,12 @@ $(document).ready(function() {
                 $discountButton.removeClass('active');
                 $discountSubmitWrapper.removeClass('active');
 
-                $transactionPrice.text((transactionPrice - discount).toFixed(2));
+                var itemTotalDiscounted = transactionPrice*100 - discount*100;
+                var eachDiscountedItem = helper.currencyFormat(itemTotalDiscounted/quantity);
+
+                $quantityInput.attr('data-each', eachDiscountedItem);
+                $eachText.text('@ ' + eachDiscountedItem + ' ea)');
+                $transactionPrice.text(helper.currencyFormat(itemTotalDiscounted));
                 calculateTotal();
             } else {
                 alert('Must be a number!')
@@ -1631,7 +1713,12 @@ $(document).ready(function() {
                 $discountButton.removeClass('active');
                 $discountSubmitWrapper.removeClass('active');
 
-                $transactionPrice.text((transactionPrice - discount).toFixed(2));
+                itemTotalDiscounted = transactionPrice*100 - discount*100;
+                eachDiscountedItem = helper.currencyFormat(itemTotalDiscounted/quantity);
+
+                $quantityInput.attr('data-each', eachDiscountedItem);
+                $eachText.text('@ ' + eachDiscountedItem + ' ea)');
+                $transactionPrice.text(helper.currencyFormat(itemTotalDiscounted));
                 calculateTotal();
             } else {
                 alert('Must be a number!')
@@ -1653,9 +1740,23 @@ $(document).ready(function() {
         var $transactionPrice = $transactionItem.find('.transaction-price');
         var price = parseFloat($transactionPrice.text());
         var discount = parseFloat($discountDelete.attr('data-discount'));
+        var $quantityInput = $transactionItem.find('.quantity-input');
+        var $eachText = $quantityInput.siblings('.each-text');
+        var quantity = parseInt($quantityInput.val());
+        if(quantity == 0){
+            quantity = 1;
+        }
+
 
         $discountDelete.closest('.discount-item').remove();
-        $transactionPrice.text((price + discount).toFixed(2));
+        var itemSubtotal = price*100 + discount*100;
+        var eachItem = helper.currencyFormat(itemSubtotal/quantity);
+
+        $quantityInput.attr('data-each', eachItem);
+        $eachText.text('@ ' + eachItem + ' ea)');
+
+        $transactionPrice.text(helper.currencyFormat(itemSubtotal));
+
         calculateTotal();
 
         $transactionItem.find('.discount-button').addClass('active');
@@ -1664,12 +1765,14 @@ $(document).ready(function() {
     $(document).on('click', '#transaction-submit-button', function () {
         var storeId = $(this).data('id');
         var storeType = $(this).data('type');
-        alert(storeType)
         var paymentType = $('.payment-type.selected').attr('data-payment_type');
         var memo = $('#memo-input').val().trim();
         var $receiptResultWrapper = $('#receipt-result-wrapper');
         var subtotal = $receiptResultWrapper.find('#subtotal').text();
         var tax = $receiptResultWrapper.find('#tax-rate').data('tax');
+        var taxRate = $receiptResultWrapper.find('#tax-rate').text();
+        var taxTotal = $receiptResultWrapper.find('#tax').text();
+        var total = $receiptResultWrapper.find('#total').text();
         var items = {};
 
         $('.transaction-item').each(function() {
@@ -1678,7 +1781,7 @@ $(document).ready(function() {
             var itemId = $transactionItem.attr('data-id');
             var itemName = $transactionItem.find('.transaction-name').text();
             var discount =  parseFloat($(this).find('.discount').text().replace('-', ''));
-            var price = $(this).find('.quantity-input').attr('data-each');
+            var price = $transactionItem.data('item')['price'];
             if (itemId in items) {
                 items[itemId]['quantity'] +=  quantity;
                 items[itemId]['discount'] +=  discount;
@@ -1691,6 +1794,11 @@ $(document).ready(function() {
             }
         });
 
+        for (var key in items) {
+            var current_item = items[key];
+            current_item['discount'] = helper.currencyFormat(parseFloat(current_item['discount'])*100);
+        }
+
         var postData = {
             'payment_type': paymentType,
             'subtotal': subtotal,
@@ -1698,7 +1806,11 @@ $(document).ready(function() {
             'memo': memo,
             'items': items,
             'store_type': storeType,
-            'store_id': storeId
+            'store_id': storeId,
+            'tax_rate': taxRate,
+            'tax_total': taxTotal,
+            'total': total,
+            'tax_percent': globals.tax_percent
         };
 
         $.ajax({
@@ -1708,61 +1820,41 @@ $(document).ready(function() {
             dataType: 'json',
             type: "POST",
             success: function (response) {
-                if(response['success']){
-                    console.log(JSON.stringify(response));
-                    alert('Transaction Created!');
+                console.log(JSON.stringify(response));
 
-                    var $receiptSection = $('#receipt-section');
-                    $receiptSection.empty();
-                    $receiptSection.append(receiptTemplate({'tax_percent': globals.tax_percent}));
-                    $receiptSection.find('#tax-rate').data('tax', globals.tax);
-
-                    buildMessage();
-
-
-                    function buildMessage() {
-                        //Create an ePOS-Print Builder object
-                        var builder = new epson.ePOSBuilder();
-                        // Create a print document
-                        builder.addTextLang('en');
-                        builder.addTextSmooth(true);
-                        builder.addTextFont(builder.FONT_A);
-                        builder.addTextSize(3, 3);
-                        builder.addText('Hello,\tWorld!\n');
-                        builder.addCut(builder.CUT_FEED);
-                        // Acquire the print document
-                        var request = builder.toString();
-                        //alert(request);
-
-                        //Set the end point address
-                        var address = 'http://192.168.22.205/cgi-bin/epos/service.cgi?devid=local_printer&timeout=10000';
-                        // Create an ePOS-Print object
-                        var epos = new epson.ePOSPrint(address);
-                        // Send the print document
-                        epos.send(request);
-                    }
-
-
-
-
-                } else {
-                    alert('ERROR CREATING TRANSACTION')
+                for (var key in postData['items']) {
+                    var current_item = items[key];
+                    current_item['paid'] = helper.currencyFormat(parseFloat(current_item['price'])*100 - parseFloat(current_item['discount'])*100);
                 }
 
+                getReceipt(postData);
 
+                alert('Transaction Created!');
+
+                var $receiptSection = $('#receipt-section');
+                $receiptSection.empty();
+                $receiptSection.append(receiptTemplate({'tax_percent': globals.tax_percent}));
+                $receiptSection.find('#tax-rate').data('tax', globals.tax);
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    alert('Permission Denied');
+                } else {
+                    alert(response.responseText);
+                }
             }
         });
     });
 });
 
 /***/ }),
-/* 68 */
+/* 71 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 69 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(4);
@@ -1776,7 +1868,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,"
 },"useData":true});
 
 /***/ }),
-/* 70 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(4);
@@ -1794,13 +1886,13 @@ module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,"
     + alias4(((helper = (helper = helpers.barcode || (depth0 != null ? depth0.barcode : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"barcode","hash":{},"data":data}) : helper)))
     + " (<input class=\"quantity-input\" type=\"number\" value=\"1\" min=\"1\" data-each=\""
     + alias4(((helper = (helper = helpers.price || (depth0 != null ? depth0.price : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"price","hash":{},"data":data}) : helper)))
-    + "\" /> @ "
+    + "\" /> <span class=\"each-text\">@ "
     + alias4(((helper = (helper = helpers.price || (depth0 != null ? depth0.price : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"price","hash":{},"data":data}) : helper)))
-    + " ea)</div>\r\n    <div class=\"discount-wrapper\">\r\n        <div class=\"discount\">0.00</div>\r\n    </div>\r\n    <div id=\"discount-submit-wrapper\">\r\n        $ <input class=\"discount-money-input\" type=\"text\" placeholder=\"0.00\">   or\r\n        <input class=\"discount-percent-input\" type=\"text\" placeholder=\"00\">% off\r\n        <span class=\"discount-submit\"><i class=\"fas fa-check\"></i></span>\r\n        <span class=\"discount-cancel\"><i class=\"fas fa-ban\"></i></span>\r\n    </div>\r\n    <div class=\"discount-button active\"><span class=\"discount-plus-icon\"><i class=\"fas fa-plus\"></i></span> Add Discount</div>\r\n</div>";
+    + " ea)</span></div>\r\n    <div class=\"discount-wrapper\">\r\n        <div class=\"discount\">0.00</div>\r\n    </div>\r\n    <div id=\"discount-submit-wrapper\">\r\n        $ <input class=\"discount-money-input\" type=\"text\" placeholder=\"0.00\">   or\r\n        <input class=\"discount-percent-input\" type=\"text\" placeholder=\"00\">% off\r\n        <span class=\"discount-submit\"><i class=\"fas fa-check\"></i></span>\r\n        <span class=\"discount-cancel\"><i class=\"fas fa-ban\"></i></span>\r\n    </div>\r\n    <div class=\"discount-button active\"><span class=\"discount-plus-icon\"><i class=\"fas fa-plus\"></i></span> Add Discount</div>\r\n</div>";
 },"useData":true});
 
 /***/ }),
-/* 71 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(4);
@@ -1817,11 +1909,11 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=container.lambda, alias3=container.escapeExpression;
 
   return "<div class=\"discount-item\" data-type=\""
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","dollar",{"name":"ifCond","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","dollar",{"name":"ifCond","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
     + "\" data-percent=\""
     + alias3(alias2((depth0 != null ? depth0.percent : depth0), depth0))
     + "\">\r\n    <span>Discount "
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","percent",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","percent",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "</span>\r\n    <span class=\"discount\">"
     + alias3(alias2((depth0 != null ? depth0.total : depth0), depth0))
     + "-</span>\r\n    <span class=\"discount-delete\" data-discount=\""
@@ -1829,21 +1921,5 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + "\"><i class=\"fas fa-ban\"></i></span>\r\n</div>";
 },"useData":true});
 
-/***/ }),
-/* 72 */,
-/* 73 */,
-/* 74 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Handlebars = __webpack_require__(4);
-function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
-module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    var helper;
-
-  return "<div id=\"receipt-details\">\r\n    <div id=\"receipt-header\">Receipt</div>\r\n</div>\r\n\r\n<div id=\"receipt-item-container\"></div>\r\n\r\n<div id=\"receipt-result-wrapper\">\r\n    <div id=\"subtotal-wrapper\"><span class=\"receipt-subtitle\">Subtotal</span><span id=\"subtotal\">0.00</span></div>\r\n    <div id=\"tax-wrapper\"><span class=\"receipt-subtitle\">Tax</span><span id=\"tax-rate\">("
-    + container.escapeExpression(((helper = (helper = helpers.tax_percent || (depth0 != null ? depth0.tax_percent : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"tax_percent","hash":{},"data":data}) : helper)))
-    + "%)</span><span id=\"tax\">0.00</span></div>\r\n    <div id=\"total-wrapper\"><span class=\"receipt-subtitle\">Total</span><span id=\"total\">0.00</span></div>\r\n</div>\r\n";
-},"useData":true});
-
 /***/ })
-],[67]);
+],[70]);

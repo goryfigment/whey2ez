@@ -3,8 +3,7 @@
 }
 
 #main-wrapper {
-    margin: 20px;
-    height: calc(100% - 40px);
+    padding-top: 20px;
 }
 
 #create-transaction-title {

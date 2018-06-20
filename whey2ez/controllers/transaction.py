@@ -1,11 +1,11 @@
 import json, re, time
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.forms.models import model_to_dict
-import whey2ez.modules.checker as checker
 from whey2ez.models import Transaction
 from whey2ez.modules.base import transaction_name_regex, transaction_total
 from whey2ez.decorators import login_required, user_permission, data_required
 from whey2ez.modules.base import get_boss, get_establishment
+from whey2ez.modules.receipt_printer import receipt_printer
 
 
 @login_required
@@ -54,11 +54,13 @@ def create_transaction(request):
     store_type = request.BODY['store_type']
     store_id = request.BODY['store_id']
     establishment = get_establishment(store_id, store_type, current_boss)
-
     user_inventory = establishment.inventory
     quantity_column = establishment.link_columns['quantity']
     cost_column = establishment.link_columns['cost']
     transaction_items = request.BODY['items']
+
+    if not len(transaction_items):
+        return HttpResponseBadRequest('Must have at least one item per transaction.', 'application/json')
 
     # If cost column is linked then add cost to items
     if cost_column:
@@ -113,16 +115,18 @@ def create_transaction(request):
 @data_required(['start_time', 'end_time'], 'GET')
 def get_transaction(request):
     current_user = request.user
-
+    current_boss = get_boss(current_user)
     start_time = request.GET['start_time']
     end_time = request.GET['end_time']
 
-    # Check if user is a boss
-    if current_user.boss:
-        transactions = list(Transaction.objects.filter(boss=current_user.boss, date__range=(start_time, end_time)).order_by('-date').values())
+    if str(start_time) == '*':
+        transactions = list(Transaction.objects.filter(boss=current_boss).order_by('-date').values())
+        start_time = '*'
+        end_time = '*'
     else:
-        transactions = list(Transaction.objects.filter(boss=current_user.employee.boss_id, date__range=(start_time, end_time)).order_by('-date').values())
-    ######
+        transactions = list(Transaction.objects.filter(boss=current_boss, date__range=(start_time, end_time)).order_by('-date').values())
+        start_time = time.strftime('%b %#d, %Y %#I:%M%p', time.localtime(int(start_time)))
+        end_time = time.strftime('%b %#d, %Y %#I:%M%p', time.localtime(int(end_time)))
 
     # ADD DATE TO TRANSACTION ITEMS & CALCULATE TOTAL
     total_data = transaction_total(transactions)
@@ -130,8 +134,8 @@ def get_transaction(request):
     return JsonResponse({
         'transactions': total_data['transactions'],
         'total': total_data['total'],
-        'start_time': time.strftime('%b %#d, %Y %#I:%M%p', time.localtime(int(start_time))),
-        'end_time': time.strftime('%b %#d, %Y %#I:%M%p', time.localtime(int(end_time))),
+        'start_time': start_time,
+        'end_time': end_time
     }, safe=False)
 
 
@@ -153,6 +157,7 @@ def save_settings(request):
 
     user_settings.transaction_filter['filter'] = settings['filter']
     user_settings.date_range = settings['date_range']
+    user_settings.start_time = settings['start_time']
 
     user_settings.save()
     user_business.save()
@@ -174,3 +179,32 @@ def save_settings(request):
     #     current_store['tax'] = str(float(current_store['tax'])*100)
 
     return JsonResponse({'business_tax': user_business.tax, 'transaction_settings': model_to_dict(user_settings)}, safe=False)
+
+
+@login_required
+@data_required(['transaction'], 'BODY')
+def get_receipt(request):
+    current_user = request.user
+    current_boss = get_boss(current_user)
+
+    # Print receipt
+    receipt_printer(current_boss.settings, request.BODY['transaction'])
+
+    return JsonResponse({'success': True}, safe=False)
+
+
+@login_required
+@user_permission('')
+@data_required(['ip_address', 'header', 'footer'], 'BODY')
+def save_receipt_settings(request):
+    current_user = request.user
+    current_boss = get_boss(current_user)
+    user_settings = current_boss.settings
+
+    user_settings.ip_address = request.BODY['ip_address']
+    user_settings.header = request.BODY['header']
+    user_settings.footer = request.BODY['footer']
+
+    user_settings.save()
+
+    return JsonResponse({'transaction_settings': model_to_dict(user_settings)}, safe=False)

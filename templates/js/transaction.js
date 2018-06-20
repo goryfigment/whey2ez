@@ -5,6 +5,7 @@ require('./../library/fontawesome/fontawesome.js');
 //handlebars
 var transactionTemplate = require('./../handlebars/transaction/transaction.hbs');
 var transactionOperationTemplate = require('./../handlebars/transaction/transaction_operation.hbs');
+var receiptSettingsTemplate = require('./../handlebars/transaction/receipt_settings.hbs');
 
 //libraries
 var $ = require('jquery');
@@ -12,7 +13,29 @@ var helper = require('./../js/helpers.js');
 require('./../library/calendar/calendar.js');
 
 function init() {
-    $('[value="' + globals.date_range + '"]').prop('selected', true);
+    //Start Date
+    var d1 = new Date();
+    d1.setHours(globals.start_time, 0, 0, 0);
+
+    //End Date
+    var d2 = new Date();
+    d2.setHours(globals.start_time, 0, 0, 0);
+    d2.setDate(d1.getDate() + 1);
+
+    if (globals.date_range == '7') {
+        d1.setDate(d2.getDate() - 7);
+        getTransactionReport(d1.valueOf()/1000, d2.valueOf()/1000 - 1);
+    } else if(globals.date_range == '*') {
+        d1 = '*';
+        getTransactionReport(d1, d2);
+    } else {
+        getTransactionReport(d1.valueOf()/1000, d2.valueOf()/1000 - 1);
+    }
+
+    $('#receipt-wrapper').append(receiptSettingsTemplate(globals.receipt_settings));
+
+    $('#date-start-input [value="' + globals.start_time + '"]').prop('selected', true);
+    $('#date-range-input [value="' + globals.date_range + '"]').prop('selected', true);
 }
 
 function tabHandler($clickedTab) {
@@ -34,8 +57,8 @@ function popupHandler(e, popupData) {
 
 function getTransactionReport(start_time, end_time) {
     var postData = {
-        'start_time': Math.ceil(start_time.valueOf()/1000),
-        'end_time': Math.ceil(end_time.valueOf()/1000)
+        'start_time': start_time,
+        'end_time': end_time
     };
 
     $.ajax({
@@ -177,7 +200,7 @@ $(document).ready(function() {
         var firstDate = new Date(firstDateString);
         var lastDate = new Date(lastDateString);
 
-        getTransactionReport(firstDate, lastDate);
+        getTransactionReport(firstDate.valueOf()/1000, lastDate.valueOf()/1000);
 
         $calendarWrapper.find('#calendar-exit').click();
     });
@@ -190,6 +213,7 @@ $(document).ready(function() {
         var storeTax = {};
 
         var dateRange = $('#date-range-input').val();
+        var startTime = $('#date-start-input').val();
 
         $('.filter-input:checked').each(function() {
             filter.push($(this).attr('data-name'));
@@ -209,7 +233,8 @@ $(document).ready(function() {
             'settings': {
                 'date_range': dateRange,
                 'filter': filter,
-                'tax': businessTax
+                'tax': businessTax,
+                'start_time': startTime
             },
             'store_tax': storeTax
         };
@@ -222,9 +247,185 @@ $(document).ready(function() {
             type: "POST",
             success: function (response) {
                 //console.log(JSON.stringify(response));
+
+                var $settingResult = $('#settings-result');
+                $settingResult.removeClass('denied');
+                $settingResult.addClass('success');
+                $settingResult.text('Saved!');
+                $settingResult.show();
+                $settingResult.fadeOut(2000);
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    var $settingResult = $('#settings-result');
+                    $settingResult.removeClass('success');
+                    $settingResult.addClass('denied');
+                    $settingResult.text('Permission Denied');
+                    $settingResult.show();
+                    $settingResult.fadeOut(2000);
+                }
             }
         });
-
     });
     // SAVE SETTINGS //
+
+    // RECEIPT SETTINGS //
+    $(document).on('click', '#add-footer-button, #add-header-button', function () {
+        var $lineContainer = $(this).siblings('.line-container');
+        var $receiptInputWrapper = $lineContainer.find('.receipt-input-wrapper');
+        //Copy last item
+        var $copyItem = $receiptInputWrapper.last().clone();
+        var newNumber = String(parseInt($copyItem.attr('data-number')) + 1);
+        $copyItem.attr('data-number', newNumber);
+        $copyItem.find('.receipt-input-container .receipt-text-label').text('Text (Line ' + newNumber + ')');
+        $copyItem.find('.receipt-text-input').val('');
+        $lineContainer.append($copyItem);
+
+        var $receiptPreviewWrapper = $('#receipt-'+$receiptInputWrapper.attr('data-type')+'-wrapper');
+        var $copyPreviewItem = $receiptPreviewWrapper.find('.receipt-line').last().clone();
+        $copyPreviewItem.attr('data-receipt_id', newNumber);
+        $copyPreviewItem.text('');
+        $receiptPreviewWrapper.append($copyPreviewItem);
+    });
+
+    $(document).on('click', '.delete-line-item', function () {
+        var $item = $(this).closest('.receipt-input-wrapper');
+        var $wrapper = $item.parent();
+        var $items = $wrapper.find('.receipt-input-wrapper');
+
+        var $receiptPreviewWrapper = $('#receipt-'+$item.attr('data-type')+'-wrapper');
+        var $previewItem = $receiptPreviewWrapper.find('.receipt-line[data-receipt_id="' + $item.attr('data-number') + '"]');
+
+        if($items.length > 1) {
+            $item.remove();
+            $previewItem.remove();
+
+            var number = 1;
+
+            $wrapper.find('.receipt-input-wrapper').each(function() {
+                var $this = $(this);
+                $this.attr('data-number', number);
+                $this.find('.receipt-input-container .receipt-text-label').text('Text (Line ' + number + ')');
+                number += 1;
+            });
+
+            number = 1;
+
+            $receiptPreviewWrapper.find('.receipt-line').each(function() {
+                var $this = $(this);
+                $this.attr('data-receipt_id', number);
+                number += 1;
+            });
+        }
+    });
+
+    $(document).on('click', '#save-receipt-settings', function () {
+        var ipAddress = '';
+
+        var header = {
+            'lines': []
+        };
+
+        var footer = {
+            'lines': []
+        };
+
+        function getLineData($this, lineType) {
+            var text = $this.find('.receipt-text-input').val().trim();
+
+            var currentData = {
+                'size': $this.find('.font-size-input').val(),
+                'align': $this.find('.font-alignment-input').val(),
+                'text': text
+            };
+
+            if(text != '' && lineType == 'header') {
+                header['lines'].push(currentData);
+            } else if(text != '' && lineType == 'footer') {
+                footer['lines'].push(currentData);
+            }
+        }
+
+        $('#printer-address-wrapper').find('.printer-address').each(function() {
+            ipAddress = ipAddress + $(this).val().trim() + '.';
+        });
+
+        $('#header-container').find('.header-item').each(function() {
+            getLineData($(this), 'header');
+        });
+
+        $('#footer-container').find('.footer-item').each(function() {
+            getLineData($(this), 'footer');
+        });
+
+        var postData = {
+            'ip_address': ipAddress.substring(0, ipAddress.length - 1),
+            'header': header,
+            'footer': footer
+        };
+
+        $.ajax({
+            headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
+            url: globals.base_url + '/transaction/save_receipt_settings/',
+            data: JSON.stringify(postData),
+            dataType: 'json',
+            type: "POST",
+            success: function (response) {
+                //console.log(JSON.stringify(response));
+
+                var $settingResult = $('#receipt-settings-result');
+                $settingResult.removeClass('denied');
+                $settingResult.addClass('success');
+                $settingResult.text('Saved!');
+                $settingResult.show();
+                $settingResult.fadeOut(2000);
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    var $settingResult = $('#receipt-settings-result');
+                    $settingResult.removeClass('success');
+                    $settingResult.addClass('denied');
+                    $settingResult.text('Permission Denied');
+                    $settingResult.show();
+                    $settingResult.fadeOut(2000);
+                }
+            }
+        });
+    });
+    // RECEIPT SETTINGS //
+
+    //RECEIPT PREVIEW //
+    $(document).on('keydown keyup', '.receipt-text-input', function () {
+        var $receiptTextInput = $(this);
+        var lineId = $receiptTextInput.closest('.receipt-input-wrapper').attr('data-number');
+        var textValue = $receiptTextInput.val();
+        var $receiptInputWrapper = $receiptTextInput.closest('.receipt-input-wrapper');
+
+        $('#receipt-'+$receiptInputWrapper.attr('data-type')+'-wrapper').find('[data-receipt_id="' + lineId + '"]').text(textValue);
+    });
+
+    $(document).on('focusin', '.font-alignment-input', function() {
+        $(this).data('val', $(this).val());
+    }).on('change','.font-alignment-input', function() {
+        var $this = $(this);
+        var lineId = $this.closest('.receipt-input-wrapper').attr('data-number');
+        var $receiptLine = $('#receipt-header-wrapper').find('[data-receipt_id="' + lineId + '"]');
+
+        $receiptLine.removeClass('align-'+$(this).data('val'));
+        $receiptLine.addClass('align-'+$(this).val());
+        $this.data('val', $(this).val());
+    });
+
+    $(document).on('focusin', '.font-size-input', function() {
+        $(this).data('val', $(this).val());
+    }).on('change','.font-size-input', function() {
+        var $this = $(this);
+        var lineId = $this.closest('.receipt-input-wrapper').attr('data-number');
+        var $receiptLine = $('#receipt-header-wrapper').find('[data-receipt_id="' + lineId + '"]');
+
+        $receiptLine.removeClass('font-'+$(this).data('val'));
+        $receiptLine.addClass('font-'+$(this).val());
+        $this.data('val', $(this).val());
+    });
+    //RECEIPT PREVIEW //
 });

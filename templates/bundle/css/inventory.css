@@ -338,6 +338,10 @@
     height: 25px;
 }
 
+#add-item-wrapper, #edit-item-wrapper {
+    overflow-y: auto;
+}
+
 .add-item-input, .edit-item-input {
     margin: 10px 0;
 }
@@ -443,8 +447,17 @@
     margin-bottom: 20px;
 }
 
-#operation-link-column-wrapper {
+#operation-link-column-wrapper, #export-error {
     text-align: center;
+}
+
+.error {
+    display: none;
+    font-size: 13px;
+}
+
+.error.permission {
+    margin-bottom: 10px;
 }
 /* OPERATION OVERLAY */
 
@@ -686,6 +699,7 @@ table.table-container tbody td {
 }
 
 #save-wrapper {
+    position: relative;
     display: -ms-flexbox;
     display: flex;
     width: 100%;
@@ -720,6 +734,20 @@ table.table-container tbody td {
 #order-by-wrapper .check-box-wrapper {
     margin-left: 20px;
     font-size: 20px;
+}
+
+#settings-result {
+    font-size: 11px;
+    position: absolute;
+    top: 3px;
+}
+
+.success {
+    color: #4dff4d;
+}
+
+.denied {
+    color: #ff655d;
 }
 /* SETTINGS */
 

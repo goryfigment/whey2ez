@@ -1,5 +1,34 @@
 webpackJsonp([1],[
 /* 0 */
+/***/ (function(module, exports) {
+
+module.exports = function(v1, operator, v2, options) {
+    switch (operator) {
+        case '==':
+            return (v1 == v2) ? options.fn(this) : options.inverse(this);
+        case '===':
+            return (v1 === v2) ? options.fn(this) : options.inverse(this);
+        case '<':
+            return (v1 < v2) ? options.fn(this) : options.inverse(this);
+        case '<=':
+            return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+        case '>':
+            return (v1 > v2) ? options.fn(this) : options.inverse(this);
+        case '>=':
+            return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+        case '&&':
+            return (v1 && v2) ? options.fn(this) : options.inverse(this);
+        case '||':
+            return (v1 || v2) ? options.fn(this) : options.inverse(this);
+        case '!=':
+            return (v1 != v2) ? options.fn(this) : options.inverse(this);
+        default:
+            return options.inverse(this);
+    }
+};
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -130,35 +159,6 @@ function appendContextPath(contextPath, id) {
 
 
 /***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-module.exports = function(v1, operator, v2, options) {
-    switch (operator) {
-        case '==':
-            return (v1 == v2) ? options.fn(this) : options.inverse(this);
-        case '===':
-            return (v1 === v2) ? options.fn(this) : options.inverse(this);
-        case '<':
-            return (v1 < v2) ? options.fn(this) : options.inverse(this);
-        case '<=':
-            return (v1 <= v2) ? options.fn(this) : options.inverse(this);
-        case '>':
-            return (v1 > v2) ? options.fn(this) : options.inverse(this);
-        case '>=':
-            return (v1 >= v2) ? options.fn(this) : options.inverse(this);
-        case '&&':
-            return (v1 && v2) ? options.fn(this) : options.inverse(this);
-        case '||':
-            return (v1 || v2) ? options.fn(this) : options.inverse(this);
-        case '!=':
-            return (v1 != v2) ? options.fn(this) : options.inverse(this);
-        default:
-            return options.inverse(this);
-    }
-};
-
-/***/ }),
 /* 2 */
 /***/ (function(module, exports) {
 
@@ -266,7 +266,7 @@ exports.HandlebarsEnvironment = HandlebarsEnvironment;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 var _exception = __webpack_require__(3);
 
@@ -396,7 +396,7 @@ var _handlebarsException = __webpack_require__(3);
 
 var _handlebarsException2 = _interopRequireDefault(_handlebarsException);
 
-var _handlebarsUtils = __webpack_require__(0);
+var _handlebarsUtils = __webpack_require__(1);
 
 var Utils = _interopRequireWildcard(_handlebarsUtils);
 
@@ -538,7 +538,7 @@ function registerDefaultHelpers(instance) {
 
 exports.__esModule = true;
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 exports['default'] = function (instance) {
   instance.registerHelper('blockHelperMissing', function (context, options) {
@@ -587,7 +587,7 @@ exports.__esModule = true;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 var _exception = __webpack_require__(3);
 
@@ -717,7 +717,7 @@ module.exports = exports['default'];
 
 exports.__esModule = true;
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 exports['default'] = function (instance) {
   instance.registerHelper('if', function (conditional, options) {
@@ -805,7 +805,7 @@ module.exports = exports['default'];
 
 exports.__esModule = true;
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 exports['default'] = function (instance) {
   instance.registerHelper('with', function (context, options) {
@@ -868,7 +868,7 @@ function registerDefaultDecorators(instance) {
 
 exports.__esModule = true;
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 exports['default'] = function (instance) {
   instance.registerDecorator('inline', function (fn, props, container, options) {
@@ -904,7 +904,7 @@ module.exports = exports['default'];
 
 exports.__esModule = true;
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 var logger = {
   methodMap: ['debug', 'info', 'warn', 'error'],
@@ -993,7 +993,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 var Utils = _interopRequireWildcard(_utils);
 
@@ -1392,11 +1392,30 @@ function upAndDownPopups(keyCode, $popup, $options, scroll) {
     }
 }
 
+function currencyFormat(cents) {
+    cents = Math.round(cents);
+
+    if (cents == 0) {
+        return cents.toFixed(2);
+    } else if(cents < 100){
+        if (cents > 0 || cents > -100) {
+            return (cents/100).toFixed(2);
+        } else {
+            cents = cents.toString();
+            return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
+        }
+    }else {
+        cents = cents.toString();
+        return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
+    }
+}
+
 module.exports = {
     numberCommaFormat: numberCommaFormat,
     replaceAll: replaceAll,
     scrollToElement: scrollToElement,
-    upAndDownPopups: upAndDownPopups
+    upAndDownPopups: upAndDownPopups,
+    currencyFormat: currencyFormat
 };
 
 /***/ }),
@@ -2004,7 +2023,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     var stack1;
 
   return "                    <td "
-    + ((stack1 = __default(__webpack_require__(1)).call(depth0 != null ? depth0 : (container.nullContext || {}),"","==",depth0,{"name":"ifCond","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(depth0 != null ? depth0 : (container.nullContext || {}),"","==",depth0,{"name":"ifCond","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + ">"
     + container.escapeExpression(container.lambda(depth0, depth0))
     + "</td>\r\n";
@@ -2014,11 +2033,11 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
   return "                    <td "
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,(depths[1] != null ? depths[1].current_day : depths[1]),"<",depth0,{"name":"ifCond","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depths[1] != null ? depths[1].current_day : depths[1]),"<",depth0,{"name":"ifCond","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + " "
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,"","==",depth0,{"name":"ifCond","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,"","==",depth0,{"name":"ifCond","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + " "
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,(depths[1] != null ? depths[1].current_day : depths[1]),"==",depth0,{"name":"ifCond","hash":{},"fn":container.program(5, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depths[1] != null ? depths[1].current_day : depths[1]),"==",depth0,{"name":"ifCond","hash":{},"fn":container.program(5, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + ">"
     + container.escapeExpression(container.lambda(depth0, depth0))
     + "</td>\r\n";
@@ -2072,7 +2091,14 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 
 /***/ }),
 /* 29 */,
-/* 30 */,
+/* 30 */
+/***/ (function(module, exports) {
+
+module.exports = function(val) {
+    return parseInt(val) + 1;
+};
+
+/***/ }),
 /* 31 */,
 /* 32 */,
 /* 33 */,
@@ -2105,16 +2131,19 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 /* 60 */,
 /* 61 */,
 /* 62 */,
-/* 63 */
+/* 63 */,
+/* 64 */,
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(25);
-__webpack_require__(64);
+__webpack_require__(66);
 __webpack_require__(9);
 
 //handlebars
-var transactionTemplate = __webpack_require__(65);
-var transactionOperationTemplate = __webpack_require__(66);
+var transactionTemplate = __webpack_require__(67);
+var transactionOperationTemplate = __webpack_require__(68);
+var receiptSettingsTemplate = __webpack_require__(69);
 
 //libraries
 var $ = __webpack_require__(6);
@@ -2122,7 +2151,29 @@ var helper = __webpack_require__(24);
 __webpack_require__(26);
 
 function init() {
-    $('[value="' + globals.date_range + '"]').prop('selected', true);
+    //Start Date
+    var d1 = new Date();
+    d1.setHours(globals.start_time, 0, 0, 0);
+
+    //End Date
+    var d2 = new Date();
+    d2.setHours(globals.start_time, 0, 0, 0);
+    d2.setDate(d1.getDate() + 1);
+
+    if (globals.date_range == '7') {
+        d1.setDate(d2.getDate() - 7);
+        getTransactionReport(d1.valueOf()/1000, d2.valueOf()/1000 - 1);
+    } else if(globals.date_range == '*') {
+        d1 = '*';
+        getTransactionReport(d1, d2);
+    } else {
+        getTransactionReport(d1.valueOf()/1000, d2.valueOf()/1000 - 1);
+    }
+
+    $('#receipt-wrapper').append(receiptSettingsTemplate(globals.receipt_settings));
+
+    $('#date-start-input [value="' + globals.start_time + '"]').prop('selected', true);
+    $('#date-range-input [value="' + globals.date_range + '"]').prop('selected', true);
 }
 
 function tabHandler($clickedTab) {
@@ -2144,8 +2195,8 @@ function popupHandler(e, popupData) {
 
 function getTransactionReport(start_time, end_time) {
     var postData = {
-        'start_time': Math.ceil(start_time.valueOf()/1000),
-        'end_time': Math.ceil(end_time.valueOf()/1000)
+        'start_time': start_time,
+        'end_time': end_time
     };
 
     $.ajax({
@@ -2287,7 +2338,7 @@ $(document).ready(function() {
         var firstDate = new Date(firstDateString);
         var lastDate = new Date(lastDateString);
 
-        getTransactionReport(firstDate, lastDate);
+        getTransactionReport(firstDate.valueOf()/1000, lastDate.valueOf()/1000);
 
         $calendarWrapper.find('#calendar-exit').click();
     });
@@ -2300,6 +2351,7 @@ $(document).ready(function() {
         var storeTax = {};
 
         var dateRange = $('#date-range-input').val();
+        var startTime = $('#date-start-input').val();
 
         $('.filter-input:checked').each(function() {
             filter.push($(this).attr('data-name'));
@@ -2319,7 +2371,8 @@ $(document).ready(function() {
             'settings': {
                 'date_range': dateRange,
                 'filter': filter,
-                'tax': businessTax
+                'tax': businessTax,
+                'start_time': startTime
             },
             'store_tax': storeTax
         };
@@ -2332,21 +2385,197 @@ $(document).ready(function() {
             type: "POST",
             success: function (response) {
                 //console.log(JSON.stringify(response));
+
+                var $settingResult = $('#settings-result');
+                $settingResult.removeClass('denied');
+                $settingResult.addClass('success');
+                $settingResult.text('Saved!');
+                $settingResult.show();
+                $settingResult.fadeOut(2000);
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    var $settingResult = $('#settings-result');
+                    $settingResult.removeClass('success');
+                    $settingResult.addClass('denied');
+                    $settingResult.text('Permission Denied');
+                    $settingResult.show();
+                    $settingResult.fadeOut(2000);
+                }
             }
         });
-
     });
     // SAVE SETTINGS //
+
+    // RECEIPT SETTINGS //
+    $(document).on('click', '#add-footer-button, #add-header-button', function () {
+        var $lineContainer = $(this).siblings('.line-container');
+        var $receiptInputWrapper = $lineContainer.find('.receipt-input-wrapper');
+        //Copy last item
+        var $copyItem = $receiptInputWrapper.last().clone();
+        var newNumber = String(parseInt($copyItem.attr('data-number')) + 1);
+        $copyItem.attr('data-number', newNumber);
+        $copyItem.find('.receipt-input-container .receipt-text-label').text('Text (Line ' + newNumber + ')');
+        $copyItem.find('.receipt-text-input').val('');
+        $lineContainer.append($copyItem);
+
+        var $receiptPreviewWrapper = $('#receipt-'+$receiptInputWrapper.attr('data-type')+'-wrapper');
+        var $copyPreviewItem = $receiptPreviewWrapper.find('.receipt-line').last().clone();
+        $copyPreviewItem.attr('data-receipt_id', newNumber);
+        $copyPreviewItem.text('');
+        $receiptPreviewWrapper.append($copyPreviewItem);
+    });
+
+    $(document).on('click', '.delete-line-item', function () {
+        var $item = $(this).closest('.receipt-input-wrapper');
+        var $wrapper = $item.parent();
+        var $items = $wrapper.find('.receipt-input-wrapper');
+
+        var $receiptPreviewWrapper = $('#receipt-'+$item.attr('data-type')+'-wrapper');
+        var $previewItem = $receiptPreviewWrapper.find('.receipt-line[data-receipt_id="' + $item.attr('data-number') + '"]');
+
+        if($items.length > 1) {
+            $item.remove();
+            $previewItem.remove();
+
+            var number = 1;
+
+            $wrapper.find('.receipt-input-wrapper').each(function() {
+                var $this = $(this);
+                $this.attr('data-number', number);
+                $this.find('.receipt-input-container .receipt-text-label').text('Text (Line ' + number + ')');
+                number += 1;
+            });
+
+            number = 1;
+
+            $receiptPreviewWrapper.find('.receipt-line').each(function() {
+                var $this = $(this);
+                $this.attr('data-receipt_id', number);
+                number += 1;
+            });
+        }
+    });
+
+    $(document).on('click', '#save-receipt-settings', function () {
+        var ipAddress = '';
+
+        var header = {
+            'lines': []
+        };
+
+        var footer = {
+            'lines': []
+        };
+
+        function getLineData($this, lineType) {
+            var text = $this.find('.receipt-text-input').val().trim();
+
+            var currentData = {
+                'size': $this.find('.font-size-input').val(),
+                'align': $this.find('.font-alignment-input').val(),
+                'text': text
+            };
+
+            if(text != '' && lineType == 'header') {
+                header['lines'].push(currentData);
+            } else if(text != '' && lineType == 'footer') {
+                footer['lines'].push(currentData);
+            }
+        }
+
+        $('#printer-address-wrapper').find('.printer-address').each(function() {
+            ipAddress = ipAddress + $(this).val().trim() + '.';
+        });
+
+        $('#header-container').find('.header-item').each(function() {
+            getLineData($(this), 'header');
+        });
+
+        $('#footer-container').find('.footer-item').each(function() {
+            getLineData($(this), 'footer');
+        });
+
+        var postData = {
+            'ip_address': ipAddress.substring(0, ipAddress.length - 1),
+            'header': header,
+            'footer': footer
+        };
+
+        $.ajax({
+            headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
+            url: globals.base_url + '/transaction/save_receipt_settings/',
+            data: JSON.stringify(postData),
+            dataType: 'json',
+            type: "POST",
+            success: function (response) {
+                //console.log(JSON.stringify(response));
+
+                var $settingResult = $('#receipt-settings-result');
+                $settingResult.removeClass('denied');
+                $settingResult.addClass('success');
+                $settingResult.text('Saved!');
+                $settingResult.show();
+                $settingResult.fadeOut(2000);
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    var $settingResult = $('#receipt-settings-result');
+                    $settingResult.removeClass('success');
+                    $settingResult.addClass('denied');
+                    $settingResult.text('Permission Denied');
+                    $settingResult.show();
+                    $settingResult.fadeOut(2000);
+                }
+            }
+        });
+    });
+    // RECEIPT SETTINGS //
+
+    //RECEIPT PREVIEW //
+    $(document).on('keydown keyup', '.receipt-text-input', function () {
+        var $receiptTextInput = $(this);
+        var lineId = $receiptTextInput.closest('.receipt-input-wrapper').attr('data-number');
+        var textValue = $receiptTextInput.val();
+        var $receiptInputWrapper = $receiptTextInput.closest('.receipt-input-wrapper');
+
+        $('#receipt-'+$receiptInputWrapper.attr('data-type')+'-wrapper').find('[data-receipt_id="' + lineId + '"]').text(textValue);
+    });
+
+    $(document).on('focusin', '.font-alignment-input', function() {
+        $(this).data('val', $(this).val());
+    }).on('change','.font-alignment-input', function() {
+        var $this = $(this);
+        var lineId = $this.closest('.receipt-input-wrapper').attr('data-number');
+        var $receiptLine = $('#receipt-header-wrapper').find('[data-receipt_id="' + lineId + '"]');
+
+        $receiptLine.removeClass('align-'+$(this).data('val'));
+        $receiptLine.addClass('align-'+$(this).val());
+        $this.data('val', $(this).val());
+    });
+
+    $(document).on('focusin', '.font-size-input', function() {
+        $(this).data('val', $(this).val());
+    }).on('change','.font-size-input', function() {
+        var $this = $(this);
+        var lineId = $this.closest('.receipt-input-wrapper').attr('data-number');
+        var $receiptLine = $('#receipt-header-wrapper').find('[data-receipt_id="' + lineId + '"]');
+
+        $receiptLine.removeClass('font-'+$(this).data('val'));
+        $receiptLine.addClass('font-'+$(this).val());
+        $this.data('val', $(this).val());
+    });
+    //RECEIPT PREVIEW //
 });
 
 /***/ }),
-/* 64 */
+/* 66 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 65 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(4);
@@ -2371,9 +2600,9 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=container.lambda, alias3=container.escapeExpression;
 
   return "                    <div id=\"time-range\">\r\n"
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.start_time : depth0),{"name":"if","hash":{},"fn":container.program(6, data, 0),"inverse":container.program(9, data, 0),"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.start_time : depth0),"==","*",{"name":"ifCond","hash":{},"fn":container.program(6, data, 0),"inverse":container.program(8, data, 0),"data":data})) != null ? stack1 : "")
     + "                    </div>\r\n\r\n                    <div id=\"table-scroll-wrapper\">\r\n                        <table class=\"table-container\">\r\n                            <thead>\r\n                                <tr>\r\n                                    <th>Date</th>\r\n                                    <th>Product</th>\r\n                                    <th>Qty</th>\r\n                                    <th>Price</th>\r\n                                    <th>Subtotal</th>\r\n                                    <th>Tax</th>\r\n                                    <th>Discount</th>\r\n                                    <th>Type</th>\r\n                                    <th>Total</th>\r\n                                </tr>\r\n                            </thead>\r\n\r\n                            <tbody>\r\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.transactions : depth0),{"name":"each","hash":{},"fn":container.program(11, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.transactions : depth0),{"name":"each","hash":{},"fn":container.program(10, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                            </tbody>\r\n                        </table>\r\n                    </div>\r\n\r\n                    <div id=\"total-wrapper\">\r\n                        <span>Cash: "
     + alias3(alias2(((stack1 = (depth0 != null ? depth0.total : depth0)) != null ? stack1.cash : stack1), depth0))
     + "</span>\r\n                        <span>Credit: "
@@ -2382,115 +2611,101 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + alias3(alias2(((stack1 = (depth0 != null ? depth0.total : depth0)) != null ? stack1.total : stack1), depth0))
     + "</span>\r\n                    </div>\r\n";
 },"6":function(container,depth0,helpers,partials,data) {
-    var stack1;
-
-  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.start_time : depth0),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"7":function(container,depth0,helpers,partials,data) {
-    var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
-
-  return "                                From "
-    + alias4(((helper = (helper = helpers.start_time || (depth0 != null ? depth0.start_time : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"start_time","hash":{},"data":data}) : helper)))
-    + " - "
-    + alias4(((helper = (helper = helpers.end_time || (depth0 != null ? depth0.end_time : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"end_time","hash":{},"data":data}) : helper)))
-    + "<span id=\"calendar-edit\"><i class=\"far fa-edit\"></i></span>\r\n";
-},"9":function(container,depth0,helpers,partials,data) {
     return "                            All <span id=\"calendar-edit\"><i class=\"far fa-edit\"></i></span>\r\n";
-},"11":function(container,depth0,helpers,partials,data) {
-    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+},"8":function(container,depth0,helpers,partials,data) {
+    var alias1=container.lambda, alias2=container.escapeExpression;
+
+  return "                            From "
+    + alias2(alias1((depth0 != null ? depth0.start_time : depth0), depth0))
+    + " - "
+    + alias2(alias1((depth0 != null ? depth0.end_time : depth0), depth0))
+    + "<span id=\"calendar-edit\"><i class=\"far fa-edit\"></i></span>\r\n";
+},"10":function(container,depth0,helpers,partials,data) {
+    var stack1, alias1=container.lambda, alias2=container.escapeExpression, alias3=depth0 != null ? depth0 : (container.nullContext || {});
 
   return "                                    <tr>\r\n                                        <td class=\"number-column\">\r\n                                            "
-    + alias4(((helper = (helper = helpers.date || (depth0 != null ? depth0.date : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"date","hash":{},"data":data}) : helper)))
+    + alias2(alias1((depth0 != null ? depth0.date : depth0), depth0))
     + "\r\n                                        </td>\r\n                                        <td class=\"name-column\">\r\n"
-    + ((stack1 = helpers.each.call(alias1,((stack1 = (depth0 != null ? depth0.items : depth0)) != null ? stack1.list : stack1),{"name":"each","hash":{},"fn":container.program(12, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(alias3,((stack1 = (depth0 != null ? depth0.items : depth0)) != null ? stack1.list : stack1),{"name":"each","hash":{},"fn":container.program(11, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                                        </td>\r\n                                        <td class=\"number-column\">\r\n"
-    + ((stack1 = helpers.each.call(alias1,((stack1 = (depth0 != null ? depth0.items : depth0)) != null ? stack1.list : stack1),{"name":"each","hash":{},"fn":container.program(14, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(alias3,((stack1 = (depth0 != null ? depth0.items : depth0)) != null ? stack1.list : stack1),{"name":"each","hash":{},"fn":container.program(13, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                                        </td>\r\n                                        <td class=\"number-column\">\r\n"
-    + ((stack1 = helpers.each.call(alias1,((stack1 = (depth0 != null ? depth0.items : depth0)) != null ? stack1.list : stack1),{"name":"each","hash":{},"fn":container.program(16, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(alias3,((stack1 = (depth0 != null ? depth0.items : depth0)) != null ? stack1.list : stack1),{"name":"each","hash":{},"fn":container.program(15, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                                        </td>\r\n                                        <td class=\"number-column\">"
-    + alias4(((helper = (helper = helpers.subtotal || (depth0 != null ? depth0.subtotal : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"subtotal","hash":{},"data":data}) : helper)))
+    + alias2(alias1((depth0 != null ? depth0.subtotal : depth0), depth0))
     + "</td>\r\n                                        <td class=\"number-column\">"
-    + alias4(((helper = (helper = helpers.tax || (depth0 != null ? depth0.tax : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"tax","hash":{},"data":data}) : helper)))
+    + alias2(alias1((depth0 != null ? depth0.tax : depth0), depth0))
     + "</td>\r\n                                        <td class=\"number-column\"><span class=\"minus-sign\"><i class=\"fas fa-minus\"></i></span>"
-    + alias4(((helper = (helper = helpers.discount || (depth0 != null ? depth0.discount : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"discount","hash":{},"data":data}) : helper)))
+    + alias2(alias1((depth0 != null ? depth0.discount : depth0), depth0))
     + "</td>\r\n                                        <td>"
-    + alias4(((helper = (helper = helpers.payment_type || (depth0 != null ? depth0.payment_type : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"payment_type","hash":{},"data":data}) : helper)))
+    + alias2(alias1((depth0 != null ? depth0.payment_type : depth0), depth0))
     + "</td>\r\n                                        <td class=\"number-column\">"
-    + alias4(((helper = (helper = helpers.total || (depth0 != null ? depth0.total : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"total","hash":{},"data":data}) : helper)))
+    + alias2(alias1((depth0 != null ? depth0.total : depth0), depth0))
     + "</td>\r\n                                    </tr>\r\n";
-},"12":function(container,depth0,helpers,partials,data) {
-    var helper;
-
-  return "                                                <div class=\"product_name\">"
-    + container.escapeExpression(((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"name","hash":{},"data":data}) : helper)))
+},"11":function(container,depth0,helpers,partials,data) {
+    return "                                                <div class=\"product_name\">"
+    + container.escapeExpression(container.lambda((depth0 != null ? depth0.name : depth0), depth0))
     + "</div>\r\n";
-},"14":function(container,depth0,helpers,partials,data) {
-    var helper;
-
-  return "                                                <div>"
-    + container.escapeExpression(((helper = (helper = helpers.quantity || (depth0 != null ? depth0.quantity : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"quantity","hash":{},"data":data}) : helper)))
+},"13":function(container,depth0,helpers,partials,data) {
+    return "                                                <div>"
+    + container.escapeExpression(container.lambda((depth0 != null ? depth0.quantity : depth0), depth0))
     + "</div>\r\n";
-},"16":function(container,depth0,helpers,partials,data) {
-    var helper;
-
-  return "                                                <div>"
-    + container.escapeExpression(((helper = (helper = helpers.price || (depth0 != null ? depth0.price : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"price","hash":{},"data":data}) : helper)))
+},"15":function(container,depth0,helpers,partials,data) {
+    return "                                                <div>"
+    + container.escapeExpression(container.lambda((depth0 != null ? depth0.price : depth0), depth0))
     + "</div>\r\n";
-},"18":function(container,depth0,helpers,partials,data) {
+},"17":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
   return "    <div id=\"time-range\">\r\n"
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.start_time : depth0),{"name":"if","hash":{},"fn":container.program(19, data, 0),"inverse":container.program(22, data, 0),"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.start_time : depth0),"==","*",{"name":"ifCond","hash":{},"fn":container.program(18, data, 0),"inverse":container.program(20, data, 0),"data":data})) != null ? stack1 : "")
     + "    </div>\r\n    <div id=\"empty-transaction-wrapper\">\r\n        <span id=\"empty-transaction-icon\"><i class=\"fas fa-shopping-cart\"></i></span>\r\n        <div id=\"empty-container\">\r\n            <div>You have no Transactions!</div>\r\n"
-    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.quantity : stack1),{"name":"unless","hash":{},"fn":container.program(24, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.quantity : stack1),{"name":"unless","hash":{},"fn":container.program(29, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.price : stack1),{"name":"unless","hash":{},"fn":container.program(31, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.cost : stack1),{"name":"unless","hash":{},"fn":container.program(33, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1),{"name":"unless","hash":{},"fn":container.program(35, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.quantity : stack1),{"name":"unless","hash":{},"fn":container.program(22, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.quantity : stack1),{"name":"unless","hash":{},"fn":container.program(27, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.price : stack1),{"name":"unless","hash":{},"fn":container.program(29, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.cost : stack1),{"name":"unless","hash":{},"fn":container.program(31, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1),{"name":"unless","hash":{},"fn":container.program(33, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "        </div>\r\n    </div>\r\n";
-},"19":function(container,depth0,helpers,partials,data) {
-    var stack1;
-
-  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.start_time : depth0),{"name":"if","hash":{},"fn":container.program(20, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"18":function(container,depth0,helpers,partials,data) {
+    return "            All <span id=\"calendar-edit\"><i class=\"far fa-edit\"></i></span>\r\n";
 },"20":function(container,depth0,helpers,partials,data) {
-    var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+    var alias1=container.lambda, alias2=container.escapeExpression;
 
-  return "                From "
-    + alias4(((helper = (helper = helpers.start_time || (depth0 != null ? depth0.start_time : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"start_time","hash":{},"data":data}) : helper)))
+  return "            From "
+    + alias2(alias1((depth0 != null ? depth0.start_time : depth0), depth0))
     + " - "
-    + alias4(((helper = (helper = helpers.end_time || (depth0 != null ? depth0.end_time : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"end_time","hash":{},"data":data}) : helper)))
+    + alias2(alias1((depth0 != null ? depth0.end_time : depth0), depth0))
     + "<span id=\"calendar-edit\"><i class=\"far fa-edit\"></i></span>\r\n";
 },"22":function(container,depth0,helpers,partials,data) {
-    return "            All <span id=\"calendar-edit\"><i class=\"far fa-edit\"></i></span>\r\n";
+    var stack1;
+
+  return ((stack1 = helpers.unless.call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.price : stack1),{"name":"unless","hash":{},"fn":container.program(23, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"23":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers.unless.call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.cost : stack1),{"name":"unless","hash":{},"fn":container.program(24, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
 },"24":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return ((stack1 = helpers.unless.call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.price : stack1),{"name":"unless","hash":{},"fn":container.program(25, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+  return ((stack1 = helpers.unless.call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1),{"name":"unless","hash":{},"fn":container.program(25, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
 },"25":function(container,depth0,helpers,partials,data) {
-    var stack1;
-
-  return ((stack1 = helpers.unless.call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.cost : stack1),{"name":"unless","hash":{},"fn":container.program(26, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"26":function(container,depth0,helpers,partials,data) {
-    var stack1;
-
-  return ((stack1 = helpers.unless.call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1),{"name":"unless","hash":{},"fn":container.program(27, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"27":function(container,depth0,helpers,partials,data) {
     return "                            <div class=\"get-started-text\">Before you can make a transaction:</div>\r\n";
-},"29":function(container,depth0,helpers,partials,data) {
+},"27":function(container,depth0,helpers,partials,data) {
     return "                <a id=\"quantity-link\">Link your 'Quantity' Column!</a>\r\n";
-},"31":function(container,depth0,helpers,partials,data) {
+},"29":function(container,depth0,helpers,partials,data) {
     return "                <a id=\"price-link\">Link your 'Price' Column!</a>\r\n";
-},"33":function(container,depth0,helpers,partials,data) {
+},"31":function(container,depth0,helpers,partials,data) {
     return "                <a id=\"cost-link\">Link your 'Cost' Column!</a>\r\n";
-},"35":function(container,depth0,helpers,partials,data) {
+},"33":function(container,depth0,helpers,partials,data) {
     return "                <a id=\"name-link\">Link your 'Name' Column!</a>\r\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.transactions : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(18, data, 0),"data":data})) != null ? stack1 : "");
+  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.transactions : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(17, data, 0),"data":data})) != null ? stack1 : "");
 },"useData":true});
 
 /***/ }),
-/* 66 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(4);
@@ -2539,15 +2754,195 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
   return "<div id=\"operation-popup-wrapper\">\r\n"
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","price",{"name":"ifCond","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","price",{"name":"ifCond","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","cost",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","cost",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","quantity",{"name":"ifCond","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","quantity",{"name":"ifCond","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","name",{"name":"ifCond","hash":{},"fn":container.program(9, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","name",{"name":"ifCond","hash":{},"fn":container.program(9, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "</div>";
 },"useData":true});
 
+/***/ }),
+/* 69 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Handlebars = __webpack_require__(4);
+function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
+module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return "                <input class=\"printer-address\" value=\""
+    + container.escapeExpression(container.lambda(depth0, depth0))
+    + "\" />\r\n\r\n"
+    + ((stack1 = __default(__webpack_require__(0)).call(depth0 != null ? depth0 : (container.nullContext || {}),(data && data.index),"!=",3,{"name":"ifCond","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"2":function(container,depth0,helpers,partials,data) {
+    return "                    <span class=\"period\">.</span>\r\n";
+},"4":function(container,depth0,helpers,partials,data) {
+    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=container.escapeExpression;
+
+  return "                    <div class=\"header-item receipt-input-wrapper\" data-number=\""
+    + alias2(__default(__webpack_require__(30)).call(alias1,(data && data.index),{"name":"inc","hash":{},"data":data}))
+    + "\" data-type=\"header\">\r\n                        <div class=\"delete-line-item\">x</div>\r\n                        <div class=\"receipt-input-container\">\r\n                            <label for=\"font-size-input\">Font Size</label>\r\n                            <select class=\"font-size-input\">\r\n                                <option value=\"1\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.size : depth0),"==","1",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">12</option>\r\n                                <option value=\"2\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.size : depth0),"==","2",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">24</option>\r\n                                <option value=\"3\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.size : depth0),"==","3",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">36</option>\r\n                                <option value=\"4\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.size : depth0),"==","4",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">48</option>\r\n                                <option value=\"5\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.size : depth0),"==","5",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">60</option>\r\n                                <option value=\"6\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.size : depth0),"==","6",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">72</option>\r\n                                <option value=\"7\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.size : depth0),"==","7",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">84</option>\r\n                                <option value=\"8\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.size : depth0),"==","8",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">96</option>\r\n                            </select>\r\n                        </div>\r\n                        <div class=\"receipt-input-container\">\r\n                            <label for=\"font-alignment-input\">Font Alignment</label>\r\n                            <select class=\"font-alignment-input\">\r\n                                <option value=\"left\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.align : depth0),"==","left",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">Left</option>\r\n                                <option value=\"center\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.align : depth0),"==","center",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">Center</option>\r\n                                <option value=\"right\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.align : depth0),"==","right",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">Right</option>\r\n                            </select>\r\n                        </div>\r\n                        <div class=\"receipt-input-container\">\r\n                            <label class=\"receipt-text-label\" for=\"receipt-text-input\">Text (Line "
+    + alias2(__default(__webpack_require__(30)).call(alias1,(data && data.index),{"name":"inc","hash":{},"data":data}))
+    + ")</label>\r\n                            <input class=\"receipt-text-input\" value=\""
+    + alias2(container.lambda((depth0 != null ? depth0.text : depth0), depth0))
+    + "\" />\r\n                        </div>\r\n                    </div>\r\n";
+},"5":function(container,depth0,helpers,partials,data) {
+    return "selected";
+},"7":function(container,depth0,helpers,partials,data) {
+    return "                    <div class=\"header-item receipt-input-wrapper\" data-number=\"1\" data-type=\"header\">\r\n                        <div class=\"delete-line-item\">x</div>\r\n                        <div class=\"receipt-input-container\">\r\n                            <label for=\"font-size-input\">Font Size</label>\r\n                            <select class=\"font-size-input\">\r\n                                <option value=\"1\">12</option>\r\n                                <option value=\"2\">24</option>\r\n                                <option value=\"3\">36</option>\r\n                                <option value=\"4\">48</option>\r\n                                <option value=\"5\">60</option>\r\n                                <option value=\"6\">72</option>\r\n                                <option value=\"7\">84</option>\r\n                                <option value=\"8\">96</option>\r\n                            </select>\r\n                        </div>\r\n                        <div class=\"receipt-input-container\">\r\n                            <label for=\"font-alignment-input\">Font Alignment</label>\r\n                            <select class=\"font-alignment-input\">\r\n                                <option value=\"left\">Left</option>\r\n                                <option value=\"middle\">Middle</option>\r\n                                <option value=\"right\">Right</option>\r\n                            </select>\r\n                        </div>\r\n                        <div class=\"receipt-input-container\">\r\n                            <label class=\"receipt-text-label\" for=\"receipt-text-input\">Text (Line 1)</label>\r\n                            <input class=\"receipt-text-input\" />\r\n                        </div>\r\n                    </div>\r\n";
+},"9":function(container,depth0,helpers,partials,data) {
+    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=container.escapeExpression;
+
+  return "                    <div class=\"footer-item receipt-input-wrapper\" data-number=\""
+    + alias2(__default(__webpack_require__(30)).call(alias1,(data && data.index),{"name":"inc","hash":{},"data":data}))
+    + "\" data-type=\"footer\">\r\n                        <div class=\"delete-line-item\">x</div>\r\n                        <div class=\"receipt-input-container\">\r\n                            <label for=\"font-size-input\">Font Size</label>\r\n                            <select class=\"font-size-input\">\r\n                                <option value=\"1\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.size : depth0),"==","1",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">12</option>\r\n                                <option value=\"2\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.size : depth0),"==","2",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">24</option>\r\n                                <option value=\"3\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.size : depth0),"==","3",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">36</option>\r\n                                <option value=\"4\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.size : depth0),"==","4",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">48</option>\r\n                                <option value=\"5\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.size : depth0),"==","5",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">60</option>\r\n                                <option value=\"6\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.size : depth0),"==","6",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">72</option>\r\n                                <option value=\"7\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.size : depth0),"==","7",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">84</option>\r\n                                <option value=\"8\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.size : depth0),"==","8",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">96</option>\r\n                            </select>\r\n                        </div>\r\n                        <div class=\"receipt-input-container\">\r\n                            <label for=\"font-alignment-input\">Font Alignment</label>\r\n                            <select class=\"font-alignment-input\">\r\n                                <option value=\"left\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.align : depth0),"==","left",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">Left</option>\r\n                                <option value=\"center\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.align : depth0),"==","center",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">Center</option>\r\n                                <option value=\"right\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.align : depth0),"==","right",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">Right</option>\r\n                            </select>\r\n                        </div>\r\n                        <div class=\"receipt-input-container\">\r\n                            <label class=\"receipt-text-label\" for=\"receipt-text-input\">Text (Line "
+    + alias2(__default(__webpack_require__(30)).call(alias1,(data && data.index),{"name":"inc","hash":{},"data":data}))
+    + ")</label>\r\n                            <input class=\"receipt-text-input\" value=\""
+    + alias2(container.lambda((depth0 != null ? depth0.text : depth0), depth0))
+    + "\" />\r\n                        </div>\r\n                    </div>\r\n";
+},"11":function(container,depth0,helpers,partials,data) {
+    return "                    <div class=\"footer-item receipt-input-wrapper\" data-number=\"1\" data-type=\"footer\">\r\n                        <div class=\"delete-line-item\">x</div>\r\n                        <div class=\"receipt-input-container\">\r\n                            <label for=\"font-size-input\">Font Size</label>\r\n                            <select class=\"font-size-input\">\r\n                                <option value=\"1\">12</option>\r\n                                <option value=\"2\">24</option>\r\n                                <option value=\"3\">36</option>\r\n                                <option value=\"4\">48</option>\r\n                                <option value=\"5\">60</option>\r\n                                <option value=\"6\">72</option>\r\n                                <option value=\"7\">84</option>\r\n                                <option value=\"8\">96</option>\r\n                            </select>\r\n                        </div>\r\n                        <div class=\"receipt-input-container\">\r\n                            <label for=\"font-alignment-input\">Font Alignment</label>\r\n                            <select class=\"font-alignment-input\">\r\n                                <option value=\"left\">Left</option>\r\n                                <option value=\"middle\">Middle</option>\r\n                                <option value=\"right\">Right</option>\r\n                            </select>\r\n                        </div>\r\n                        <div class=\"receipt-input-container\">\r\n                            <label class=\"receipt-text-label\" for=\"receipt-text-input\">Text (Line 1)</label>\r\n                            <input class=\"receipt-text-input\" />\r\n                        </div>\r\n                    </div>\r\n";
+},"13":function(container,depth0,helpers,partials,data) {
+    var alias1=container.lambda, alias2=container.escapeExpression;
+
+  return "                <div class=\"receipt-line font-"
+    + alias2(alias1((depth0 != null ? depth0.size : depth0), depth0))
+    + " align-"
+    + alias2(alias1((depth0 != null ? depth0.align : depth0), depth0))
+    + "\" data-receipt_id=\""
+    + alias2(__default(__webpack_require__(30)).call(depth0 != null ? depth0 : (container.nullContext || {}),(data && data.index),{"name":"inc","hash":{},"data":data}))
+    + "\">"
+    + alias2(alias1((depth0 != null ? depth0.text : depth0), depth0))
+    + "</div>\r\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=container.escapeExpression;
+
+  return "<div id=\"receipt-settings-wrapper\">\r\n    <div class=\"receipt-super-title\">Receipt Settings</div>\r\n    <div class=\"receipt-scroll-wrapper\">\r\n        <div id=\"printer-address-wrapper\">\r\n            <div class=\"receipt-settings-title\">Network Connection</div>\r\n            <label for=\"printer-address\">Printer address: </label>\r\n"
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.ip_address : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "        </div>\r\n\r\n        <div id=\"header-input-wrapper\">\r\n            <div class=\"receipt-settings-title\">Receipt Header</div>\r\n            <div id=\"header-container\" class=\"line-container\">\r\n"
+    + ((stack1 = helpers.each.call(alias1,((stack1 = (depth0 != null ? depth0.header : depth0)) != null ? stack1.lines : stack1),{"name":"each","hash":{},"fn":container.program(4, data, 0),"inverse":container.program(7, data, 0),"data":data})) != null ? stack1 : "")
+    + "            </div>\r\n            <div id=\"add-header-button\">Add</div>\r\n        </div>\r\n\r\n        <div id=\"footer-input-wrapper\">\r\n            <div class=\"receipt-settings-title\">Receipt Footer</div>\r\n            <div id=\"footer-container\" class=\"line-container\">\r\n"
+    + ((stack1 = helpers.each.call(alias1,((stack1 = (depth0 != null ? depth0.footer : depth0)) != null ? stack1.lines : stack1),{"name":"each","hash":{},"fn":container.program(9, data, 0),"inverse":container.program(11, data, 0),"data":data})) != null ? stack1 : "")
+    + "            </div>\r\n            <div id=\"add-footer-button\">Add</div>\r\n        </div>\r\n    </div>\r\n\r\n    <div id=\"save-receipt-settings-wrapper\">\r\n        <div id=\"receipt-settings-result\"></div>\r\n        <button id=\"save-receipt-settings\" class=\"add\">Save Settings</button>\r\n    </div>\r\n</div>\r\n<div id=\"receipt-preview-wrapper\">\r\n    <div class=\"receipt-super-title\">Receipt Preview</div>\r\n\r\n    <div id=\"receipt-container\">\r\n        <div id=\"receipt-header-wrapper\">\r\n"
+    + ((stack1 = helpers.each.call(alias1,((stack1 = (depth0 != null ? depth0.header : depth0)) != null ? stack1.lines : stack1),{"name":"each","hash":{},"fn":container.program(13, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "        </div>\r\n\r\n        <br />\r\n        <br />\r\n\r\n        <div id=\"receipt-item-wrapper\" class=\"font-1\">\r\n            <div class=\"receipt-item\">\r\n                <span class=\"transaction-item\">"
+    + alias2(__default(__webpack_require__(78)).call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1),(depth0 != null ? depth0.example_item : depth0),{"name":"nameRegex","hash":{},"data":data}))
+    + "</span>\r\n                <span>"
+    + alias2(__default(__webpack_require__(79)).call(alias1,400,"-",__default(__webpack_require__(79)).call(alias1,2,"*",helpers.lookup.call(alias1,(depth0 != null ? depth0.example_item : depth0),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.price : stack1),{"name":"lookup","hash":{},"data":data}),{"name":"currencyMath","hash":{},"data":data}),{"name":"currencyMath","hash":{},"data":data}))
+    + "</span>\r\n            </div>\r\n\r\n            <div class=\"receipt-item-details\">\r\n                <span class=\"transaction-quantity\">(2 @ "
+    + alias2(__default(__webpack_require__(79)).call(alias1,100,"-",helpers.lookup.call(alias1,(depth0 != null ? depth0.example_item : depth0),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.price : stack1),{"name":"lookup","hash":{},"data":data}),{"name":"currencyMath","hash":{},"data":data}))
+    + " ea)</span>\r\n                <span>Discount 2.00-  &emsp;&emsp;</span>\r\n            </div>\r\n        </div>\r\n\r\n        <br />\r\n        <br />\r\n\r\n        <div id=\"receipt-total-wrapper\" class=\"font-1\">\r\n            <div>\r\n                <span class=\"total-label\">Subtotal</span>\r\n                <span>"
+    + alias2(__default(__webpack_require__(79)).call(alias1,400,"-",__default(__webpack_require__(79)).call(alias1,2,"*",helpers.lookup.call(alias1,(depth0 != null ? depth0.example_item : depth0),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.price : stack1),{"name":"lookup","hash":{},"data":data}),{"name":"currencyMath","hash":{},"data":data}),{"name":"currencyMath","hash":{},"data":data}))
+    + "</span>\r\n            </div>\r\n\r\n            <div>\r\n                <span class=\"total-label\">Tax (8.300%)</span>\r\n                <span>"
+    + alias2(__default(__webpack_require__(79)).call(alias1,0.083,"*",__default(__webpack_require__(79)).call(alias1,400,"-",__default(__webpack_require__(79)).call(alias1,2,"*",helpers.lookup.call(alias1,(depth0 != null ? depth0.example_item : depth0),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.price : stack1),{"name":"lookup","hash":{},"data":data}),{"name":"currencyMath","hash":{},"data":data}),{"name":"currencyMath","hash":{},"data":data}),"true",{"name":"currencyMath","hash":{},"data":data}))
+    + "</span>\r\n            </div>\r\n\r\n            <div class=\"font-2\">\r\n                <span class=\"total-label\">Total</span>\r\n                <span>"
+    + alias2(__default(__webpack_require__(79)).call(alias1,__default(__webpack_require__(79)).call(alias1,400,"-",__default(__webpack_require__(79)).call(alias1,2,"*",helpers.lookup.call(alias1,(depth0 != null ? depth0.example_item : depth0),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.price : stack1),{"name":"lookup","hash":{},"data":data}),{"name":"currencyMath","hash":{},"data":data}),{"name":"currencyMath","hash":{},"data":data}),"+",__default(__webpack_require__(79)).call(alias1,0.083,"*",__default(__webpack_require__(79)).call(alias1,400,"-",__default(__webpack_require__(79)).call(alias1,2,"*",helpers.lookup.call(alias1,(depth0 != null ? depth0.example_item : depth0),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.price : stack1),{"name":"lookup","hash":{},"data":data}),{"name":"currencyMath","hash":{},"data":data}),{"name":"currencyMath","hash":{},"data":data}),"true",{"name":"currencyMath","hash":{},"data":data}),"false","true",{"name":"currencyMath","hash":{},"data":data}))
+    + "</span>\r\n            </div>\r\n\r\n        </div>\r\n\r\n        <br />\r\n        <br />\r\n\r\n        <div id=\"receipt-footer-wrapper\">\r\n"
+    + ((stack1 = helpers.each.call(alias1,((stack1 = (depth0 != null ? depth0.footer : depth0)) != null ? stack1.lines : stack1),{"name":"each","hash":{},"fn":container.program(13, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "        </div>\r\n    </div>\r\n</div>\r\n";
+},"useData":true});
+
+/***/ }),
+/* 70 */,
+/* 71 */,
+/* 72 */,
+/* 73 */,
+/* 74 */,
+/* 75 */,
+/* 76 */,
+/* 77 */,
+/* 78 */
+/***/ (function(module, exports) {
+
+module.exports = function(name_regex, item) {
+    var re = /\{{.*?\}}/g;
+
+    name_regex.replace(re, function(match) {
+        var key = match.replace('{{', '').replace('}}', '');
+        name_regex = name_regex.replace(match, item[key])
+    });
+
+    return name_regex;
+};
+
+/***/ }),
+/* 79 */
+/***/ (function(module, exports) {
+
+module.exports = function(leftVal, operator, curRightVal, round, both) {
+    leftVal = parseFloat(leftVal);
+    curRightVal = parseFloat(curRightVal) * 100;
+
+    if (both == 'true') {
+        leftVal = leftVal * 100;
+    }
+
+    var cents = {
+        "+": curRightVal + leftVal,
+        "-": curRightVal - leftVal,
+        "*": curRightVal * leftVal,
+        "/": curRightVal / leftVal,
+        "%": curRightVal % leftVal
+    }[operator];
+
+    if (round == 'true') {
+        cents = Math.round(cents);
+    }
+
+    if (cents == 0) {
+        return cents.toFixed(2);
+    } else {
+        cents = cents.toString();
+        return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
+    }
+};
+
 /***/ })
-],[63]);
+],[65]);

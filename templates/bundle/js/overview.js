@@ -1,5 +1,34 @@
 webpackJsonp([2],[
 /* 0 */
+/***/ (function(module, exports) {
+
+module.exports = function(v1, operator, v2, options) {
+    switch (operator) {
+        case '==':
+            return (v1 == v2) ? options.fn(this) : options.inverse(this);
+        case '===':
+            return (v1 === v2) ? options.fn(this) : options.inverse(this);
+        case '<':
+            return (v1 < v2) ? options.fn(this) : options.inverse(this);
+        case '<=':
+            return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+        case '>':
+            return (v1 > v2) ? options.fn(this) : options.inverse(this);
+        case '>=':
+            return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+        case '&&':
+            return (v1 && v2) ? options.fn(this) : options.inverse(this);
+        case '||':
+            return (v1 || v2) ? options.fn(this) : options.inverse(this);
+        case '!=':
+            return (v1 != v2) ? options.fn(this) : options.inverse(this);
+        default:
+            return options.inverse(this);
+    }
+};
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -130,35 +159,6 @@ function appendContextPath(contextPath, id) {
 
 
 /***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-module.exports = function(v1, operator, v2, options) {
-    switch (operator) {
-        case '==':
-            return (v1 == v2) ? options.fn(this) : options.inverse(this);
-        case '===':
-            return (v1 === v2) ? options.fn(this) : options.inverse(this);
-        case '<':
-            return (v1 < v2) ? options.fn(this) : options.inverse(this);
-        case '<=':
-            return (v1 <= v2) ? options.fn(this) : options.inverse(this);
-        case '>':
-            return (v1 > v2) ? options.fn(this) : options.inverse(this);
-        case '>=':
-            return (v1 >= v2) ? options.fn(this) : options.inverse(this);
-        case '&&':
-            return (v1 && v2) ? options.fn(this) : options.inverse(this);
-        case '||':
-            return (v1 || v2) ? options.fn(this) : options.inverse(this);
-        case '!=':
-            return (v1 != v2) ? options.fn(this) : options.inverse(this);
-        default:
-            return options.inverse(this);
-    }
-};
-
-/***/ }),
 /* 2 */
 /***/ (function(module, exports) {
 
@@ -266,7 +266,7 @@ exports.HandlebarsEnvironment = HandlebarsEnvironment;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 var _exception = __webpack_require__(3);
 
@@ -396,7 +396,7 @@ var _handlebarsException = __webpack_require__(3);
 
 var _handlebarsException2 = _interopRequireDefault(_handlebarsException);
 
-var _handlebarsUtils = __webpack_require__(0);
+var _handlebarsUtils = __webpack_require__(1);
 
 var Utils = _interopRequireWildcard(_handlebarsUtils);
 
@@ -538,7 +538,7 @@ function registerDefaultHelpers(instance) {
 
 exports.__esModule = true;
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 exports['default'] = function (instance) {
   instance.registerHelper('blockHelperMissing', function (context, options) {
@@ -587,7 +587,7 @@ exports.__esModule = true;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 var _exception = __webpack_require__(3);
 
@@ -717,7 +717,7 @@ module.exports = exports['default'];
 
 exports.__esModule = true;
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 exports['default'] = function (instance) {
   instance.registerHelper('if', function (conditional, options) {
@@ -805,7 +805,7 @@ module.exports = exports['default'];
 
 exports.__esModule = true;
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 exports['default'] = function (instance) {
   instance.registerHelper('with', function (context, options) {
@@ -868,7 +868,7 @@ function registerDefaultDecorators(instance) {
 
 exports.__esModule = true;
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 exports['default'] = function (instance) {
   instance.registerDecorator('inline', function (fn, props, container, options) {
@@ -904,7 +904,7 @@ module.exports = exports['default'];
 
 exports.__esModule = true;
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 var logger = {
   methodMap: ['debug', 'info', 'warn', 'error'],
@@ -993,7 +993,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 var Utils = _interopRequireWildcard(_utils);
 
@@ -1392,11 +1392,30 @@ function upAndDownPopups(keyCode, $popup, $options, scroll) {
     }
 }
 
+function currencyFormat(cents) {
+    cents = Math.round(cents);
+
+    if (cents == 0) {
+        return cents.toFixed(2);
+    } else if(cents < 100){
+        if (cents > 0 || cents > -100) {
+            return (cents/100).toFixed(2);
+        } else {
+            cents = cents.toString();
+            return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
+        }
+    }else {
+        cents = cents.toString();
+        return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
+    }
+}
+
 module.exports = {
     numberCommaFormat: numberCommaFormat,
     replaceAll: replaceAll,
     scrollToElement: scrollToElement,
-    upAndDownPopups: upAndDownPopups
+    upAndDownPopups: upAndDownPopups,
+    currencyFormat: currencyFormat
 };
 
 /***/ }),
@@ -2004,7 +2023,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     var stack1;
 
   return "                    <td "
-    + ((stack1 = __default(__webpack_require__(1)).call(depth0 != null ? depth0 : (container.nullContext || {}),"","==",depth0,{"name":"ifCond","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(depth0 != null ? depth0 : (container.nullContext || {}),"","==",depth0,{"name":"ifCond","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + ">"
     + container.escapeExpression(container.lambda(depth0, depth0))
     + "</td>\r\n";
@@ -2014,11 +2033,11 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
   return "                    <td "
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,(depths[1] != null ? depths[1].current_day : depths[1]),"<",depth0,{"name":"ifCond","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depths[1] != null ? depths[1].current_day : depths[1]),"<",depth0,{"name":"ifCond","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + " "
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,"","==",depth0,{"name":"ifCond","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,"","==",depth0,{"name":"ifCond","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + " "
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,(depths[1] != null ? depths[1].current_day : depths[1]),"==",depth0,{"name":"ifCond","hash":{},"fn":container.program(5, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depths[1] != null ? depths[1].current_day : depths[1]),"==",depth0,{"name":"ifCond","hash":{},"fn":container.program(5, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + ">"
     + container.escapeExpression(container.lambda(depth0, depth0))
     + "</td>\r\n";
@@ -2079,18 +2098,19 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 /* 34 */,
 /* 35 */,
 /* 36 */,
-/* 37 */
+/* 37 */,
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(25);
-__webpack_require__(38);
+__webpack_require__(39);
 __webpack_require__(9);
 
 //handlebars
 //var transactionTemplate = require('./../handlebars/transaction/transaction.hbs');
 //var rowTemplate = require('./../handlebars/inventory/row.hbs');
-var overviewOperationTemplate = __webpack_require__(39);
-var overviewTotalTemplate = __webpack_require__(40);
+var overviewOperationTemplate = __webpack_require__(40);
+var overviewTotalTemplate = __webpack_require__(41);
 
 //libraries
 var $ = __webpack_require__(6);
@@ -2101,19 +2121,29 @@ function init() {
     google.charts.load('current', {packages: ['corechart', 'line']});
     console.log(globals.transactions);
 
+    //Start Date
+    var d1 = new Date();
+    d1.setHours(globals.start_time, 0, 0, 0);
+
+    //End Date
+    var d2 = new Date();
+    d2.setHours(globals.start_time, 0, 0, 0);
+    d2.setDate(d1.getDate() + 1);
+
+    if (globals.date_range == '7') {
+        d1.setDate(d2.getDate() - 7);
+        getTransactionReport(d1.valueOf()/1000, d2.valueOf()/1000 - 1);
+    } else if(globals.date_range == '*') {
+        d1 = '*';
+        getTransactionReport(d1, d2);
+    } else {
+        getTransactionReport(d1.valueOf()/1000, d2.valueOf()/1000 - 1);
+    }
+
     if (globals.date_range == '*') {
         createOverviewGraph(globals.transactions)
     } else {
         createOverviewGraph(globals.transactions, globals.start_epoch, globals.end_epoch);
-    }
-}
-
-function currencyFormat(cents) {
-    if (cents == 0) {
-        return cents.toFixed(2);
-    } else {
-        cents = cents.toString();
-        return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
     }
 }
 
@@ -2469,13 +2499,13 @@ function createOverviewChart(seperation, array) {
 
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(4);
@@ -2524,18 +2554,18 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
   return "<div id=\"operation-popup-wrapper\">\r\n"
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","price",{"name":"ifCond","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","price",{"name":"ifCond","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","cost",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","cost",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","quantity",{"name":"ifCond","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","quantity",{"name":"ifCond","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","name",{"name":"ifCond","hash":{},"fn":container.program(9, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","name",{"name":"ifCond","hash":{},"fn":container.program(9, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "</div>";
 },"useData":true});
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(4);
@@ -2557,4 +2587,4 @@ module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,"
 },"useData":true});
 
 /***/ })
-],[37]);
+],[38]);

@@ -13,10 +13,12 @@
                     {{#each columns}}
                         <div id="add-item-container">
                             <label for="add-item-input">{{this}}:</label>
+                            <div class="error" data-column="{{this}}"></div>
                             <input class="operation-text-input add-item-input" data-column="{{this}}" />
                         </div>
                     {{/each}}
                     <div class="operation-button-wrapper">
+                        <div class="error permission"></div>
                         <button class="operation-submit add" id="add-item-submit">Add Item</button>
                     </div>
                 </div>
@@ -26,6 +28,7 @@
                 <div class="operation-description">Create a new column.</div>
                 <div class="operation-add-column-wrapper">
                     <label for="add-column-input">Column Name:</label>
+                    <div class="error"></div>
                     <input class="operation-text-input" id="add-column-input" />
                     <button class="operation-submit add" id="add-column-submit">Add Column</button>
                 </div>
@@ -90,10 +93,12 @@
                         {{#each columns}}
                             <div id="edit-item-container">
                                 <label for="edit-item-input">{{this}}:</label>
+                                <div class="error" data-column="{{this}}"></div>
                                 <input class="operation-text-input edit-item-input" data-column="{{this}}" />
                             </div>
                         {{/each}}
                         <div class="operation-button-wrapper">
+                            <div class="error permission"></div>
                             <button id="edit-back-button">Back</button>
                             <button class="operation-submit edit" id="edit-item-submit">Edit Item</button>
                         </div>
@@ -105,6 +110,7 @@
                 <div class="operation-title">Edit Column</div>
                 <div class="operation-description">Edit an existing column.</div>
                 <div id="operation-edit-column-wrapper">
+                    <div class="error permission"></div>
                     <select id="edit-prev-column-input">
                         {{#each columns}}
                             <option value="{{this}}">{{this}}</option>
@@ -177,6 +183,7 @@
 
                         </table>
                         <div class="operation-button-wrapper">
+                            <div class="error permission"></div>
                             <button id="delete-back-button">Back</button>
                             <button class="operation-submit delete" id="delete-item-submit">Delete Item</button>
                         </div>
@@ -188,6 +195,7 @@
                 <div class="operation-title">Delete Column</div>
                 <div class="operation-description">Delete an existing column.</div>
                 <div id="operation-delete-column-wrapper">
+                    <div class="error permission"></div>
                     <select id="delete-column-input">
                         {{#each columns}}
                             <option value="{{this}}">{{this}}</option>
@@ -210,60 +218,68 @@
         </div>
     {{/ifCond}}
 
-    {{#ifCond type '==' 'export'}}
-        <div class="operation-title">Export</div>
-        <p class="operation-description">Export as a excel file, csv file, or json.</p>
-
-        <div id="file-upload-wrapper">
-            <select class="select-input" id="export-type-input">
-                <option value="json">json</option>
-                <option value="excel">excel</option>
-                <option value="csv">csv</option>
-            </select>
-            <button id="export-submit">Export</button>
-            <a id="export-download"></a>
-        </div>
-    {{/ifCond}}
-
     {{#ifCond type '==' 'import2'}}
-        <div class="operation-title">Confirm data</div>
-        <p class="operation-description">Map each column to an existing field or add a new field.</p>
-        <div class="table-scroll-wrapper import">
-            <table id="import-table" class="table-container">
-                <thead>
-                    <tr>
-                        {{#each import_data.headers}}
-                            <th><input class="header-input" value="{{this}}" data-column="{{@index}}"/></th>
-                        {{/each}}
-                    </tr>
-                    <tr>
-                        {{#each import_data.headers}}
-                            <th><input class="include-input" type="checkbox" data-column="{{@index}}" checked /> Include</th>
-                        {{/each}}
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each import_data.data}}
+        <div id="import-wrapper" class="operation-body-wrapper">
+            <div class="operation-title">Confirm data</div>
+            <p class="operation-description">Map each column to an existing field or add a new field.</p>
+            <div class="table-scroll-wrapper import">
+                <table id="import-table" class="table-container">
+                    <thead>
                         <tr>
-                            {{#each this}}
-                                <td class="included">{{this}}</td>
+                            {{#each import_data.headers}}
+                                <th><input class="header-input" value="{{this}}" data-column="{{@index}}"/></th>
                             {{/each}}
                         </tr>
-                    {{/each}}
-                </tbody>
-            </table>
-        </div>
-        <div class="operation-button-wrapper">
-            <button id="import-submit-button" class="add">Submit</button>
+                        <tr>
+                            {{#each import_data.headers}}
+                                <th><input class="include-input" type="checkbox" data-column="{{@index}}" checked /> Include</th>
+                            {{/each}}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each import_data.data}}
+                            <tr>
+                                {{#each this}}
+                                    <td class="included">{{this}}</td>
+                                {{/each}}
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+            <div class="operation-button-wrapper">
+                <div class="error permission"></div>
+                <button id="import-submit-button" class="add">Submit</button>
+            <div>
         <div>
     {{/ifCond}}
 
+    {{#ifCond type '==' 'export'}}
+        <div id="export-wrapper">
+            <div class="operation-title">Export</div>
+            <p class="operation-description">Export as a excel file, csv file, or json.</p>
+            <div id="export-error" class="error"></div>
+            <div id="file-upload-wrapper">
+                <select class="select-input" id="export-type-input">
+                    <option value="json">json</option>
+                    <option value="excel">excel</option>
+                    <option value="csv">csv</option>
+                </select>
+                <button id="export-submit">Export</button>
+                <a id="export-download"></a>
+            </div>
+        </div>
+    {{/ifCond}}
+
     {{#ifCond type '==' 'drop_table'}}
-        <div class="operation-title">Drop Table</div>
-        <p class="operation-description">Delete ALL data/columns</p>
-        <p class="operation-description">This can't be UNDONE!</p>
-        <div class="operation-button-wrapper">
-            <button class="delete" id="delete-table-submit">DELETE TABLE</button>
+        <div id="drop-table-wrapper">
+            <div class="operation-title">Drop Table</div>
+            <p class="operation-description">Delete ALL data/columns</p>
+            <p class="operation-description">This can't be UNDONE!</p>
+            <div class="operation-button-wrapper">
+                <div class="error permission"></div>
+                <button class="delete" id="drop-table-submit">DELETE TABLE</button>
+            </div>
         </div>
     {{/ifCond}}
 
@@ -321,6 +337,7 @@
                         </table>
                         <div class="operation-button-wrapper">
                             <label for="details-input">Quantity Received:</label>
+                            <div class="error"></div>
                             <input type="number" id="received-input" min="1" class="operation-text-input" />
                             <label for="details-input">Extra Details:</label>
                             <textarea id="details-input" class="operation-textarea-input"></textarea>
@@ -389,6 +406,7 @@
                         </table>
                         <div class="operation-button-wrapper">
                             <label for="details-input">Quantity Damaged:</label>
+                            <div class="error"></div>
                             <input type="number" id="damaged-input" min="1" class="operation-text-input" />
                             <label for="details-input">Extra Details:</label>
                             <textarea id="details-input" class="operation-textarea-input"></textarea>
@@ -457,6 +475,7 @@
                         </table>
                         <div class="operation-button-wrapper">
                             <label for="details-input">New Cost:</label>
+                            <div class="error"></div>
                             <input type="number" id="reset-cost-input" min="1" class="operation-text-input" />
                             <label for="details-input">Extra Details:</label>
                             <textarea id="details-input" class="operation-textarea-input"></textarea>
@@ -525,6 +544,7 @@
                         </table>
                         <div class="operation-button-wrapper">
                             <label for="details-input">New Price:</label>
+                            <div class="error"></div>
                             <input type="number" id="reset-price-input" min="1" class="operation-text-input" />
                             <label for="details-input">Extra Details:</label>
                             <textarea id="details-input" class="operation-textarea-input"></textarea>

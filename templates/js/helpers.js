@@ -74,9 +74,28 @@ function upAndDownPopups(keyCode, $popup, $options, scroll) {
     }
 }
 
+function currencyFormat(cents) {
+    cents = Math.round(cents);
+
+    if (cents == 0) {
+        return cents.toFixed(2);
+    } else if(cents < 100){
+        if (cents > 0 || cents > -100) {
+            return (cents/100).toFixed(2);
+        } else {
+            cents = cents.toString();
+            return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
+        }
+    }else {
+        cents = cents.toString();
+        return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
+    }
+}
+
 module.exports = {
     numberCommaFormat: numberCommaFormat,
     replaceAll: replaceAll,
     scrollToElement: scrollToElement,
-    upAndDownPopups: upAndDownPopups
+    upAndDownPopups: upAndDownPopups,
+    currencyFormat: currencyFormat
 };

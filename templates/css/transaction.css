@@ -1,3 +1,10 @@
+@font-face {
+    font-family: VT323;
+    src: url(/templates/assets/fonts/VT323-Regular.ttf);
+    font-weight: normal;
+    font-style: normal;
+}
+
 /* SIDE BAR */
 .business-name {
     cursor: pointer;
@@ -155,6 +162,7 @@ table.table-container tbody td {
 }
 
 #save-wrapper {
+    position: relative;
     border-top: #a5aea9 solid 1px;
 }
 /* TRANSACTION TABLE */
@@ -200,7 +208,199 @@ table.table-container tbody td {
 #start-date-wrapper {
     margin-bottom: 20px;
 }
+
+#receipt-settings-result {
+    position: absolute;
+    left: 46%;
+    top: -2px;
+    font-size: 11px;
+}
+
+#settings-result {
+    font-size: 11px;
+    position: absolute;
+    top: 3px;
+}
+
+.success {
+    color: #4dff4d;
+}
+
+.denied {
+    color: #ff655d;
+}
 /* SETTINGS */
+
+/* RECEIPT */
+#receipt-wrapper.active {
+    display: flex;
+}
+
+#receipt-preview-wrapper, #receipt-settings-wrapper {
+    min-width: 200px;
+    margin-bottom: 15px;
+}
+
+#receipt-settings-wrapper {
+    border: 1px solid #4a4a4b;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 462px;
+}
+
+#receipt-preview-wrapper {
+    width: 100%;
+}
+
+.receipt-scroll-wrapper {
+    overflow-y: auto;
+}
+
+.receipt-super-title{
+    font-size: 28px;
+    margin: 10px 0;
+    text-align: center;
+}
+
+.printer-address {
+    width: 30px;
+    text-align: center;
+    height: 25px;
+}
+
+.period {
+    margin-left: 4px;
+    font-size: 20px;
+    line-height: 15px;
+}
+
+.receipt-settings-title {
+    font-size: 20px;
+    margin: 6px 0;
+}
+
+.receipt-input-container:not(:last-child) {
+    padding-right: 25px;
+}
+
+.receipt-input-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1px solid #353535;
+    padding: 13px;
+    position: relative;
+    white-space: nowrap;
+}
+
+#add-header-button, #add-footer-button {
+    background: green;
+    width: 80px;
+    border-radius: 1px;
+    text-align: center;
+    padding: 5px 5px;
+    cursor: pointer;
+    margin: 10px auto;
+}
+
+#add-header-button:hover, #add-footer-button:hover {
+    filter: brightness(115%);
+}
+
+.receipt-text-input {
+    height: 29px;
+    width: 200px;
+}
+
+.delete-line-item {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 3px 10px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #fc7e7e;
+}
+
+.delete-line-item:hover {
+    color: #ff4a4a;
+}
+
+#save-receipt-settings-wrapper {
+    position: relative;
+    margin-top: auto;
+    width: 100%;
+    text-align: center;
+    padding: 11px 0 5px;
+    border-top: 1px solid #3e3e3f;
+}
+
+#receipt-container {
+    overflow-y: auto;
+    font-family: 'VT323', Arial, Helvetica, sans-serif, Georgia, serif;
+    width: 462px;
+    height: calc(100% - 100px);
+    margin: 0 auto;
+    background: #e5e5e5;
+    color: #000;
+    padding: 20px 10px 20px 10px;
+    word-break: break-all;
+    max-height: fit-content;
+}
+
+.font-1 {
+    font-size: 24px;
+}
+
+.font-2 {
+    font-size: 48px;
+}
+
+.font-3 {
+    font-size: 72px;
+}
+
+.font-4 {
+    font-size: 96px;
+}
+
+.font-5 {
+    font-size: 120px;
+}
+
+.font-6 {
+    font-size: 144px;
+}
+
+.font-7 {
+    font-size: 168px;
+}
+
+.font-8 {
+    font-size: 192px;
+}
+
+.align-left {
+    text-align: left;
+}
+
+.align-center {
+    text-align: center;
+}
+
+.align-right {
+    text-align: right;
+}
+
+.receipt-item, .receipt-item-details, #receipt-total-wrapper div {
+    display: flex;
+}
+
+.transaction-item, .transaction-quantity, .total-label {
+    margin-right: auto;
+}
+/* RECEIPT */
+
 
 /*TEST*/
 .check-box-wrapper {

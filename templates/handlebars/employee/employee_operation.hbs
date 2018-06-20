@@ -4,19 +4,28 @@
         <div class="operation-title">Employee Type</div>
         <div class="operation-description">Define a user's title and permissions.</div>
 
-        <div class="permission-input-container">
-            <label for="assign-store-input">User type Name</label>
-            <div class="input-description" data-type="all">Admin, Manager, etc.</div>
-            <input id="employee-type-input" />
-        </div>
+        {{#if edit}}
+            <div class="permission-input-container">
+                <label for="assign-store-input">Employee Type Name</label>
+                <div class="error"></div>
+                <input id="employee-type-input" value="{{name}}" />
+            </div>
+        {{else}}
+            <div class="permission-input-container">
+                <label for="assign-store-input">Employee Type Name</label>
+                <div class="input-description" data-type="all">Admin, Manager, etc.</div>
+                <div class="error"></div>
+                <input id="employee-type-input" />
+            </div>
+        {{/if}}
 
         <div id="permission-wrapper">
 
-            <div class="operation-title">Inventory Permissions</div>
+            <div class="operation-header">Inventory Permissions</div>
 
             <div class="operation-subtitle">Columns</div>
 
-            <input type="checkbox" id="add-columns-input" data-name="add_column" class="checkbox-input" checked style="display: none" />
+            <input type="checkbox" id="add-columns-input" data-name="add_column" class="checkbox-input" {{#if edit}}{{#if permission.add_column}}checked{{/if}}{{else}}checked{{/if}} style="display: none" />
             <label for="add-columns-input" class="check-box-wrapper">
                 <span class="check-box">
                     <svg width="12px" height="10px">
@@ -26,7 +35,7 @@
                 <span class="check-box-label">Add Columns</span>
             </label>
 
-            <input type="checkbox" id="edit-columns-input" data-name="edit_column" class="checkbox-input" checked style="display: none" />
+            <input type="checkbox" id="edit-columns-input" data-name="edit_column" class="checkbox-input" {{#if edit}}{{#if permission.edit_column}}checked{{/if}}{{else}}checked{{/if}} style="display: none" />
             <label for="edit-columns-input" class="check-box-wrapper">
                 <span class="check-box">
                     <svg width="12px" height="10px">
@@ -36,7 +45,7 @@
                 <span class="check-box-label">Edit Columns</span>
             </label>
 
-            <input type="checkbox" id="delete-columns-input" data-name="delete_column" class="checkbox-input" checked style="display: none" />
+            <input type="checkbox" id="delete-columns-input" data-name="delete_column" class="checkbox-input" {{#if edit}}{{#if permission.delete_column}}checked{{/if}}{{else}}checked{{/if}} style="display: none" />
             <label for="delete-columns-input" class="check-box-wrapper">
                 <span class="check-box">
                     <svg width="12px" height="10px">
@@ -48,7 +57,7 @@
 
             <div class="operation-subtitle">Items</div>
 
-            <input type="checkbox" id="add-items-input" data-name="add_item" class="checkbox-input" checked style="display: none" />
+            <input type="checkbox" id="add-items-input" data-name="add_item" class="checkbox-input" {{#if edit}}{{#if permission.add_item}}checked{{/if}}{{else}}checked{{/if}} style="display: none" />
             <label for="add-items-input" class="check-box-wrapper">
                 <span class="check-box">
                     <svg width="12px" height="10px">
@@ -58,7 +67,7 @@
                 <span class="check-box-label">Add Items</span>
             </label>
 
-            <input type="checkbox" id="edit-items-input" data-name="edit_item" class="checkbox-input" checked style="display: none" />
+            <input type="checkbox" id="edit-items-input" data-name="edit_item" class="checkbox-input" {{#if edit}}{{#if permission.edit_item}}checked{{/if}}{{else}}checked{{/if}} style="display: none" />
             <label for="edit-items-input" class="check-box-wrapper">
                 <span class="check-box">
                     <svg width="12px" height="10px">
@@ -68,7 +77,7 @@
                 <span class="check-box-label">Edit Items</span>
             </label>
 
-            <input type="checkbox" id="delete-items-input" data-name="delete_item" class="checkbox-input" checked style="display: none" />
+            <input type="checkbox" id="delete-items-input" data-name="delete_item" class="checkbox-input" {{#if edit}}{{#if permission.delete_item}}checked{{/if}}{{else}}checked{{/if}} style="display: none" />
             <label for="delete-items-input" class="check-box-wrapper">
                 <span class="check-box">
                     <svg width="12px" height="10px">
@@ -80,7 +89,7 @@
 
             <div class="operation-subtitle">Other Actions</div>
 
-            <input type="checkbox" id="import-input" data-name="import" class="checkbox-input" checked style="display: none" />
+            <input type="checkbox" id="import-input" data-name="import" class="checkbox-input" {{#if edit}}{{#if permission.import_file}}checked{{/if}}{{else}}checked{{/if}} style="display: none" />
             <label for="import-input" class="check-box-wrapper">
                 <span class="check-box">
                     <svg width="12px" height="10px">
@@ -90,7 +99,7 @@
                 <span class="check-box-label">Import</span>
             </label>
 
-            <input type="checkbox" id="export-input" data-name="export" class="checkbox-input" checked style="display: none" />
+            <input type="checkbox" id="export-input" data-name="export" class="checkbox-input" {{#if edit}}{{#if permission.export_file}}checked{{/if}}{{else}}checked{{/if}} style="display: none" />
             <label for="export-input" class="check-box-wrapper">
                 <span class="check-box">
                     <svg width="12px" height="10px">
@@ -100,7 +109,7 @@
                 <span class="check-box-label">Export</span>
             </label>
 
-            <input type="checkbox" id="drop-table-input" data-name="drop_table" class="checkbox-input" checked style="display: none" />
+            <input type="checkbox" id="drop-table-input" data-name="drop_table" class="checkbox-input" {{#if edit}}{{#if permission.drop_table}}checked{{/if}}{{else}}checked{{/if}} style="display: none" />
             <label for="drop-table-input" class="check-box-wrapper">
                 <span class="check-box">
                     <svg width="12px" height="10px">
@@ -112,7 +121,7 @@
 
             <div class="operation-subtitle">Operations</div>
 
-            <input type="checkbox" id="receive-input" data-name="receive" class="checkbox-input" checked style="display: none" />
+            <input type="checkbox" id="receive-input" data-name="receive" class="checkbox-input" {{#if edit}}{{#if permission.receive}}checked{{/if}}{{else}}checked{{/if}} style="display: none" />
             <label for="receive-input" class="check-box-wrapper">
                 <span class="check-box">
                     <svg width="12px" height="10px">
@@ -122,7 +131,7 @@
                 <span class="check-box-label">Receive</span>
             </label>
 
-            <input type="checkbox" id="damage-input" data-name="damage" class="checkbox-input" checked style="display: none" />
+            <input type="checkbox" id="damage-input" data-name="damage" class="checkbox-input" {{#if edit}}{{#if permission.damage}}checked{{/if}}{{else}}checked{{/if}} style="display: none" />
             <label for="damage-input" class="check-box-wrapper">
                 <span class="check-box">
                     <svg width="12px" height="10px">
@@ -132,7 +141,7 @@
                 <span class="check-box-label">Damage</span>
             </label>
 
-            <input type="checkbox" id="reset-price-input" data-name="reset_price" class="checkbox-input" checked style="display: none" />
+            <input type="checkbox" id="reset-price-input" data-name="reset_price" class="checkbox-input" {{#if edit}}{{#if permission.reset_price}}checked{{/if}}{{else}}checked{{/if}} style="display: none" />
             <label for="reset-price-input" class="check-box-wrapper">
                 <span class="check-box">
                     <svg width="12px" height="10px">
@@ -142,7 +151,7 @@
                 <span class="check-box-label">Reset Price</span>
             </label>
 
-            <input type="checkbox" id="reset-cost-input" data-name="reset_cost" class="checkbox-input" checked style="display: none" />
+            <input type="checkbox" id="reset-cost-input" data-name="reset_cost" class="checkbox-input" {{#if edit}}{{#if permission.reset_cost}}checked{{/if}}{{else}}checked{{/if}} style="display: none" />
             <label for="reset-cost-input" class="check-box-wrapper">
                 <span class="check-box">
                     <svg width="12px" height="10px">
@@ -154,7 +163,7 @@
 
             <div class="operation-subtitle">Visible Columns</div>
             {{#each columns}}
-                <input type="checkbox" id="{{this}}-input" data-name="{{this}}" data-type="columns" class="checkbox-input" checked style="display: none" />
+                <input type="checkbox" id="{{this}}-input" data-name="{{this}}" data-type="columns" class="checkbox-input" {{#if ../edit}}{{#contains this ../permission.visible_columns}}checked{{/contains}}{{else}}checked{{/if}} style="display: none" />
                 <label for="{{this}}-input" class="check-box-wrapper">
                     <span class="check-box">
                         <svg width="12px" height="10px">
@@ -165,9 +174,9 @@
                 </label>
             {{/each}}
 
-            <div class="operation-title">Transaction Permissions</div>
+            <div class="operation-header">Transaction Permissions</div>
 
-            <input type="checkbox" id="create-transaction-input" data-name="create_transaction" class="checkbox-input" checked style="display: none" />
+            <input type="checkbox" id="create-transaction-input" data-name="create_transaction" class="checkbox-input" {{#if edit}}{{#if permission.create_transaction}}checked{{/if}}{{else}}checked{{/if}} style="display: none" />
             <label for="create-transaction-input" class="check-box-wrapper">
                 <span class="check-box">
                     <svg width="12px" height="10px">
@@ -177,7 +186,7 @@
                 <span class="check-box-label">Create Transaction</span>
             </label>
 
-            <input type="checkbox" id="edit-transaction-settings-input" data-name="edit_transaction_settings" class="checkbox-input" checked style="display: none" />
+            <input type="checkbox" id="edit-transaction-settings-input" data-name="edit_transaction_settings" class="checkbox-input" {{#if edit}}{{#if permission.edit_transaction_settings}}checked{{/if}}{{else}}checked{{/if}} style="display: none" />
             <label for="edit-transaction-settings-input" class="check-box-wrapper">
                 <span class="check-box">
                     <svg width="12px" height="10px">
@@ -187,9 +196,9 @@
                 <span class="check-box-label">Edit Transaction Settings</span>
             </label>
 
-            <div class="operation-title">Store</div>
+            <div class="operation-header">Store</div>
 
-            <input type="checkbox" id="create-store-input" data-name="create_store" class="checkbox-input" checked style="display: none" />
+            <input type="checkbox" id="create-store-input" data-name="create_store" class="checkbox-input" {{#if edit}}{{#if permission.create_store}}checked{{/if}}{{else}}checked{{/if}} style="display: none" />
             <label for="create-store-input" class="check-box-wrapper">
                 <span class="check-box">
                     <svg width="12px" height="10px">
@@ -199,7 +208,7 @@
                 <span class="check-box-label">Create Store</span>
             </label>
 
-            <input type="checkbox" id="edit-store-input" data-name="edit_store" class="checkbox-input" checked style="display: none" />
+            <input type="checkbox" id="edit-store-input" data-name="edit_store" class="checkbox-input" {{#if edit}}{{#if permission.edit_store}}checked{{/if}}{{else}}checked{{/if}} style="display: none" />
             <label for="edit-store-input" class="check-box-wrapper">
                 <span class="check-box">
                     <svg width="12px" height="10px">
@@ -209,7 +218,7 @@
                 <span class="check-box-label">Edit Store</span>
             </label>
 
-            <input type="checkbox" id="delete-store-input" data-name="delete_store" class="checkbox-input" checked style="display: none" />
+            <input type="checkbox" id="delete-store-input" data-name="delete_store" class="checkbox-input" {{#if edit}}{{#if permission.delete_store}}checked{{/if}}{{else}}checked{{/if}} style="display: none" />
             <label for="delete-store-input" class="check-box-wrapper">
                 <span class="check-box">
                     <svg width="12px" height="10px">
@@ -219,41 +228,57 @@
                 <span class="check-box-label">Delete Store</span>
             </label>
 
-            <div class="operation-title">Creating Users</div>
+            <div class="operation-header">Creating Users</div>
 
-            <input type="checkbox" id="create-user-type-input" data-name="create_user_type" class="checkbox-input" checked style="display: none" />
+            <input type="checkbox" id="create-user-type-input" data-name="create_user_type" class="checkbox-input" {{#if edit}}{{#if permission.create_user_type}}checked{{/if}}{{else}}checked{{/if}} style="display: none" />
             <label for="create-user-type-input" class="check-box-wrapper">
                 <span class="check-box">
                     <svg width="12px" height="10px">
                         <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
                     </svg>
                 </span>
-                <span class="check-box-label">Create User Types</span>
+                <span class="check-box-label">Create Employee Type</span>
             </label>
 
-            <input type="checkbox" id="create-new-users-input" data-name="create_user" class="checkbox-input" checked style="display: none" />
-            <label for="create-new-users-input" class="check-box-wrapper">
-                <span class="check-box">
-                    <svg width="12px" height="10px">
-                        <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
-                    </svg>
-                </span>
-                <span class="check-box-label">Create New Users</span>
-            </label>
-
-            <input type="checkbox" id="edit-user-permissions-input" data-name="edit_permissions" class="checkbox-input" checked style="display: none" />
+            <input type="checkbox" id="edit-user-permissions-input" data-name="edit_permissions" class="checkbox-input" {{#if edit}}{{#if permission.edit_permissions}}checked{{/if}}{{else}}checked{{/if}} style="display: none" />
             <label for="edit-user-permissions-input" class="check-box-wrapper">
                 <span class="check-box">
                     <svg width="12px" height="10px">
                         <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
                     </svg>
                 </span>
-                <span class="check-box-label">Edit Users Permissions</span>
+                <span class="check-box-label">Edit Employee Permissions</span>
+            </label>
+
+            <input type="checkbox" id="delete-user-permissions-input" data-name="delete_user_type" class="checkbox-input" {{#if edit}}{{#if permission.delete_user_type}}checked{{/if}}{{else}}checked{{/if}} style="display: none" />
+            <label for="delete-user-permissions-input" class="check-box-wrapper">
+                <span class="check-box">
+                    <svg width="12px" height="10px">
+                        <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                    </svg>
+                </span>
+                <span class="check-box-label">Delete Employee Type</span>
+            </label>
+
+            <input type="checkbox" id="create-new-users-input" data-name="create_user" class="checkbox-input" {{#if edit}}{{#if permission.create_user}}checked{{/if}}{{else}}checked{{/if}} style="display: none" />
+            <label for="create-new-users-input" class="check-box-wrapper">
+                <span class="check-box">
+                    <svg width="12px" height="10px">
+                        <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                    </svg>
+                </span>
+                <span class="check-box-label">Create New Employees</span>
             </label>
         </div>
 
         <div class="operation-button-wrapper">
-            <button class="add" id="create-user-type-submit">Create User Type</button>
+            <div id="settings-result"></div>
+            {{#if edit}}
+                <button class="edit" id="edit-user-type-submit">Edit User Permissions</button>
+                <button class="delete" id="delete-user-type-submit">Delete Employee Type</button>
+            {{else}}
+                <button class="add" id="create-user-type-submit">Create User Type</button>
+            {{/if}}
         </div>
     </div>
     {{/ifCond}}
@@ -266,7 +291,7 @@
             <label for="assign-store-input">User Type</label>
             <select class="select-input" id="user-type-input">
                 {{#each user_types}}
-                    <option value="{{this.id}}">{{this.name}}</option>
+                    <option value="{{this.id}}" {{#ifCond user_type_id '==' this.id}}selected{{/ifCond}}>{{this.name}}</option>
                 {{/each}}
             </select>
 

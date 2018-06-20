@@ -17,19 +17,29 @@ function init() {
     google.charts.load('current', {packages: ['corechart', 'line']});
     console.log(globals.transactions);
 
+    //Start Date
+    var d1 = new Date();
+    d1.setHours(globals.start_time, 0, 0, 0);
+
+    //End Date
+    var d2 = new Date();
+    d2.setHours(globals.start_time, 0, 0, 0);
+    d2.setDate(d1.getDate() + 1);
+
+    if (globals.date_range == '7') {
+        d1.setDate(d2.getDate() - 7);
+        getTransactionReport(d1.valueOf()/1000, d2.valueOf()/1000 - 1);
+    } else if(globals.date_range == '*') {
+        d1 = '*';
+        getTransactionReport(d1, d2);
+    } else {
+        getTransactionReport(d1.valueOf()/1000, d2.valueOf()/1000 - 1);
+    }
+
     if (globals.date_range == '*') {
         createOverviewGraph(globals.transactions)
     } else {
         createOverviewGraph(globals.transactions, globals.start_epoch, globals.end_epoch);
-    }
-}
-
-function currencyFormat(cents) {
-    if (cents == 0) {
-        return cents.toFixed(2);
-    } else {
-        cents = cents.toString();
-        return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
     }
 }
 

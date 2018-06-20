@@ -27,6 +27,8 @@ def check_link_columns(link_column, item):
     cost_column = link_column['cost']
     price_column = link_column['price']
 
+    error_list = []
+
     if quantity_column:
         quantity = item[quantity_column].strip()
 
@@ -35,8 +37,7 @@ def check_link_columns(link_column, item):
         try:
             item[quantity_column] = int(quantity)
         except ValueError:
-            data = {'success': False, 'error_msg': 'Wrong type of quantity.'}
-            return HttpResponseBadRequest(json.dumps(data), 'application/json')
+            error_list.append([quantity_column, 'Must be a whole number.'])
 
     if cost_column:
         cost = item[cost_column].strip()
@@ -46,20 +47,20 @@ def check_link_columns(link_column, item):
         try:
             item[cost_column] = '{0:.2f}'.format(float(cost))
         except ValueError:
-            data = {'success': False, 'error_msg': 'Wrong data type of cost.'}
-            return HttpResponseBadRequest(json.dumps(data), 'application/json')
+            error_list.append([cost_column, 'Must be a whole or decimal number.'])
 
     if price_column:
         price = item[price_column].strip()
 
         if price == "":
             item[price_column] = "0.00"
-
         try:
             item[price_column] = '{0:.2f}'.format(float(price))
         except ValueError:
-            data = {'success': False, 'error_msg': 'Wrong data type of price.'}
-            return HttpResponseBadRequest(json.dumps(data), 'application/json')
+            error_list.append([price_column, 'Must be a whole or decimal number.'])
 
-    return item
+    if error_list:
+        return HttpResponseBadRequest(json.dumps(error_list), 'application/json')
+    else:
+        return item
 

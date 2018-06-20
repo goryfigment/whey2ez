@@ -1,30 +1,23 @@
-import json
 from django.http import JsonResponse, HttpResponseBadRequest
-import whey2ez.modules.checker as checker
 from whey2ez.modules.base import decimal_format, transaction_name_regex
 from whey2ez.models import ItemLog
 from whey2ez.modules.base import get_boss, get_establishment, sort_inventory
+from whey2ez.decorators import login_required, user_permission, data_required
 
 
+@login_required
+@user_permission('')
+@data_required(['column', 'link_type'], 'POST')
 def link_columns(request):
-    checker.check_req_data(['column', 'link_type'], request.POST)
-
     current_user = request.user
-    checker.check_permission(current_user)
-
     column = request.POST['column']
     link_type = request.POST['link_type']
-
-    if current_user.boss:
-        establishment = current_user.boss.business
-    else:
-        establishment = current_user.employee.boss.business
-
+    current_boss = get_boss(current_user)
+    establishment = current_boss.business
     user_inventory = establishment.inventory
 
     if link_type not in establishment.link_columns:
-        data = {'success': False, 'error_msg:': 'Link type does not exist.'}
-        return HttpResponseBadRequest(json.dumps(data), 'application/json')
+        return HttpResponseBadRequest('Link type does not exist.', 'application/json')
 
     establishment.link_columns[link_type] = column.strip()
 

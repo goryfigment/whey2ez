@@ -43,6 +43,10 @@ class Settings(models.Model):
     # TRANSACTION SETTINGS
     transaction_filter = JSONField()
     date_range = models.CharField(max_length=15, default='*')
+    # RECEIPT SETTINGS
+    ip_address = models.CharField(max_length=100, default='192.168.0.0')
+    header = JSONField()
+    footer = JSONField()
 
     class Meta:
         db_table = "settings"
@@ -84,6 +88,7 @@ class Permission(models.Model):
     create_user = models.BooleanField(default=True)
     create_user_type = models.BooleanField(default=True)
     edit_permissions = models.BooleanField(default=True)
+    delete_user_type = models.BooleanField(default=True)
 
     class Meta:
         db_table = "permission"
@@ -91,7 +96,7 @@ class Permission(models.Model):
 
 class UserType(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    permission = models.OneToOneField(Permission)
+    permission = models.OneToOneField(Permission, on_delete=models.CASCADE)
     boss = models.ForeignKey(Boss)
 
     class Meta:
@@ -116,8 +121,8 @@ class User(AbstractBaseUser):
     last_name = models.CharField(max_length=255)
     is_staff = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=True)
-    boss = models.ForeignKey(Boss, default=None, null=True)
-    employee = models.ForeignKey(Employee, default=None, null=True)
+    boss = models.OneToOneField(Boss, default=None, null=True, on_delete=models.CASCADE)
+    employee = models.OneToOneField(Employee, default=None, null=True, on_delete=models.CASCADE)
     # password = models.CharField(max_length=255)
     # last_login = models.DateTimeField(default=timezone.now, blank=True)
 

@@ -4,13 +4,11 @@
             {{#if link_columns.cost}}
                 {{#if link_columns.name}}
                     <div id="time-range">
-                        {{#if start_time}}
-                            {{#if start_time}}
-                                From {{start_time}} - {{end_time}}<span id="calendar-edit"><i class="far fa-edit"></i></span>
-                            {{/if}}
-                        {{else}}
+                        {{#ifCond start_time '==' '*'}}
                             All <span id="calendar-edit"><i class="far fa-edit"></i></span>
-                        {{/if}}
+                        {{else}}
+                            From {{start_time}} - {{end_time}}<span id="calendar-edit"><i class="far fa-edit"></i></span>
+                        {{/ifCond}}
                     </div>
 
                     <div id="table-scroll-wrapper">
@@ -72,13 +70,11 @@
     {{/if}}
 {{else}}
     <div id="time-range">
-        {{#if start_time}}
-            {{#if start_time}}
-                From {{start_time}} - {{end_time}}<span id="calendar-edit"><i class="far fa-edit"></i></span>
-            {{/if}}
-        {{else}}
+        {{#ifCond start_time '==' '*'}}
             All <span id="calendar-edit"><i class="far fa-edit"></i></span>
-        {{/if}}
+        {{else}}
+            From {{start_time}} - {{end_time}}<span id="calendar-edit"><i class="far fa-edit"></i></span>
+        {{/ifCond}}
     </div>
     <div id="empty-transaction-wrapper">
         <span id="empty-transaction-icon"><i class="fas fa-shopping-cart"></i></span>

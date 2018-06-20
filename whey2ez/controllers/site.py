@@ -5,7 +5,7 @@ from django.forms.models import model_to_dict
 from whey2ez.modules.base import decimal_format, transaction_total, get_transactions, get_utc_epoch_time, get_boss, get_establishment
 from whey2ez.models import UserType, Employee, User, ItemLog
 import json, time
-from django.utils import timezone
+
 
 def error_page(request):
     data = {
@@ -75,7 +75,6 @@ def inventory(request):
         'business_id': user_business.id,
         'business_name': user_business.name,
         'inventory': json.dumps(sorted_inventory),
-        'json_inventory': json.dumps(user_inventory),
         'link_columns': json.dumps(user_business.link_columns),
         'columns': json.dumps(user_business.columns['columns']),
         'name': current_user.first_name + " " + current_user.last_name,
@@ -123,7 +122,7 @@ def employee(request):
 def transaction(request):
     current_user = request.user
 
-    # If user is login redirect to overview
+    # If not login go to login page
     if not request.user.is_authenticated():
         return HttpResponseRedirect('/login/')
 
@@ -132,19 +131,9 @@ def transaction(request):
     user_settings = model_to_dict(current_boss.settings)
     user_business = current_boss.business
     user_settings['business_tax'] = decimal_format(float(user_business.tax)*100, 3, False)
-    date_range = user_settings['date_range']
-    start_time = None
-    end_time = None
-
-    if date_range == '*':
-        transactions = get_transactions(current_boss, order='-date')
-    else:
-        start_time = get_utc_epoch_time(days=date_range)
-        end_time = get_utc_epoch_time()
-        transactions = get_transactions(current_boss, start_time=start_time, end_time=end_time, order='-date')
-
-    # ADD NAME TO TRANSACTION ITEMS & CALCULATE TOTAL
-    total_data = transaction_total(transactions)
+    user_settings['ip_address'] = user_settings['ip_address'].split('.')
+    user_settings['example_item'] = next(iter(user_business.inventory.items()))[1]
+    user_settings['link_columns'] = user_business.link_columns
 
     data = {
         'base_url': get_base_url(),
@@ -156,20 +145,11 @@ def transaction(request):
         'business_id': user_business.id,
         'business_name': user_business.name,
         'stores': list(user_business.stores.all().values()),
-        'transactions': total_data['transactions'],
-        'total': total_data['total'],
         'settings': user_settings,
+        'start_time': user_settings['start_time'],
         'date_range': user_settings['date_range'],
-        'all': 'ALL'
+        'receipt_settings': json.dumps(user_settings)
     }
-
-    if start_time and end_time:
-        data['start_time'] = time.strftime('%b %#d, %Y %#I:%M%p', time.localtime(int(start_time)))
-        data['end_time'] = time.strftime('%b %#d, %Y %#I:%M%p', time.localtime(int(end_time)))
-
-    # If not login go to
-    if not request.user.is_authenticated():
-        return HttpResponseRedirect('/login/')
 
     return render(request, 'transaction.html', data)
 

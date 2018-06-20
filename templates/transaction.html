@@ -11,6 +11,8 @@
         globals.date_range = '{{date_range}}';
         globals.columns = {{columns|safe}};
         globals.link_columns = {{link_columns|safe}};
+        globals.start_time = {{start_time}};
+        globals.receipt_settings = {{receipt_settings|safe}};
     </script>
 </head>
 <body>
@@ -63,7 +65,9 @@
                 <div id="tab-wrapper">
                     <div class="tab active" id="transaction-tab" data-wrapper="#transaction-wrapper">Transaction</div>
                     <div class="tab" id="discount-tab" data-wrapper="#discount-wrapper">Discount</div>
-                    <div class="tab" id="settings-tab" data-wrapper="#settings-wrapper">Settings</div>
+
+                    <div class="tab" id="receipt-tab" data-wrapper="#receipt-wrapper">Receipt</div>
+                    <div class="tab" id="setttings-tab" data-wrapper="#settings-wrapper">Setting</div>
                 </div>
                 <div id="user-wrapper">
                     <div id="user-container">
@@ -75,93 +79,14 @@
 
             <div id="main-content-container">
                 <div class="body-wrapper active" id="transaction-wrapper">
-                    {% if transactions and link_dict.quantity and link_dict.price and link_dict.cost and link_dict.name %}
-                    <div id="time-range">
-                        {% if start_time and end_time %}
-                            From {{start_time}} - {{end_time}} <span id="calendar-edit"><i class="far fa-edit"></i></span>
-                        {% else %}
-                            All <span id="calendar-edit"><i class="far fa-edit"></i></span>
-                        {% endif %}
-                    </div>
-                    <div id="table-scroll-wrapper">
-                        <table class="table-container">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Product</th>
-                                    <th>Qty</th>
-                                    <th>Price</th>
-                                    <th>Subtotal</th>
-                                    <th>Tax</th>
-                                    <th>Discount</th>
-                                    <th>Type</th>
-                                    <th>Total</th>
-                                </tr>
-                            </thead>
 
-                            <tbody>
-                                {% for transaction in transactions %}
-                                    <tr>
-                                        <td class="number-column">{{transaction.date}}</td>
-                                        <td class="name-column">
-                                            {% for item in transaction.items.list %}
-                                                <div class="product_name">{{item.name}}</div>
-                                            {% endfor %}
-                                        </td>
-                                        <td class="number-column">
-                                            {% for item in transaction.items.list %}
-                                                <div>{{item.quantity}}</div>
-                                            {% endfor %}
-                                        </td>
-                                        <td class="number-column">
-                                            {% for item in transaction.items.list %}
-                                                <div>{{item.price}}</div>
-                                            {% endfor %}
-                                        </td>
-                                        <td class="number-column">{{transaction.subtotal}}</td>
-                                        <td class="number-column">{{transaction.tax}}</td>
-                                        <td class="number-column"><span class="minus-sign"><i class="fas fa-minus"></i></span>{{transaction.discount}}</td>
-                                        <td>{{transaction.payment_type}}</td>
-                                        <td class="number-column">{{transaction.total}}</td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div id="total-wrapper">
-                        <span>Cash: {{ total.cash }}</span>
-                        <span>Credit: {{ total.credit }}</span>
-                        <span>Total: {{ total.total }}</span>
-                    </div>
-                    {% else %}
-                        <div id="empty-transaction-wrapper">
-                            <span id="empty-transaction-icon"><i class="fas fa-shopping-cart"></i></span>
-                            <div id="empty-container">
-                                {% if not transactions %}
-                                    <div>You have no Transactions!</div>
-                                {% endif %}
-                                {% if not link_dict.quantity and not link_dict.price and not link_dict.cost and not link_dict.name %}
-                                    <div class="get-started-text">Before you can make a transaction:</div>
-                                {% endif %}
-                                {% if not link_dict.quantity %}
-                                    <a id="quantity-link">Link your 'Quantity' Column!</a>
-                                {% endif %}
-                                {% if not link_dict.price %}
-                                    <a id="price-link">Link your 'Price' Column!</a>
-                                {% endif %}
-                                {% if not link_dict.cost %}
-                                    <a id="cost-link">Link your 'Cost' Column!</a>
-                                {% endif %}
-                                {% if not link_dict.name %}
-                                    <a id="name-link">Link your 'Name' Column!</a>
-                                {% endif %}
-                            </div>
-                        </div>
-                    {% endif %}
                 </div>
 
                 <div class="body-wrapper" id="discount-wrapper">
+
+                </div>
+
+                <div class="body-wrapper" id="receipt-wrapper">
 
                 </div>
 
@@ -250,6 +175,7 @@
                         </div>
                     </div>
                     <div id="save-wrapper">
+                        <div id="settings-result"></div>
                         <button id="transaction-settings-submit" class="add">Save Settings</button>
                     </div>
                 </div>

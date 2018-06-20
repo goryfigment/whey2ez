@@ -75,6 +75,32 @@
 /* SIDE BAR */
 
 /* OPERATION POPUP */
+#operation-popup-wrapper input {
+    height: 31px;
+}
+
+.operation-button-wrapper {
+    padding-top: 16px;
+    position: relative;
+}
+
+.operation-header {
+    background: #3f4e97;
+    padding: 10px 0;
+    margin: 10px 0;
+    text-align: center;
+    font-size: 22px;
+    cursor: default;
+}
+
+.operation-subtitle {
+    background: #5d5d5d;
+    font-size: 20px;
+    border-radius: 1px;
+    padding: 7px;
+    margin: 10px 0 10px 25px;
+}
+
 .operation-popup-container{
 	width: 80%;
     margin: 0 auto;
@@ -87,8 +113,9 @@
 
 #permission-wrapper {
 	overflow: auto;
-    height: calc(100% - 170px);
+    height: calc(100% - 183px);
     padding: 2px 25px;
+
 }
 
 .permission-input-container {
@@ -121,15 +148,36 @@
 .input-description.active{
 	display: block;
 }
+
+#settings-result {
+    font-size: 11px;
+    position: absolute;
+    top: 0;
+    left: 47.5%;
+}
+
+.success {
+    color: #4dff4d;
+}
+
+.denied {
+    color: #ff655d;
+}
+
+.error {
+    display: none;
+    font-size: 13px;
+}
 /* OPERATION POPUP */
 
 /*TEST*/
 .check-box-wrapper {
-	margin: auto;
+    margin: auto 0 0 50px;
     user-select: none;
     cursor: pointer;
 	padding: 10px;
-    border: solid 1px #939393;
+    border: solid 1px #272727;
+    background: #000000;
 }
 
 .check-box-wrapper span {

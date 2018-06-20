@@ -1,4 +1,4 @@
-import json, time
+import re, time
 from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.forms.models import model_to_dict
 import pandas as pd
@@ -6,7 +6,7 @@ from io import BytesIO as IO
 from whey2ez.controllers.operation import inventory_operation
 import whey2ez.modules.checker as checker
 from whey2ez.modules.base import get_boss, get_establishment, sort_inventory
-from whey2ez.models import ItemLog
+from whey2ez.models import ItemLog, UserType
 from whey2ez.decorators import login_required, user_permission, data_required
 
 
@@ -18,17 +18,15 @@ def add_column(request):
     current_boss = get_boss(current_user)
     establishment = get_establishment(request.POST['id'], request.POST['type'], current_boss)
 
-    column_name = request.POST['column_name'].lower()
+    column_name = request.POST['column_name'].lower().strip()
     items = establishment.inventory
     columns = establishment.columns['columns']
 
     if column_name == '':
-        data = {'success': False, 'error_msg:': 'Column name is an empty string.'}
-        return HttpResponseBadRequest(json.dumps(data), 'application/json')
+        return HttpResponseBadRequest('Column name is an empty string.', 'application/json')
 
     if column_name in columns:
-        data = {'success': False, 'error_msg:': 'Column name already exist.'}
-        return HttpResponseBadRequest(json.dumps(data), 'application/json')
+        return HttpResponseBadRequest('Column name already exist.', 'application/json')
 
     columns.append(column_name)
     for key, item in items.iteritems():
@@ -49,19 +47,18 @@ def add_item(request):
     current_user = request.user
     current_boss = get_boss(current_user)
     establishment = get_establishment(request.BODY['id'], request.BODY['type'], current_boss)
+    columns = establishment.columns
     linked_columns = current_boss.business.link_columns
     # Check if all link columns has static data
     item = checker.check_link_columns(linked_columns, request.BODY['item'])
     if isinstance(item, HttpResponseBadRequest):
         return item
 
-    items = establishment.inventory
-    columns = establishment.columns['columns']
-
     for key, val in item.iteritems():
         if key not in columns:
-            data = {'success': False, 'error_msg:': 'All columns do not exist!', 'data': request}
-            return HttpResponseBadRequest(json.dumps(data), 'application/json')
+            return HttpResponseBadRequest('All columns do not exist.', 'application/json')
+
+    items = establishment.inventory
 
     if len(items):
         item_id = int(max(items, key=int)) + 1
@@ -93,29 +90,47 @@ def edit_column(request):
     linked_columns = establishment.link_columns
 
     if prev_column_name not in columns:
-        data = {'success': False, 'error_msg:': 'Column name does not exist.'}
-        return HttpResponseBadRequest(json.dumps(data), 'application/json')
+        return HttpResponseBadRequest('Column name does not exist.', 'application/json')
+
+    if new_column_name == '':
+        return HttpResponseBadRequest('Column name is an empty string.', 'application/json')
 
     # Edit column list
     establishment.columns['columns'] = [w.replace(prev_column_name, new_column_name) for w in columns]
+
     # Edit inventory
     for key, item in items.iteritems():
         item[new_column_name] = item.pop(prev_column_name)
+
     # Check link columns
     for key, item in linked_columns.iteritems():
         if linked_columns[key] == prev_column_name:
             linked_columns[key] = new_column_name
 
+    # Check name link column
+    name_regex = linked_columns['name']
+    if name_regex:
+        linked_columns['name'] = name_regex.replace('{{' + prev_column_name + '}}', '{{' + new_column_name + '}}')
+
     establishment.save()
 
     user_settings = current_boss.settings
 
+    # Check transaction filters
     user_settings.transaction_filter['filter'] = [w.replace(prev_column_name, new_column_name) for w in columns]
 
     if prev_column_name == user_settings.order_by:
         user_settings.order_by = new_column_name
 
     user_settings.save()
+
+    # Check every permission visible columns
+    user_types = UserType.objects.filter(boss=current_boss)
+    for user_type in user_types:
+        permission = user_type.permission
+        permission.visible_columns = [w.replace(prev_column_name, new_column_name) for w in columns]
+        permission.save()
+
     user_inventory = sort_inventory(user_settings, establishment.inventory)
 
     return JsonResponse({'columns': establishment.columns['columns'], 'inventory': user_inventory}, safe=False)
@@ -141,8 +156,7 @@ def edit_item(request):
 
     for key, val in item.iteritems():
         if key not in columns:
-            data = {'success': False, 'error_msg:': 'All columns do not exist!'}
-            return HttpResponseBadRequest(json.dumps(data), 'application/json')
+            return HttpResponseBadRequest('All columns do not exist.', 'application/json')
 
     items[item_id] = item
     establishment.save()
@@ -167,12 +181,10 @@ def delete_column(request):
     linked_columns = establishment.link_columns
 
     if column_name == '':
-        data = {'success': False, 'error_msg:': 'Column name is an empty string.'}
-        return HttpResponseBadRequest(json.dumps(data), 'application/json')
+        return HttpResponseBadRequest('Column name is an empty string.', 'application/json')
 
     if column_name not in columns:
-        data = {'success': False, 'error_msg:': 'Column name does not exist.'}
-        return HttpResponseBadRequest(json.dumps(data), 'application/json')
+        return HttpResponseBadRequest('Column name does not exist.', 'application/json')
     
     # Remove column from list
     columns.remove(column_name)
@@ -194,10 +206,19 @@ def delete_column(request):
     if column_name == user_settings.order_by:
         user_settings.order_by = "none"
 
+    # Check transaction filter
     if column_name in transaction_filter:
         transaction_filter.remove(column_name)
 
     user_settings.save()
+
+    # Check every permission visible columns
+    user_types = UserType.objects.filter(boss=current_boss)
+    for user_type in user_types:
+        permission = user_type.permission
+        permission.visible_columns.remove(column_name)
+        permission.save()
+
     user_inventory = sort_inventory(user_settings, establishment.inventory)
 
     return JsonResponse({'columns': establishment.columns['columns'], 'inventory': user_inventory}, safe=False)
@@ -222,34 +243,32 @@ def delete_item(request):
 
 
 @login_required
-@user_permission('import_file')
 @data_required(['excel_file'], 'FILES')
 def read_excel(request):
-    if request.method == 'POST' and request.FILES['excel_file']:
-        excel_file = pd.read_excel(request.FILES['excel_file'])
+    excel_file = pd.read_excel(request.FILES['excel_file'])
 
-        columns = excel_file.columns
+    columns = excel_file.columns
 
-        json_data = {'headers': [], 'data': [], 'column': {}}
+    json_data = {'headers': [], 'data': [], 'column': {}}
 
-        for index in range(0, len(excel_file[columns[0]])):
-            row_data = []
+    for index in range(0, len(excel_file[columns[0]])):
+        row_data = []
 
-            for column in columns:
-                if index == 0:
-                    json_data['headers'].append(column)
+        for column in columns:
+            if index == 0:
+                json_data['headers'].append(column)
 
-                current_data = str(excel_file[column][index])
-                if current_data == 'nan':
-                    current_data = ""
-                else:
-                    current_data = " ".join(current_data.strip().split())
+            current_data = str(excel_file[column][index])
+            if current_data == 'nan':
+                current_data = ""
+            else:
+                current_data = " ".join(current_data.strip().split())
 
-                row_data.append(current_data)
+            row_data.append(current_data)
 
-            json_data['data'].append(row_data)
+        json_data['data'].append(row_data)
 
-        return JsonResponse(json_data, safe=False)
+    return JsonResponse(json_data, safe=False)
 
 
 @login_required
@@ -329,24 +348,27 @@ def import_submit(request):
 
 @login_required
 @user_permission('export_file')
-@data_required(['inventory', 'columns'], 'BODY')
+@data_required(['inventory', 'columns', 'type'], 'BODY')
 def export_submit(request):
-    byte_io = IO()
+    if request.BODY['type'] == 'excel':
+        byte_io = IO()
 
-    excel_file = pd.DataFrame(request.BODY['inventory'])
-    excel_file = excel_file[request.BODY['columns']]
+        excel_file = pd.DataFrame(request.BODY['inventory'])
+        excel_file = excel_file[request.BODY['columns']]
 
-    writer = pd.ExcelWriter(byte_io, engine='xlsxwriter')
-    excel_file.to_excel(writer, sheet_name='Inventory')
-    writer.save()
-    writer.close()
+        writer = pd.ExcelWriter(byte_io, engine='xlsxwriter')
+        excel_file.to_excel(writer, sheet_name='Inventory')
+        writer.save()
+        writer.close()
 
-    byte_io.seek(0)
+        byte_io.seek(0)
 
-    response = HttpResponse(byte_io.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename=inventory.xlsx'
+        response = HttpResponse(byte_io.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename=inventory.xlsx'
 
-    return response
+        return response
+    else:
+        return JsonResponse({}, safe=False)
 
 
 @login_required
@@ -374,8 +396,13 @@ def drop_table(request):
 @user_permission('receive')
 @data_required(['item_id', 'change_value', 'id', 'type', 'details'], 'POST')
 def received(request):
+    try:
+        request.POST['change_value'] = int(request.POST['change_value'])
+    except ValueError:
+        return HttpResponseBadRequest('Must be a whole number.', 'application/json')
+
     def received_operation(column, change_value):
-        return column + int(change_value)
+        return int(column) + change_value
 
     return JsonResponse(inventory_operation(request, 'Edit', 'Received', 'quantity', received_operation), safe=False)
 
@@ -384,8 +411,13 @@ def received(request):
 @user_permission('damage')
 @data_required(['item_id', 'change_value', 'id', 'type', 'details'], 'POST')
 def damaged(request):
+    try:
+        request.POST['change_value'] = int(request.POST['change_value'])
+    except ValueError:
+        return HttpResponseBadRequest('Must be a whole number.', 'application/json')
+
     def damaged_operation(column, change_value):
-        return int(column) - int(change_value)
+        return int(column) - change_value
 
     return JsonResponse(inventory_operation(request, 'Edit', 'Damaged', 'quantity', damaged_operation), safe=False)
 
@@ -394,8 +426,13 @@ def damaged(request):
 @user_permission('reset_cost')
 @data_required(['item_id', 'change_value', 'id', 'type', 'details'], 'POST')
 def reset_cost(request):
+    try:
+        request.POST['change_value'] = float(request.POST['change_value'])
+    except ValueError:
+        return HttpResponseBadRequest('Must be a decimal or whole number.', 'application/json')
+
     def received_operation(column, change_value):
-        return '{0:.2f}'.format(float(change_value))
+        return '{0:.2f}'.format(change_value)
 
     return JsonResponse(inventory_operation(request, 'Edit', 'Reset Cost', 'cost', received_operation), safe=False)
 
@@ -404,8 +441,13 @@ def reset_cost(request):
 @user_permission('reset_cost')
 @data_required(['item_id', 'change_value', 'id', 'type', 'details'], 'POST')
 def reset_price(request):
+    try:
+        request.POST['change_value'] = float(request.POST['change_value'])
+    except ValueError:
+        return HttpResponseBadRequest('Must be a decimal or whole number.', 'application/json')
+
     def received_operation(column, change_value):
-        return '{0:.2f}'.format(float(change_value))
+        return '{0:.2f}'.format(change_value)
 
     return JsonResponse(inventory_operation(request, 'Edit', 'Reset Price', 'price', received_operation), safe=False)
 

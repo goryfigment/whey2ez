@@ -54,7 +54,7 @@ $(document).ready(function() {
         popupHandler(e, {type: "employee_type", columns: globals.columns});
     });
 
-    $(document).on('click', '#create-user-type-submit', function (e) {
+    $(document).on('click', '#create-user-type-submit', function () {
         var $operationOverlay = $('#operation-overlay');
 
         var visibleColumns = [];
@@ -82,26 +82,163 @@ $(document).ready(function() {
             dataType: 'json',
             type: "POST",
             success: function (response) {
-                console.log(JSON.stringify(response));
+                //console.log(JSON.stringify(response));
                 $operationOverlay.removeClass('active');
             },
             error: function (response) {
-                console.log(JSON.stringify(response.responseJSON['error_msg']));
+                if(response.status && response.status == 403) {
+                    var $settingResult = $('#settings-result');
+                    $settingResult.removeClass('success');
+                    $settingResult.addClass('denied');
+                    $settingResult.text('Permission Denied');
+                    $settingResult.show();
+                    $settingResult.fadeOut(2000);
+                } else {
+                    $('.operation-popup-container').find('.error').text(response.responseText).show()
+                }
             }
         });
     });
     //EMPLOYEE TYPE//
 
+    //GET EMPLOYEE TYPE//
+    $(document).on('click', '#user-type-settings', function (e) {
+        var userTypeId = $(this).closest('.user-type-item').attr('data-id');
+
+        var getData = {
+            'user_type': userTypeId
+        };
+
+        $.ajax({
+            url: globals.base_url + '/employee/get_employee_type/',
+            data: getData,
+            dataType: 'json',
+            type: "GET",
+            success: function (response) {
+                console.log(response);
+                response['type'] = "employee_type";
+                response['columns'] = globals.columns;
+                response['edit'] = true;
+                popupHandler(e, response);
+
+                $('#edit-user-type-submit').data('id', userTypeId);
+                $('#delete-user-type-submit').data('id', userTypeId);
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    var $settingResult = $('#settings-result');
+                    $settingResult.removeClass('success');
+                    $settingResult.addClass('denied');
+                    $settingResult.text('Permission Denied');
+                    $settingResult.show();
+                    $settingResult.fadeOut(2000);
+                } else {
+                    $('.operation-popup-container').find('.error').text(response.responseText).show()
+                }
+            }
+        });
+    });
+    //GET EMPLOYEE TYPE//
+
+
+    //EDIT EMPLOYEE TYPE//
+    $(document).on('click', '#edit-user-type-submit', function () {
+        var $operationOverlay = $('#operation-overlay');
+
+        var visibleColumns = [];
+        var postData = {
+            permissions: {}
+        };
+
+        $operationOverlay.find('.checkbox-input').each(function() {
+            var $checkboxInput = $(this);
+
+            if ($checkboxInput.attr('data-type') == 'columns' && $checkboxInput.prop('checked')) {
+                visibleColumns.push($checkboxInput.attr('data-name'));
+            } else {
+                postData['permissions'][$checkboxInput.attr('data-name')] = $checkboxInput.prop('checked');
+            }
+        });
+
+        postData['visible_columns'] = visibleColumns;
+        postData['name'] = $operationOverlay.find('#employee-type-input').val();
+        postData['user_type'] = $(this).data('id');
+
+        $.ajax({
+            headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
+            url: globals.base_url + '/employee/edit_user_type/',
+            data: JSON.stringify(postData),
+            dataType: 'json',
+            type: "POST",
+            success: function (response) {
+                console.log(JSON.stringify(response));
+
+                var $settingResult = $('#settings-result');
+                $settingResult.removeClass('denied');
+                $settingResult.addClass('success');
+                $settingResult.text('Saved!');
+                $settingResult.show();
+                $settingResult.fadeOut(2000);
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    var $settingResult = $('#settings-result');
+                    $settingResult.removeClass('success');
+                    $settingResult.addClass('denied');
+                    $settingResult.text('Permission Denied');
+                    $settingResult.show();
+                    $settingResult.fadeOut(2000);
+                } else {
+                    $('.operation-popup-container').find('.error').text(response.responseText).show()
+                }
+            }
+        });
+    });
+    //EDIT EMPLOYEE TYPE//
+
+
+    //DELETE EMPLOYEE TYPE//
+    $(document).on('click', '#delete-user-type-submit', function () {
+
+        var userTypeId = $(this).data('id');
+
+        $.ajax({
+            headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
+            url: globals.base_url + '/employee/delete_user_type/',
+            data: {'user_type': userTypeId},
+            dataType: 'json',
+            type: "POST",
+            success: function (response) {
+                $('#operation-overlay').removeClass('active');
+                $('.user-type-item[data-id="' + userTypeId + '"]').remove();
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    var $settingResult = $('#settings-result');
+                    $settingResult.removeClass('success');
+                    $settingResult.addClass('denied');
+                    $settingResult.text('Permission Denied');
+                    $settingResult.show();
+                    $settingResult.fadeOut(2000);
+                } else {
+                    $('.operation-popup-container').find('.error').text(response.responseText).show()
+                }
+            }
+        });
+    });
+    //DELETE EMPLOYEE TYPE//
+
+
     //CREATE USER//
     $(document).on('click', '#user-create', function (e) {
-        popupHandler(e, {type: "create_employee", user_types: globals.user_types, user_type_id: $(this).attr('data-id')});
+        popupHandler(e, {type: "create_employee", user_types: globals.user_types, user_type_id: parseInt($(this).attr('data-id'))});
     });
 
     $(document).on('change', '#assign-store-input', function () {
         var $input = $(this);
         var $inputDescriptionWrapper = $input.siblings('.input-description-wrapper');
         $inputDescriptionWrapper.find('.active').removeClass('active');
-        var $description = $inputDescriptionWrapper.find('.input-description[data-type="' + $input.val() + '"]')
+        var $description = $inputDescriptionWrapper.find('.input-description[data-type="' + $input.val() + '"]');
         $description.addClass('active');
     });
 
@@ -132,53 +269,10 @@ $(document).ready(function() {
             dataType: 'json',
             type: "POST",
             success: function (response) {
-
                 console.log(response);
             },
             error: function (response) {
                 console.log(JSON.stringify(response.responseJSON));
-                //var error = response.responseJSON['error_msg'];
-                //
-                //if (error == 'Username must be between 3 to 15 characters.') {
-                //    var $error = $('.error.username');
-                //    $error.text(error);
-                //    $error.show();
-                //} else if(error == 'Username exists.') {
-                //    $error = $('.error.username');
-                //    $error.text('Username is not available.');
-                //    $error.show();
-                //}
-                //
-                //if (error == 'Password must be 8 characters or more.') {
-                //    $error = $('.error.password');
-                //    $error.text(error);
-                //    $error.show();
-                //
-                //} else if(error == 'Invalid password.') {
-                //    $error = $('.error.password');
-                //    $error.text('Password must contain letter and digit.');
-                //    $error.show();
-                //}
-                //
-                //if(error == 'Invalid email.') {
-                //    $error = $('.error.email');
-                //    $error.text('Must be a valid email.');
-                //    $error.show();
-                //} else if(error == 'Email exists.') {
-                //    $error = $('.error.email');
-                //    $error.text('Email is not available.');
-                //    $error.show();
-                //}
-                //
-                //if(error == 'Must have a first name.') {
-                //    $error = $('.error.email');
-                //    $error.show();
-                //}
-                //
-                //if(error == 'Must have a last name.') {
-                //    $error = $('.error.email');
-                //    $error.show();
-                //}
             }
         });
     });

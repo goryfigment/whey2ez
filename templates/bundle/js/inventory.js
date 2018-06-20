@@ -1,5 +1,34 @@
 webpackJsonp([0],[
 /* 0 */
+/***/ (function(module, exports) {
+
+module.exports = function(v1, operator, v2, options) {
+    switch (operator) {
+        case '==':
+            return (v1 == v2) ? options.fn(this) : options.inverse(this);
+        case '===':
+            return (v1 === v2) ? options.fn(this) : options.inverse(this);
+        case '<':
+            return (v1 < v2) ? options.fn(this) : options.inverse(this);
+        case '<=':
+            return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+        case '>':
+            return (v1 > v2) ? options.fn(this) : options.inverse(this);
+        case '>=':
+            return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+        case '&&':
+            return (v1 && v2) ? options.fn(this) : options.inverse(this);
+        case '||':
+            return (v1 || v2) ? options.fn(this) : options.inverse(this);
+        case '!=':
+            return (v1 != v2) ? options.fn(this) : options.inverse(this);
+        default:
+            return options.inverse(this);
+    }
+};
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -130,35 +159,6 @@ function appendContextPath(contextPath, id) {
 
 
 /***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-module.exports = function(v1, operator, v2, options) {
-    switch (operator) {
-        case '==':
-            return (v1 == v2) ? options.fn(this) : options.inverse(this);
-        case '===':
-            return (v1 === v2) ? options.fn(this) : options.inverse(this);
-        case '<':
-            return (v1 < v2) ? options.fn(this) : options.inverse(this);
-        case '<=':
-            return (v1 <= v2) ? options.fn(this) : options.inverse(this);
-        case '>':
-            return (v1 > v2) ? options.fn(this) : options.inverse(this);
-        case '>=':
-            return (v1 >= v2) ? options.fn(this) : options.inverse(this);
-        case '&&':
-            return (v1 && v2) ? options.fn(this) : options.inverse(this);
-        case '||':
-            return (v1 || v2) ? options.fn(this) : options.inverse(this);
-        case '!=':
-            return (v1 != v2) ? options.fn(this) : options.inverse(this);
-        default:
-            return options.inverse(this);
-    }
-};
-
-/***/ }),
 /* 2 */
 /***/ (function(module, exports) {
 
@@ -266,7 +266,7 @@ exports.HandlebarsEnvironment = HandlebarsEnvironment;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 var _exception = __webpack_require__(3);
 
@@ -396,7 +396,7 @@ var _handlebarsException = __webpack_require__(3);
 
 var _handlebarsException2 = _interopRequireDefault(_handlebarsException);
 
-var _handlebarsUtils = __webpack_require__(0);
+var _handlebarsUtils = __webpack_require__(1);
 
 var Utils = _interopRequireWildcard(_handlebarsUtils);
 
@@ -538,7 +538,7 @@ function registerDefaultHelpers(instance) {
 
 exports.__esModule = true;
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 exports['default'] = function (instance) {
   instance.registerHelper('blockHelperMissing', function (context, options) {
@@ -587,7 +587,7 @@ exports.__esModule = true;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 var _exception = __webpack_require__(3);
 
@@ -717,7 +717,7 @@ module.exports = exports['default'];
 
 exports.__esModule = true;
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 exports['default'] = function (instance) {
   instance.registerHelper('if', function (conditional, options) {
@@ -805,7 +805,7 @@ module.exports = exports['default'];
 
 exports.__esModule = true;
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 exports['default'] = function (instance) {
   instance.registerHelper('with', function (context, options) {
@@ -868,7 +868,7 @@ function registerDefaultDecorators(instance) {
 
 exports.__esModule = true;
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 exports['default'] = function (instance) {
   instance.registerDecorator('inline', function (fn, props, container, options) {
@@ -904,7 +904,7 @@ module.exports = exports['default'];
 
 exports.__esModule = true;
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 var logger = {
   methodMap: ['debug', 'info', 'warn', 'error'],
@@ -993,7 +993,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 var Utils = _interopRequireWildcard(_utils);
 
@@ -1392,11 +1392,30 @@ function upAndDownPopups(keyCode, $popup, $options, scroll) {
     }
 }
 
+function currencyFormat(cents) {
+    cents = Math.round(cents);
+
+    if (cents == 0) {
+        return cents.toFixed(2);
+    } else if(cents < 100){
+        if (cents > 0 || cents > -100) {
+            return (cents/100).toFixed(2);
+        } else {
+            cents = cents.toString();
+            return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
+        }
+    }else {
+        cents = cents.toString();
+        return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
+    }
+}
+
 module.exports = {
     numberCommaFormat: numberCommaFormat,
     replaceAll: replaceAll,
     scrollToElement: scrollToElement,
-    upAndDownPopups: upAndDownPopups
+    upAndDownPopups: upAndDownPopups,
+    currencyFormat: currencyFormat
 };
 
 /***/ }),
@@ -2004,7 +2023,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     var stack1;
 
   return "                    <td "
-    + ((stack1 = __default(__webpack_require__(1)).call(depth0 != null ? depth0 : (container.nullContext || {}),"","==",depth0,{"name":"ifCond","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(depth0 != null ? depth0 : (container.nullContext || {}),"","==",depth0,{"name":"ifCond","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + ">"
     + container.escapeExpression(container.lambda(depth0, depth0))
     + "</td>\r\n";
@@ -2014,11 +2033,11 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
   return "                    <td "
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,(depths[1] != null ? depths[1].current_day : depths[1]),"<",depth0,{"name":"ifCond","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depths[1] != null ? depths[1].current_day : depths[1]),"<",depth0,{"name":"ifCond","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + " "
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,"","==",depth0,{"name":"ifCond","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,"","==",depth0,{"name":"ifCond","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + " "
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,(depths[1] != null ? depths[1].current_day : depths[1]),"==",depth0,{"name":"ifCond","hash":{},"fn":container.program(5, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depths[1] != null ? depths[1].current_day : depths[1]),"==",depth0,{"name":"ifCond","hash":{},"fn":container.program(5, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + ">"
     + container.escapeExpression(container.lambda(depth0, depth0))
     + "</td>\r\n";
@@ -2074,7 +2093,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 /* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Handlebars = __webpack_require__(31);
+var Handlebars = __webpack_require__(32);
 
 module.exports = function(data, column) {
     var html = "";
@@ -2087,7 +2106,8 @@ module.exports = function(data, column) {
 };
 
 /***/ }),
-/* 30 */
+/* 30 */,
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2234,7 +2254,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // USAGE:
@@ -2243,9 +2263,9 @@ module.exports = exports['default'];
 
 // var local = handlebars.create();
 
-var handlebars = __webpack_require__(45)['default'];
+var handlebars = __webpack_require__(46)['default'];
 
-var printer = __webpack_require__(53);
+var printer = __webpack_require__(54);
 handlebars.PrintVisitor = printer.PrintVisitor;
 handlebars.print = printer.print;
 
@@ -2265,7 +2285,7 @@ if ("function" !== 'undefined' && (void 0)) {
 
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2303,7 +2323,6 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 33 */,
 /* 34 */,
 /* 35 */,
 /* 36 */,
@@ -2311,26 +2330,27 @@ module.exports = exports['default'];
 /* 38 */,
 /* 39 */,
 /* 40 */,
-/* 41 */
+/* 41 */,
+/* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(25);
-__webpack_require__(42);
-__webpack_require__(9);
 __webpack_require__(43);
+__webpack_require__(9);
+__webpack_require__(44);
 
 //handlebars
-var inventoryTemplate = __webpack_require__(44);
-var itemLogTemplate = __webpack_require__(54);
-var settingsTemplate = __webpack_require__(56);
-var rowTemplate = __webpack_require__(57);
-var inventoryOperationTemplate = __webpack_require__(58);
-var operationTemplate = __webpack_require__(73);
+var inventoryTemplate = __webpack_require__(45);
+var itemLogTemplate = __webpack_require__(55);
+var settingsTemplate = __webpack_require__(57);
+var rowTemplate = __webpack_require__(58);
+var inventoryOperationTemplate = __webpack_require__(59);
+var operationTemplate = __webpack_require__(60);
 
 //libraries
 var $ = __webpack_require__(6);
 var helper = __webpack_require__(24);
-__webpack_require__(59);
+__webpack_require__(61);
 __webpack_require__(26);
 
 
@@ -2492,7 +2512,11 @@ $(document).ready(function() {
                 globals.inventory = response['inventory'];
             },
             error: function (response) {
-                console.log(JSON.stringify(response.responseJSON['error_msg']));
+                if(response.status && response.status == 403) {
+                    $('#add-column-wrapper').find('.error').text('Permission Denied').show();
+                } else {
+                    $('#add-column-wrapper').find('.error').text(response.responseText).show();
+                }
             }
         });
     });
@@ -2525,7 +2549,23 @@ $(document).ready(function() {
                 globals.inventory = response['inventory'];
             },
             error: function (response) {
-                console.log(JSON.stringify(response.responseJSON['error_msg']));
+                var $wrapper = $('#add-item-wrapper');
+
+                $wrapper.find('.error').each(function() {
+                    $(this).hide();
+                });
+
+                if(response.status && response.status == 403) {
+                    $wrapper.find('.error.permission').text('Permission Denied').show();
+                } else {
+                    var errorList = JSON.parse(response.responseText);
+                    for (var i = 0; i < errorList.length; i++) {
+                        var columnName = errorList[i][0];
+                        var errorMsg = errorList[i][1];
+
+                        $wrapper.find(".error[data-column='" + columnName + "']").text(errorMsg).show();
+                    }
+                }
             }
         });
     });
@@ -2573,7 +2613,11 @@ $(document).ready(function() {
                 globals.columns = response['columns']
             },
             error: function (response) {
-                console.log(JSON.stringify(response.responseJSON['error_msg']));
+                if(response.status && response.status == 403) {
+                    $('#edit-column-wrapper').find('.error').text('Permission Denied').show();
+                } else {
+                    $('#edit-column-wrapper').find('.error').text(response.responseText).show();
+                }
             }
         });
     });
@@ -2583,7 +2627,17 @@ $(document).ready(function() {
     //EDIT ITEM FUNCTIONS//
     $(document).on('click', '#operation-table.edit tbody tr', function () {
         var itemId = $(this).attr('data-id');
-        var item = globals.json_inventory[itemId];
+        var inventoryJson = globals.inventory;
+        var item = null;
+
+        for (var i = 0; i < inventoryJson.length; i++) {
+            var current_item = inventoryJson[i];
+            if (current_item[0] == itemId) {
+                item = current_item[1];
+                break;
+            }
+        }
+
         var $editStep2 = $('#edit-step-2');
 
         for (var key in item) {
@@ -2638,7 +2692,23 @@ $(document).ready(function() {
                 globals.inventory = response['inventory'];
             },
             error: function (response) {
-                console.log(JSON.stringify(response.responseJSON['error_msg']));
+                var $wrapper = $('#edit-item-wrapper');
+
+                $wrapper.find('.error').each(function() {
+                    $(this).hide();
+                });
+
+                if(response.status && response.status == 403) {
+                    $wrapper.find('.error.permission').text('Permission Denied').show();
+                } else {
+                    var errorList = JSON.parse(response.responseText);
+                    for (var i = 0; i < errorList.length; i++) {
+                        var columnName = errorList[i][0];
+                        var errorMsg = errorList[i][1];
+
+                        $wrapper.find(".error[data-column='" + columnName + "']").text(errorMsg).show();
+                    }
+                }
             }
         });
     });
@@ -2691,7 +2761,11 @@ $(document).ready(function() {
                 }
             },
             error: function (response) {
-                console.log(JSON.stringify(response.responseJSON['error_msg']));
+                if(response.status && response.status == 403) {
+                    $('#delete-column-wrapper').find('.error').text('Permission Denied').show();
+                } else {
+                    $('#delete-column-wrapper').find('.error').text(response.responseText).show();
+                }
             }
         });
     });
@@ -2744,6 +2818,25 @@ $(document).ready(function() {
                 $operationOverlay.removeClass('active');
                 $('#inventory-table [data-id="' + itemId + '"]').remove();
                 globals.inventory = response['inventory'];
+            },
+            error: function (response) {
+                var $wrapper = $('#delete-item-wrapper');
+
+                $wrapper.find('.error').each(function() {
+                    $(this).hide();
+                });
+
+                if(response.status && response.status == 403) {
+                    $wrapper.find('.error.permission').text('Permission Denied').show();
+                } else {
+                    var errorList = JSON.parse(response.responseText);
+                    for (var i = 0; i < errorList.length; i++) {
+                        var columnName = errorList[i][0];
+                        var errorMsg = errorList[i][1];
+
+                        $wrapper.find(".error[data-column='" + columnName + "']").text(errorMsg).show();
+                    }
+                }
             }
         });
     });
@@ -2851,6 +2944,13 @@ $(document).ready(function() {
                 $inventoryWrapper.append(inventoryTemplate(response));
                 globals.inventory = response['inventory'];
                 globals.columns = response['columns'];
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    $('#import-wrapper').find('.error').text('Permission Denied').show();
+                } else {
+                    $('#import-wrapper').find('.error').text(response.responseText).show();
+                }
             }
         });
     });
@@ -2865,8 +2965,9 @@ $(document).ready(function() {
     $(document).on('click', '#export-submit', function () {
         var fileType = $('#export-type-input').val();
         var exportLink = document.getElementById('export-download');
-        var inventory = globals.json_inventory;
+        var inventory = globals.inventory;
         var columns = globals.columns;
+        var valid = false;
 
         var inventoryJson = [];
 
@@ -2874,39 +2975,71 @@ $(document).ready(function() {
             inventoryJson.push(inventory[key]);
         }
 
-        if(fileType == 'csv') {
-            var csvFile = '';
-
-            for (var i = 0; i < columns.length; i++) {
-                if(i == columns.length - 1) {
-                    csvFile += columns[i] + '\r\n';
-                } else {
-                    csvFile += columns[i] + ',';
-                }
-            }
-
-            for (var p = 0; p < inventoryJson.length; p++) {
-                var currentRow = inventoryJson[p];
-                for (var c = 0; c < columns.length; c++) {
-                    if(c == columns.length - 1) {
-                        csvFile += '"' + currentRow[columns[c]] + '"\r\n';
-                    } else {
-                        csvFile += '"' + currentRow[columns[c]] + '",';
+        if(fileType == 'csv' || fileType == 'json') {
+            $.ajax({
+                headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
+                url: globals.base_url + '/inventory/export_submit/',
+                data: JSON.stringify({'columns': {}, 'inventory': {}, 'type': fileType}),
+                dataType: 'json',
+                type: "POST",
+                success: function (response) {
+                    valid = true;
+                    callback();
+                },
+                error: function (response) {
+                    if(response.status && response.status == 403) {
+                        $('#export-wrapper').find('.error').text('Permission Denied').show();
                     }
                 }
-            }
+            });
+        }
 
-            var blob = new Blob([csvFile], {type: 'text/csv;charset=utf-8;'});
-            var url = URL.createObjectURL(blob);
-            exportLink.setAttribute("href", url);
-            exportLink.setAttribute("download", "inventory.csv");
-            exportLink.click();
-        } else if(fileType == 'json') {
+        if(fileType == 'json') {
             var tab = window.open();
-            tab.document.open();
-            tab.document.write('<pre style="background:#000; color:#fff; margin: -8px;">' + JSON.stringify({'inventory': inventoryJson}, null, 2) + '</pre>');
-            tab.document.close();
-        } else if(fileType == 'excel') {
+        }
+
+        function callback() {
+            if (valid && fileType == 'csv') {
+                var csvFile = '';
+
+                for (var i = 0; i < columns.length; i++) {
+                    if (i == columns.length - 1) {
+                        csvFile += columns[i] + '\r\n';
+                    } else {
+                        csvFile += columns[i] + ',';
+                    }
+                }
+
+                for (var p = 0; p < inventoryJson.length; p++) {
+                    var currentRow = inventoryJson[p][1];
+                    for (var c = 0; c < columns.length; c++) {
+                        if (c == columns.length - 1) {
+                            csvFile += '"' + currentRow[columns[c]] + '"\r\n';
+                        } else {
+                            csvFile += '"' + currentRow[columns[c]] + '",';
+                        }
+                    }
+                }
+
+                var blob = new Blob([csvFile], {type: 'text/csv;charset=utf-8;'});
+                var url = URL.createObjectURL(blob);
+                exportLink.setAttribute("href", url);
+                exportLink.setAttribute("download", "inventory.csv");
+                exportLink.click();
+            } else if (valid && fileType == 'json') {
+                var newJsonInventory = [];
+
+                for (var j = 0; j < inventoryJson.length; j++) {
+                    newJsonInventory.push(inventoryJson[j][1])
+                }
+
+                tab.document.open();
+                tab.document.write('<pre style="background:#000; color:#fff; margin: -8px;">' + JSON.stringify({'inventory': newJsonInventory}, null, 2) + '</pre>');
+                tab.document.close();
+            }
+        }
+
+        if(fileType == 'excel') {
             var xmlHttp = createXmlHttpRequestObject();
             xmlHttp.open('POST', '/inventory/export_submit/', true);
             xmlHttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
@@ -2920,9 +3053,11 @@ $(document).ready(function() {
                     exportLink.setAttribute("href", window.URL.createObjectURL(new Blob([blob], {type: contentTypeHeader})));
                     exportLink.setAttribute("download", "inventory.xlsx");
                     exportLink.click();
-               }
+                } else if (xmlHttp.status === 403) {
+                    $('#export-wrapper').find('.error').text('Permission Denied').show();
+                }
            };
-           xmlHttp.send(JSON.stringify({'columns': columns, 'inventory': inventoryJson}));
+           xmlHttp.send(JSON.stringify({'columns': columns, 'inventory': inventoryJson, 'type': fileType}));
         }
     });
     //EXPORT FILE FUNCTIONS//
@@ -2932,7 +3067,7 @@ $(document).ready(function() {
         popupHandler(e, {type: "drop_table"});
     });
 
-    $(document).on('click', '#delete-table-submit', function () {
+    $(document).on('click', '#drop-table-submit', function () {
         var $activeInventory = $('.establishment.active');
         var postData = {
             drop_table: true,
@@ -2956,6 +3091,11 @@ $(document).ready(function() {
                 var $inventoryWrapper = $('#inventory-wrapper');
                 $inventoryWrapper.empty();
                 $inventoryWrapper.append(inventoryTemplate({'columns': globals.columns, 'inventory': globals.inventory}));
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    $('#drop-table-wrapper').find('.error').text('Permission Denied').show();
+                }
             }
         });
     });
@@ -2965,7 +3105,7 @@ $(document).ready(function() {
     //RECIEVED FUNCTIONS//
     $(document).on('click', '#receiving-button', function (e) {
         if(!globals.link_columns['quantity']){
-            popupHandler(e, {type: "cost", columns: globals.columns, link_columns: globals.link_columns}, operationTemplate);
+            popupHandler(e, {type: "quantity", columns: globals.columns, link_columns: globals.link_columns}, operationTemplate);
         } else if(!globals.link_columns['name']) {
             popupHandler(e, {type: "name", columns: globals.columns, link_columns: globals.link_columns}, operationTemplate);
         } else {
@@ -3027,6 +3167,13 @@ $(document).ready(function() {
                 $logWrapper.append(itemLogTemplate({'item_log': globals.item_log}));
 
                 tabHandler($('#log-tab'));
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    $('#received-step-2').find('.error').text('Permission Denied').show();
+                } else {
+                    $('#received-step-2').find('.error').text(response.responseText).show();
+                }
             }
         });
     });
@@ -3096,6 +3243,13 @@ $(document).ready(function() {
                 $logWrapper.append(itemLogTemplate({'item_log': globals.item_log}));
 
                 tabHandler($('inventory-tab'));
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    $('#damaged-step-2').find('.error').text('Permission Denied').show();
+                } else {
+                    $('#damaged-step-2').find('.error').text(response.responseText).show();
+                }
             }
         });
     });
@@ -3165,6 +3319,13 @@ $(document).ready(function() {
                 $logWrapper.append(itemLogTemplate({'item_log': globals.item_log}));
 
                 tabHandler($('inventory-tab'));
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    $('#reset-cost-step-2').find('.error').text('Permission Denied').show();
+                } else {
+                    $('#reset-cost-step-2').find('.error').text(response.responseText).show();
+                }
             }
         });
     });
@@ -3172,8 +3333,8 @@ $(document).ready(function() {
 
     //RESET PRICE FUNCTIONS//
     $(document).on('click', '#reset-price-button', function (e) {
-        if(!globals.link_columns['cost']){
-            popupHandler(e, {type: "cost", columns: globals.columns, link_columns: globals.link_columns}, operationTemplate);
+        if(!globals.link_columns['price']){
+            popupHandler(e, {type: "price", columns: globals.columns, link_columns: globals.link_columns}, operationTemplate);
         } else if(!globals.link_columns['name']) {
             popupHandler(e, {type: "name", columns: globals.columns, link_columns: globals.link_columns}, operationTemplate);
         } else {
@@ -3234,6 +3395,13 @@ $(document).ready(function() {
                 $logWrapper.append(itemLogTemplate({'item_log': globals.item_log}));
 
                 tabHandler($('inventory-tab'));
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    $('#reset-price-step-2').find('.error').text('Permission Denied').show();
+                } else {
+                    $('#reset-price-step-2').find('.error').text(response.responseText).show();
+                }
             }
         });
     });
@@ -3293,7 +3461,23 @@ $(document).ready(function() {
                 var $inventoryWrapper = $('#inventory-wrapper');
                 $inventoryWrapper.empty();
                 $inventoryWrapper.append(inventoryTemplate({'columns': globals.columns, 'inventory': globals.inventory}));
-                //console.log(JSON.stringify(response));
+
+                var $settingResult = $('#settings-result');
+                $settingResult.removeClass('denied');
+                $settingResult.addClass('success');
+                $settingResult.text('Saved!');
+                $settingResult.show();
+                $settingResult.fadeOut(2000);
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    var $settingResult = $('#settings-result');
+                    $settingResult.removeClass('success');
+                    $settingResult.addClass('denied');
+                    $settingResult.text('Permission Denied');
+                    $settingResult.show();
+                    $settingResult.fadeOut(2000);
+                }
             }
         });
     });
@@ -3326,21 +3510,14 @@ $(document).ready(function() {
                 globals.link_columns = response;
             },
             error: function (response) {
-                console.log(JSON.stringify(response.responseJSON['error_msg']));
+                if(response.status && response.status == 403) {
+                    $('#link-column-wrapper').find('.error').text('Permission Denied').show();
+                }
             }
         });
     });
     // LINK COLUMN //
-
-
-
 });
-
-/***/ }),
-/* 42 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
 
 /***/ }),
 /* 43 */
@@ -3350,6 +3527,12 @@ $(document).ready(function() {
 
 /***/ }),
 /* 44 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(4);
@@ -3411,7 +3594,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true,"useDepths":true});
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3428,19 +3611,19 @@ var _handlebarsRuntime2 = _interopRequireDefault(_handlebarsRuntime);
 
 // Compiler imports
 
-var _handlebarsCompilerAst = __webpack_require__(32);
+var _handlebarsCompilerAst = __webpack_require__(33);
 
 var _handlebarsCompilerAst2 = _interopRequireDefault(_handlebarsCompilerAst);
 
-var _handlebarsCompilerBase = __webpack_require__(46);
+var _handlebarsCompilerBase = __webpack_require__(47);
 
-var _handlebarsCompilerCompiler = __webpack_require__(50);
+var _handlebarsCompilerCompiler = __webpack_require__(51);
 
-var _handlebarsCompilerJavascriptCompiler = __webpack_require__(51);
+var _handlebarsCompilerJavascriptCompiler = __webpack_require__(52);
 
 var _handlebarsCompilerJavascriptCompiler2 = _interopRequireDefault(_handlebarsCompilerJavascriptCompiler);
 
-var _handlebarsCompilerVisitor = __webpack_require__(30);
+var _handlebarsCompilerVisitor = __webpack_require__(31);
 
 var _handlebarsCompilerVisitor2 = _interopRequireDefault(_handlebarsCompilerVisitor);
 
@@ -3483,7 +3666,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -3499,19 +3682,19 @@ function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _parser = __webpack_require__(47);
+var _parser = __webpack_require__(48);
 
 var _parser2 = _interopRequireDefault(_parser);
 
-var _whitespaceControl = __webpack_require__(48);
+var _whitespaceControl = __webpack_require__(49);
 
 var _whitespaceControl2 = _interopRequireDefault(_whitespaceControl);
 
-var _helpers = __webpack_require__(49);
+var _helpers = __webpack_require__(50);
 
 var Helpers = _interopRequireWildcard(_helpers);
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 exports.parser = _parser2['default'];
 
@@ -3538,7 +3721,7 @@ function parse(input, options) {
 
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4284,7 +4467,7 @@ module.exports = exports["default"];
 
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4295,7 +4478,7 @@ exports.__esModule = true;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _visitor = __webpack_require__(30);
+var _visitor = __webpack_require__(31);
 
 var _visitor2 = _interopRequireDefault(_visitor);
 
@@ -4512,7 +4695,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4749,7 +4932,7 @@ function preparePartialBlock(open, program, close, locInfo) {
 
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4769,9 +4952,9 @@ var _exception = __webpack_require__(3);
 
 var _exception2 = _interopRequireDefault(_exception);
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
-var _ast = __webpack_require__(32);
+var _ast = __webpack_require__(33);
 
 var _ast2 = _interopRequireDefault(_ast);
 
@@ -5329,7 +5512,7 @@ function transformLiteralToPath(sexpr) {
 
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5346,9 +5529,9 @@ var _exception = __webpack_require__(3);
 
 var _exception2 = _interopRequireDefault(_exception);
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
-var _codeGen = __webpack_require__(52);
+var _codeGen = __webpack_require__(53);
 
 var _codeGen2 = _interopRequireDefault(_codeGen);
 
@@ -6464,7 +6647,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6473,7 +6656,7 @@ module.exports = exports['default'];
 
 exports.__esModule = true;
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 var SourceNode = undefined;
 
@@ -6637,7 +6820,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6651,7 +6834,7 @@ exports.PrintVisitor = PrintVisitor;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _visitor = __webpack_require__(30);
+var _visitor = __webpack_require__(31);
 
 var _visitor2 = _interopRequireDefault(_visitor);
 
@@ -6830,7 +7013,7 @@ PrintVisitor.prototype.HashPair = function (pair) {
 
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(4);
@@ -6867,19 +7050,19 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + " "
     + alias2(alias1((depth0 != null ? depth0.user__last_name : depth0), depth0))
     + "</td>\r\n                        <td>\r\n"
-    + ((stack1 = __default(__webpack_require__(1)).call(alias3,(depth0 != null ? depth0.operation : depth0),"==","",{"name":"ifCond","hash":{},"fn":container.program(8, data, 0),"inverse":container.program(10, data, 0),"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias3,(depth0 != null ? depth0.operation : depth0),"==","",{"name":"ifCond","hash":{},"fn":container.program(8, data, 0),"inverse":container.program(10, data, 0),"data":data})) != null ? stack1 : "")
     + "                        </td>\r\n                        <td>"
     + alias2(alias1((depth0 != null ? depth0.item_name : depth0), depth0))
     + "</td>\r\n                        <td class=\"number-column\">\r\n                            "
-    + ((stack1 = __default(__webpack_require__(1)).call(alias3,(depth0 != null ? depth0.operation : depth0),"==","Received",{"name":"ifCond","hash":{},"fn":container.program(12, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias3,(depth0 != null ? depth0.operation : depth0),"==","Received",{"name":"ifCond","hash":{},"fn":container.program(12, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\r\n                            "
-    + ((stack1 = __default(__webpack_require__(1)).call(alias3,(depth0 != null ? depth0.operation : depth0),"==","Damaged",{"name":"ifCond","hash":{},"fn":container.program(14, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias3,(depth0 != null ? depth0.operation : depth0),"==","Damaged",{"name":"ifCond","hash":{},"fn":container.program(14, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\r\n                             "
     + alias2(alias1((depth0 != null ? depth0.change : depth0), depth0))
     + "\r\n                        </td>\r\n                        <td>"
-    + alias2(__default(__webpack_require__(55)).call(alias3,(depth0 != null ? depth0.date : depth0),{"name":"stringDate","hash":{},"data":data}))
+    + alias2(__default(__webpack_require__(56)).call(alias3,(depth0 != null ? depth0.date : depth0),{"name":"stringDate","hash":{},"data":data}))
     + "</td>\r\n                        <td class=\"details-icon "
-    + ((stack1 = __default(__webpack_require__(1)).call(alias3,((stack1 = (depth0 != null ? depth0.details : depth0)) != null ? stack1.notes : stack1),"!=","",{"name":"ifCond","hash":{},"fn":container.program(16, data, 0),"inverse":container.program(18, data, 0),"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias3,((stack1 = (depth0 != null ? depth0.details : depth0)) != null ? stack1.notes : stack1),"!=","",{"name":"ifCond","hash":{},"fn":container.program(16, data, 0),"inverse":container.program(18, data, 0),"data":data})) != null ? stack1 : "")
     + "><i class=\"fas fa-file-alt\"></i></td>\r\n                    </tr>\r\n";
 },"8":function(container,depth0,helpers,partials,data) {
     return "                                "
@@ -6914,10 +7097,10 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true});
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Handlebars = __webpack_require__(31);
+var Handlebars = __webpack_require__(32);
 
 module.exports = function(epoch) {
     var dateObject = new Date(parseInt(epoch) * 1000);
@@ -6942,11 +7125,10 @@ module.exports = function(epoch) {
     }
 
     return month + '/' + day + '/' + year + ' ' + hour + ':' + min + ampm
-
 };
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(4);
@@ -6957,7 +7139,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
   return "                    <option value=\""
     + alias2(alias1(depth0, depth0))
     + "\" "
-    + ((stack1 = __default(__webpack_require__(1)).call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depths[1] != null ? depths[1].settings : depths[1])) != null ? stack1.order_by : stack1),"==",depth0,{"name":"ifCond","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depths[1] != null ? depths[1].settings : depths[1])) != null ? stack1.order_by : stack1),"==",depth0,{"name":"ifCond","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + ">"
     + alias2(alias1(depth0, depth0))
     + "</option>\r\n";
@@ -6972,11 +7154,11 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </select>\r\n            <input type=\"checkbox\" id=\"reverse-checkbox\" data-type=\"columns\" class=\"checkbox-input\" style=\"display: none\" "
     + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.settings : depth0)) != null ? stack1.reverse : stack1),{"name":"if","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "/>\r\n            <label for=\"reverse-checkbox\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Reverse</span>\r\n            </label>\r\n        </div>\r\n    </div>\r\n</div>\r\n<div id=\"save-wrapper\">\r\n    <button id=\"inventory-settings-submit\" class=\"add\">Save Settings</button>\r\n</div>";
+    + "/>\r\n            <label for=\"reverse-checkbox\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Reverse</span>\r\n            </label>\r\n        </div>\r\n    </div>\r\n</div>\r\n<div id=\"save-wrapper\">\r\n    <div id=\"settings-result\"></div>\r\n    <button id=\"inventory-settings-submit\" class=\"add\">Save Settings</button>\r\n</div>";
 },"useData":true,"useDepths":true});
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(4);
@@ -6996,7 +7178,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true,"useDepths":true});
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(4);
@@ -7012,9 +7194,9 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"if","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\">\r\n                <div class=\"operation-title\">Add Item</div>\r\n                <div class=\"operation-description\">Create a new item.</div>\r\n                <div class=\"operation-add-item-wrapper\">\r\n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "                    <div class=\"operation-button-wrapper\">\r\n                        <button class=\"operation-submit add\" id=\"add-item-submit\">Add Item</button>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n            <div id=\"add-column-wrapper\" class=\"operation-body-container "
+    + "                    <div class=\"operation-button-wrapper\">\r\n                        <div class=\"error permission\"></div>\r\n                        <button class=\"operation-submit add\" id=\"add-item-submit\">Add Item</button>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n            <div id=\"add-column-wrapper\" class=\"operation-body-container "
     + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"unless","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "\">\r\n                <div class=\"operation-title\">Add Column</div>\r\n                <div class=\"operation-description\">Create a new column.</div>\r\n                <div class=\"operation-add-column-wrapper\">\r\n                    <label for=\"add-column-input\">Column Name:</label>\r\n                    <input class=\"operation-text-input\" id=\"add-column-input\" />\r\n                    <button class=\"operation-submit add\" id=\"add-column-submit\">Add Column</button>\r\n                </div>\r\n            </div>\r\n        </div>\r\n";
+    + "\">\r\n                <div class=\"operation-title\">Add Column</div>\r\n                <div class=\"operation-description\">Create a new column.</div>\r\n                <div class=\"operation-add-column-wrapper\">\r\n                    <label for=\"add-column-input\">Column Name:</label>\r\n                    <div class=\"error\"></div>\r\n                    <input class=\"operation-text-input\" id=\"add-column-input\" />\r\n                    <button class=\"operation-submit add\" id=\"add-column-submit\">Add Column</button>\r\n                </div>\r\n            </div>\r\n        </div>\r\n";
 },"2":function(container,depth0,helpers,partials,data) {
     return "active";
 },"4":function(container,depth0,helpers,partials,data) {
@@ -7024,7 +7206,9 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 
   return "                        <div id=\"add-item-container\">\r\n                            <label for=\"add-item-input\">"
     + alias2(alias1(depth0, depth0))
-    + ":</label>\r\n                            <input class=\"operation-text-input add-item-input\" data-column=\""
+    + ":</label>\r\n                            <div class=\"error\" data-column=\""
+    + alias2(alias1(depth0, depth0))
+    + "\"></div>\r\n                            <input class=\"operation-text-input add-item-input\" data-column=\""
     + alias2(alias1(depth0, depth0))
     + "\" />\r\n                        </div>\r\n";
 },"8":function(container,depth0,helpers,partials,data,blockParams,depths) {
@@ -7045,9 +7229,9 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.inventory : depth0),{"name":"each","hash":{},"fn":container.program(13, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                            </tbody>\r\n                        </table>\r\n                    </div>\r\n                </div>\r\n                <div id=\"edit-step-2\">\r\n                    <div class=\"operation-description\">Edit an existing item.</div>\r\n                    <div class=\"operation-edit-item-wrapper\">\r\n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(15, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "                        <div class=\"operation-button-wrapper\">\r\n                            <button id=\"edit-back-button\">Back</button>\r\n                            <button class=\"operation-submit edit\" id=\"edit-item-submit\">Edit Item</button>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n\r\n            <div id=\"edit-column-wrapper\" class=\"operation-body-container "
+    + "                        <div class=\"operation-button-wrapper\">\r\n                            <div class=\"error permission\"></div>\r\n                            <button id=\"edit-back-button\">Back</button>\r\n                            <button class=\"operation-submit edit\" id=\"edit-item-submit\">Edit Item</button>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n\r\n            <div id=\"edit-column-wrapper\" class=\"operation-body-container "
     + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.inventory : depth0),{"name":"unless","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "\">\r\n                <div class=\"operation-title\">Edit Column</div>\r\n                <div class=\"operation-description\">Edit an existing column.</div>\r\n                <div id=\"operation-edit-column-wrapper\">\r\n                    <select id=\"edit-prev-column-input\">\r\n"
+    + "\">\r\n                <div class=\"operation-title\">Edit Column</div>\r\n                <div class=\"operation-description\">Edit an existing column.</div>\r\n                <div id=\"operation-edit-column-wrapper\">\r\n                    <div class=\"error permission\"></div>\r\n                    <select id=\"edit-prev-column-input\">\r\n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(17, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                    </select> to\r\n                    <input class=\"operation-text-input\" id=\"edit-column-input\" />\r\n                </div>\r\n                <div class=\"operation-button-wrapper\">\r\n                    <button class=\"operation-submit edit\" id=\"edit-column-submit\">Edit Column</button>\r\n                </div>\r\n            </div>\r\n        </div>\r\n";
 },"9":function(container,depth0,helpers,partials,data) {
@@ -7083,7 +7267,9 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 
   return "                            <div id=\"edit-item-container\">\r\n                                <label for=\"edit-item-input\">"
     + alias2(alias1(depth0, depth0))
-    + ":</label>\r\n                                <input class=\"operation-text-input edit-item-input\" data-column=\""
+    + ":</label>\r\n                                <div class=\"error\" data-column=\""
+    + alias2(alias1(depth0, depth0))
+    + "\"></div>\r\n                                <input class=\"operation-text-input edit-item-input\" data-column=\""
     + alias2(alias1(depth0, depth0))
     + "\" />\r\n                            </div>\r\n";
 },"17":function(container,depth0,helpers,partials,data) {
@@ -7110,49 +7296,49 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(11, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                                </tr>\r\n                            </thead>\r\n\r\n                            <tbody>\r\n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.inventory : depth0),{"name":"each","hash":{},"fn":container.program(13, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "                            </tbody>\r\n                        </table>\r\n                    </div>\r\n                </div>\r\n                <div id=\"delete-step-2\">\r\n                    <div class=\"operation-description\">Delete an existing item.</div>\r\n                    <div class=\"operation-delete-item-wrapper\">\r\n                        <table id=\"delete-item-container\" class=\"table-container\">\r\n\r\n                        </table>\r\n                        <div class=\"operation-button-wrapper\">\r\n                            <button id=\"delete-back-button\">Back</button>\r\n                            <button class=\"operation-submit delete\" id=\"delete-item-submit\">Delete Item</button>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n\r\n            <div id=\"delete-column-wrapper\" class=\"operation-body-container "
+    + "                            </tbody>\r\n                        </table>\r\n                    </div>\r\n                </div>\r\n                <div id=\"delete-step-2\">\r\n                    <div class=\"operation-description\">Delete an existing item.</div>\r\n                    <div class=\"operation-delete-item-wrapper\">\r\n                        <table id=\"delete-item-container\" class=\"table-container\">\r\n\r\n                        </table>\r\n                        <div class=\"operation-button-wrapper\">\r\n                            <div class=\"error permission\"></div>\r\n                            <button id=\"delete-back-button\">Back</button>\r\n                            <button class=\"operation-submit delete\" id=\"delete-item-submit\">Delete Item</button>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n\r\n            <div id=\"delete-column-wrapper\" class=\"operation-body-container "
     + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.inventory_length : depth0),{"name":"unless","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "\">\r\n                <div class=\"operation-title\">Delete Column</div>\r\n                <div class=\"operation-description\">Delete an existing column.</div>\r\n                <div id=\"operation-delete-column-wrapper\">\r\n                    <select id=\"delete-column-input\">\r\n"
+    + "\">\r\n                <div class=\"operation-title\">Delete Column</div>\r\n                <div class=\"operation-description\">Delete an existing column.</div>\r\n                <div id=\"operation-delete-column-wrapper\">\r\n                    <div class=\"error permission\"></div>\r\n                    <select id=\"delete-column-input\">\r\n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(17, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                    </select>\r\n                    <button class=\"operation-submit delete\" id=\"delete-column-submit\">Delete Column</button>\r\n                </div>\r\n            </div>\r\n        </div>\r\n";
 },"21":function(container,depth0,helpers,partials,data) {
     return "        <div class=\"operation-body-wrapper\">\r\n            <div class=\"operation-title\">Import</div>\r\n            <p class=\"operation-description\">Import a excel or csv file.</p>\r\n            <div id=\"file-upload-wrapper\">\r\n                <a id=\"file-upload-link\">Choose a file</a>\r\n                <input type=\"file\" id=\"file-upload\" />\r\n            </div>\r\n        </div>\r\n";
 },"23":function(container,depth0,helpers,partials,data) {
-    return "        <div class=\"operation-title\">Export</div>\r\n        <p class=\"operation-description\">Export as a excel file, csv file, or json.</p>\r\n\r\n        <div id=\"file-upload-wrapper\">\r\n            <select class=\"select-input\" id=\"export-type-input\">\r\n                <option value=\"json\">json</option>\r\n                <option value=\"excel\">excel</option>\r\n                <option value=\"csv\">csv</option>\r\n            </select>\r\n            <button id=\"export-submit\">Export</button>\r\n            <a id=\"export-download\"></a>\r\n        </div>\r\n";
-},"25":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
-  return "        <div class=\"operation-title\">Confirm data</div>\r\n        <p class=\"operation-description\">Map each column to an existing field or add a new field.</p>\r\n        <div class=\"table-scroll-wrapper import\">\r\n            <table id=\"import-table\" class=\"table-container\">\r\n                <thead>\r\n                    <tr>\r\n"
+  return "        <div id=\"import-wrapper\" class=\"operation-body-wrapper\">\r\n            <div class=\"operation-title\">Confirm data</div>\r\n            <p class=\"operation-description\">Map each column to an existing field or add a new field.</p>\r\n            <div class=\"table-scroll-wrapper import\">\r\n                <table id=\"import-table\" class=\"table-container\">\r\n                    <thead>\r\n                        <tr>\r\n"
+    + ((stack1 = helpers.each.call(alias1,((stack1 = (depth0 != null ? depth0.import_data : depth0)) != null ? stack1.headers : stack1),{"name":"each","hash":{},"fn":container.program(24, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "                        </tr>\r\n                        <tr>\r\n"
     + ((stack1 = helpers.each.call(alias1,((stack1 = (depth0 != null ? depth0.import_data : depth0)) != null ? stack1.headers : stack1),{"name":"each","hash":{},"fn":container.program(26, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "                    </tr>\r\n                    <tr>\r\n"
-    + ((stack1 = helpers.each.call(alias1,((stack1 = (depth0 != null ? depth0.import_data : depth0)) != null ? stack1.headers : stack1),{"name":"each","hash":{},"fn":container.program(28, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "                    </tr>\r\n                </thead>\r\n                <tbody>\r\n"
-    + ((stack1 = helpers.each.call(alias1,((stack1 = (depth0 != null ? depth0.import_data : depth0)) != null ? stack1.data : stack1),{"name":"each","hash":{},"fn":container.program(30, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "                </tbody>\r\n            </table>\r\n        </div>\r\n        <div class=\"operation-button-wrapper\">\r\n            <button id=\"import-submit-button\" class=\"add\">Submit</button>\r\n        <div>\r\n";
-},"26":function(container,depth0,helpers,partials,data) {
+    + "                        </tr>\r\n                    </thead>\r\n                    <tbody>\r\n"
+    + ((stack1 = helpers.each.call(alias1,((stack1 = (depth0 != null ? depth0.import_data : depth0)) != null ? stack1.data : stack1),{"name":"each","hash":{},"fn":container.program(28, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "                    </tbody>\r\n                </table>\r\n            </div>\r\n            <div class=\"operation-button-wrapper\">\r\n                <div class=\"error permission\"></div>\r\n                <button id=\"import-submit-button\" class=\"add\">Submit</button>\r\n            <div>\r\n        <div>\r\n";
+},"24":function(container,depth0,helpers,partials,data) {
     var alias1=container.lambda, alias2=container.escapeExpression;
 
-  return "                            <th><input class=\"header-input\" value=\""
+  return "                                <th><input class=\"header-input\" value=\""
     + alias2(alias1(depth0, depth0))
     + "\" data-column=\""
     + alias2(alias1((data && data.index), depth0))
     + "\"/></th>\r\n";
-},"28":function(container,depth0,helpers,partials,data) {
-    return "                            <th><input class=\"include-input\" type=\"checkbox\" data-column=\""
+},"26":function(container,depth0,helpers,partials,data) {
+    return "                                <th><input class=\"include-input\" type=\"checkbox\" data-column=\""
     + container.escapeExpression(container.lambda((data && data.index), depth0))
     + "\" checked /> Include</th>\r\n";
-},"30":function(container,depth0,helpers,partials,data) {
+},"28":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return "                        <tr>\r\n"
-    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,{"name":"each","hash":{},"fn":container.program(31, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "                        </tr>\r\n";
-},"31":function(container,depth0,helpers,partials,data) {
-    return "                                <td class=\"included\">"
+  return "                            <tr>\r\n"
+    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,{"name":"each","hash":{},"fn":container.program(29, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "                            </tr>\r\n";
+},"29":function(container,depth0,helpers,partials,data) {
+    return "                                    <td class=\"included\">"
     + container.escapeExpression(container.lambda(depth0, depth0))
     + "</td>\r\n";
+},"31":function(container,depth0,helpers,partials,data) {
+    return "        <div id=\"export-wrapper\">\r\n            <div class=\"operation-title\">Export</div>\r\n            <p class=\"operation-description\">Export as a excel file, csv file, or json.</p>\r\n            <div id=\"export-error\" class=\"error\"></div>\r\n            <div id=\"file-upload-wrapper\">\r\n                <select class=\"select-input\" id=\"export-type-input\">\r\n                    <option value=\"json\">json</option>\r\n                    <option value=\"excel\">excel</option>\r\n                    <option value=\"csv\">csv</option>\r\n                </select>\r\n                <button id=\"export-submit\">Export</button>\r\n                <a id=\"export-download\"></a>\r\n            </div>\r\n        </div>\r\n";
 },"33":function(container,depth0,helpers,partials,data) {
-    return "        <div class=\"operation-title\">Drop Table</div>\r\n        <p class=\"operation-description\">Delete ALL data/columns</p>\r\n        <p class=\"operation-description\">This can't be UNDONE!</p>\r\n        <div class=\"operation-button-wrapper\">\r\n            <button class=\"delete\" id=\"delete-table-submit\">DELETE TABLE</button>\r\n        </div>\r\n";
+    return "        <div id=\"drop-table-wrapper\">\r\n            <div class=\"operation-title\">Drop Table</div>\r\n            <p class=\"operation-description\">Delete ALL data/columns</p>\r\n            <p class=\"operation-description\">This can't be UNDONE!</p>\r\n            <div class=\"operation-button-wrapper\">\r\n                <div class=\"error permission\"></div>\r\n                <button class=\"delete\" id=\"drop-table-submit\">DELETE TABLE</button>\r\n            </div>\r\n        </div>\r\n";
 },"35":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
@@ -7164,7 +7350,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(11, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                                </tr>\r\n                            </thead>\r\n\r\n                            <tbody>\r\n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.inventory : depth0),{"name":"each","hash":{},"fn":container.program(13, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "                            </tbody>\r\n                        </table>\r\n                    </div>\r\n                </div>\r\n                <div id=\"received-step-2\">\r\n                    <div class=\"operation-description\">How many have you received?</div>\r\n                    <div class=\"operation-received-item-wrapper\">\r\n                        <table id=\"received-item-container\" class=\"table-container\">\r\n\r\n                        </table>\r\n                        <div class=\"operation-button-wrapper\">\r\n                            <label for=\"details-input\">Quantity Received:</label>\r\n                            <input type=\"number\" id=\"received-input\" min=\"1\" class=\"operation-text-input\" />\r\n                            <label for=\"details-input\">Extra Details:</label>\r\n                            <textarea id=\"details-input\" class=\"operation-textarea-input\"></textarea>\r\n                        </div>\r\n                        <div class=\"operation-button-wrapper\">\r\n                            <button id=\"received-back-button\">Back</button>\r\n                            <button class=\"operation-submit add\" id=\"received-item-submit\">Submit</button>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n";
+    + "                            </tbody>\r\n                        </table>\r\n                    </div>\r\n                </div>\r\n                <div id=\"received-step-2\">\r\n                    <div class=\"operation-description\">How many have you received?</div>\r\n                    <div class=\"operation-received-item-wrapper\">\r\n                        <table id=\"received-item-container\" class=\"table-container\">\r\n\r\n                        </table>\r\n                        <div class=\"operation-button-wrapper\">\r\n                            <label for=\"details-input\">Quantity Received:</label>\r\n                            <div class=\"error\"></div>\r\n                            <input type=\"number\" id=\"received-input\" min=\"1\" class=\"operation-text-input\" />\r\n                            <label for=\"details-input\">Extra Details:</label>\r\n                            <textarea id=\"details-input\" class=\"operation-textarea-input\"></textarea>\r\n                        </div>\r\n                        <div class=\"operation-button-wrapper\">\r\n                            <button id=\"received-back-button\">Back</button>\r\n                            <button class=\"operation-submit add\" id=\"received-item-submit\">Submit</button>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n";
 },"37":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
@@ -7176,7 +7362,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(11, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                                </tr>\r\n                            </thead>\r\n\r\n                            <tbody>\r\n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.inventory : depth0),{"name":"each","hash":{},"fn":container.program(13, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "                            </tbody>\r\n                        </table>\r\n                    </div>\r\n                </div>\r\n                <div id=\"damaged-step-2\">\r\n                    <div class=\"operation-description\">How many are damaged?</div>\r\n                    <div class=\"operation-damaged-item-wrapper\">\r\n                        <table id=\"damaged-item-container\" class=\"table-container\">\r\n\r\n                        </table>\r\n                        <div class=\"operation-button-wrapper\">\r\n                            <label for=\"details-input\">Quantity Damaged:</label>\r\n                            <input type=\"number\" id=\"damaged-input\" min=\"1\" class=\"operation-text-input\" />\r\n                            <label for=\"details-input\">Extra Details:</label>\r\n                            <textarea id=\"details-input\" class=\"operation-textarea-input\"></textarea>\r\n                        </div>\r\n                        <div class=\"operation-button-wrapper\">\r\n                            <button id=\"damaged-back-button\">Back</button>\r\n                            <button class=\"operation-submit delete\" id=\"damaged-item-submit\">Submit</button>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n";
+    + "                            </tbody>\r\n                        </table>\r\n                    </div>\r\n                </div>\r\n                <div id=\"damaged-step-2\">\r\n                    <div class=\"operation-description\">How many are damaged?</div>\r\n                    <div class=\"operation-damaged-item-wrapper\">\r\n                        <table id=\"damaged-item-container\" class=\"table-container\">\r\n\r\n                        </table>\r\n                        <div class=\"operation-button-wrapper\">\r\n                            <label for=\"details-input\">Quantity Damaged:</label>\r\n                            <div class=\"error\"></div>\r\n                            <input type=\"number\" id=\"damaged-input\" min=\"1\" class=\"operation-text-input\" />\r\n                            <label for=\"details-input\">Extra Details:</label>\r\n                            <textarea id=\"details-input\" class=\"operation-textarea-input\"></textarea>\r\n                        </div>\r\n                        <div class=\"operation-button-wrapper\">\r\n                            <button id=\"damaged-back-button\">Back</button>\r\n                            <button class=\"operation-submit delete\" id=\"damaged-item-submit\">Submit</button>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n";
 },"39":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
@@ -7188,7 +7374,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(11, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                                </tr>\r\n                            </thead>\r\n\r\n                            <tbody>\r\n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.inventory : depth0),{"name":"each","hash":{},"fn":container.program(13, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "                            </tbody>\r\n                        </table>\r\n                    </div>\r\n                </div>\r\n                <div id=\"reset-cost-step-2\">\r\n                    <div class=\"operation-description\">Edit the cost</div>\r\n                    <div class=\"operation-reset-cost-item-wrapper\">\r\n                        <table id=\"reset-cost-item-container\" class=\"table-container\">\r\n\r\n                        </table>\r\n                        <div class=\"operation-button-wrapper\">\r\n                            <label for=\"details-input\">New Cost:</label>\r\n                            <input type=\"number\" id=\"reset-cost-input\" min=\"1\" class=\"operation-text-input\" />\r\n                            <label for=\"details-input\">Extra Details:</label>\r\n                            <textarea id=\"details-input\" class=\"operation-textarea-input\"></textarea>\r\n                        </div>\r\n                        <div class=\"operation-button-wrapper\">\r\n                            <button id=\"reset-cost-back-button\">Back</button>\r\n                            <button class=\"operation-submit edit\" id=\"reset-cost-item-submit\">Submit</button>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n";
+    + "                            </tbody>\r\n                        </table>\r\n                    </div>\r\n                </div>\r\n                <div id=\"reset-cost-step-2\">\r\n                    <div class=\"operation-description\">Edit the cost</div>\r\n                    <div class=\"operation-reset-cost-item-wrapper\">\r\n                        <table id=\"reset-cost-item-container\" class=\"table-container\">\r\n\r\n                        </table>\r\n                        <div class=\"operation-button-wrapper\">\r\n                            <label for=\"details-input\">New Cost:</label>\r\n                            <div class=\"error\"></div>\r\n                            <input type=\"number\" id=\"reset-cost-input\" min=\"1\" class=\"operation-text-input\" />\r\n                            <label for=\"details-input\">Extra Details:</label>\r\n                            <textarea id=\"details-input\" class=\"operation-textarea-input\"></textarea>\r\n                        </div>\r\n                        <div class=\"operation-button-wrapper\">\r\n                            <button id=\"reset-cost-back-button\">Back</button>\r\n                            <button class=\"operation-submit edit\" id=\"reset-cost-item-submit\">Submit</button>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n";
 },"41":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
@@ -7200,37 +7386,97 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(11, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                                </tr>\r\n                            </thead>\r\n\r\n                            <tbody>\r\n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.inventory : depth0),{"name":"each","hash":{},"fn":container.program(13, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "                            </tbody>\r\n                        </table>\r\n                    </div>\r\n                </div>\r\n                <div id=\"reset-price-step-2\">\r\n                    <div class=\"operation-description\">Edit the price.</div>\r\n                    <div class=\"operation-reset-price-item-wrapper\">\r\n                        <table id=\"reset-price-item-container\" class=\"table-container\">\r\n\r\n                        </table>\r\n                        <div class=\"operation-button-wrapper\">\r\n                            <label for=\"details-input\">New Price:</label>\r\n                            <input type=\"number\" id=\"reset-price-input\" min=\"1\" class=\"operation-text-input\" />\r\n                            <label for=\"details-input\">Extra Details:</label>\r\n                            <textarea id=\"details-input\" class=\"operation-textarea-input\"></textarea>\r\n                        </div>\r\n                        <div class=\"operation-button-wrapper\">\r\n                            <button id=\"reset-price-back-button\">Back</button>\r\n                            <button class=\"operation-submit edit\" id=\"reset-price-item-submit\">Submit</button>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n";
+    + "                            </tbody>\r\n                        </table>\r\n                    </div>\r\n                </div>\r\n                <div id=\"reset-price-step-2\">\r\n                    <div class=\"operation-description\">Edit the price.</div>\r\n                    <div class=\"operation-reset-price-item-wrapper\">\r\n                        <table id=\"reset-price-item-container\" class=\"table-container\">\r\n\r\n                        </table>\r\n                        <div class=\"operation-button-wrapper\">\r\n                            <label for=\"details-input\">New Price:</label>\r\n                            <div class=\"error\"></div>\r\n                            <input type=\"number\" id=\"reset-price-input\" min=\"1\" class=\"operation-text-input\" />\r\n                            <label for=\"details-input\">Extra Details:</label>\r\n                            <textarea id=\"details-input\" class=\"operation-textarea-input\"></textarea>\r\n                        </div>\r\n                        <div class=\"operation-button-wrapper\">\r\n                            <button id=\"reset-price-back-button\">Back</button>\r\n                            <button class=\"operation-submit edit\" id=\"reset-price-item-submit\">Submit</button>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
   return "<div id=\"operation-popup-wrapper\">\r\n"
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","add",{"name":"ifCond","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","add",{"name":"ifCond","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","edit",{"name":"ifCond","hash":{},"fn":container.program(8, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","edit",{"name":"ifCond","hash":{},"fn":container.program(8, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","delete",{"name":"ifCond","hash":{},"fn":container.program(19, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","delete",{"name":"ifCond","hash":{},"fn":container.program(19, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","import",{"name":"ifCond","hash":{},"fn":container.program(21, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","import",{"name":"ifCond","hash":{},"fn":container.program(21, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","export",{"name":"ifCond","hash":{},"fn":container.program(23, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","import2",{"name":"ifCond","hash":{},"fn":container.program(23, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","import2",{"name":"ifCond","hash":{},"fn":container.program(25, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","export",{"name":"ifCond","hash":{},"fn":container.program(31, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","drop_table",{"name":"ifCond","hash":{},"fn":container.program(33, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","drop_table",{"name":"ifCond","hash":{},"fn":container.program(33, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","received",{"name":"ifCond","hash":{},"fn":container.program(35, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","received",{"name":"ifCond","hash":{},"fn":container.program(35, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","damaged",{"name":"ifCond","hash":{},"fn":container.program(37, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","damaged",{"name":"ifCond","hash":{},"fn":container.program(37, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","reset_cost",{"name":"ifCond","hash":{},"fn":container.program(39, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","reset_cost",{"name":"ifCond","hash":{},"fn":container.program(39, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","reset_price",{"name":"ifCond","hash":{},"fn":container.program(41, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","reset_price",{"name":"ifCond","hash":{},"fn":container.program(41, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "</div>";
 },"useData":true,"useDepths":true});
 
 /***/ }),
-/* 59 */
+/* 60 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Handlebars = __webpack_require__(4);
+function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
+module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return "        <div id=\"link-column-wrapper\">\r\n            <div class=\"operation-title\">Link Price</div>\r\n            <div class=\"operation-description\">Link the price, that is being sold to the consumer.</div>\r\n            <div id=\"operation-link-column-wrapper\">\r\n                <div class=\"error permission\"></div>\r\n                <select id=\"link-column-input\" data-type=\""
+    + container.escapeExpression(container.lambda((depth0 != null ? depth0.type : depth0), depth0))
+    + "\">\r\n"
+    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "                </select>\r\n                <button class=\"operation-submit add\" id=\"link-column-submit\">Link Column</button>\r\n            </div>\r\n        </div>\r\n";
+},"2":function(container,depth0,helpers,partials,data) {
+    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
+
+  return ((stack1 = helpers.unless.call(alias1,helpers.lookup.call(alias1,(depth0 != null ? depth0.link_columns : depth0),depth0,{"name":"lookup","hash":{},"data":data}),{"name":"unless","hash":{},"fn":container.program(3, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"3":function(container,depth0,helpers,partials,data) {
+    var alias1=container.lambda, alias2=container.escapeExpression;
+
+  return "                            <option value=\""
+    + alias2(alias1(depth0, depth0))
+    + "\">"
+    + alias2(alias1(depth0, depth0))
+    + "</option>\r\n";
+},"5":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return "        <div id=\"link-column-wrapper\">\r\n            <div class=\"operation-title\">Link Cost</div>\r\n            <div class=\"operation-description\">Link the cost, to accurately calculate profit.</div>\r\n            <div id=\"operation-link-column-wrapper\">\r\n                <div class=\"error permission\"></div>\r\n                <select id=\"link-column-input\" data-type=\""
+    + container.escapeExpression(container.lambda((depth0 != null ? depth0.type : depth0), depth0))
+    + "\">\r\n"
+    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "                </select>\r\n                <button class=\"operation-submit add\" id=\"link-column-submit\">Link Column</button>\r\n            </div>\r\n        </div>\r\n";
+},"7":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return "        <div id=\"link-column-wrapper\">\r\n            <div class=\"operation-title\">Link Quantity</div>\r\n            <div class=\"operation-description\">Link the quantity, to maintain inventory after transaction.</div>\r\n            <div id=\"operation-link-column-wrapper\">\r\n                <div class=\"error permission\"></div>\r\n                <select id=\"link-column-input\" data-type=\""
+    + container.escapeExpression(container.lambda((depth0 != null ? depth0.type : depth0), depth0))
+    + "\">\r\n"
+    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "                </select>\r\n                <button class=\"operation-submit add\" id=\"link-column-submit\">Link Column</button>\r\n            </div>\r\n        </div>\r\n";
+},"9":function(container,depth0,helpers,partials,data) {
+    return "        <div id=\"link-column-wrapper\">\r\n            <div class=\"operation-title\">Link Name</div>\r\n            <div class=\"operation-description\">Link the name of the product that you would like to appear on the receipt.</div>\r\n            <div id=\"operation-link-column-wrapper\">\r\n                <div class=\"error permission\"></div>\r\n                <input id=\"link-column-input\" data-type=\""
+    + container.escapeExpression(container.lambda((depth0 != null ? depth0.type : depth0), depth0))
+    + "\" />\r\n                <button class=\"operation-submit add\" id=\"link-column-submit\">Link Column</button>\r\n                <p class=\"name-description\">Use curly brace to capture column names ex. {{name}}</p>\r\n            </div>\r\n        </div>\r\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
+
+  return "<div id=\"operation-popup-wrapper\">\r\n"
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","price",{"name":"ifCond","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\r\n"
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","cost",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\r\n"
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","quantity",{"name":"ifCond","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\r\n"
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","name",{"name":"ifCond","hash":{},"fn":container.program(9, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "</div>";
+},"useData":true});
+
+/***/ }),
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $ = __webpack_require__(6);
@@ -7277,78 +7523,5 @@ $(document).ready(function() {
     }, '.tippy');
 });
 
-/***/ }),
-/* 60 */,
-/* 61 */,
-/* 62 */,
-/* 63 */,
-/* 64 */,
-/* 65 */,
-/* 66 */,
-/* 67 */,
-/* 68 */,
-/* 69 */,
-/* 70 */,
-/* 71 */,
-/* 72 */,
-/* 73 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Handlebars = __webpack_require__(4);
-function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
-module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
-    var stack1;
-
-  return "        <div id=\"edit-column-wrapper\">\r\n            <div class=\"operation-title\">Link Price</div>\r\n            <div class=\"operation-description\">Link the price, that is being sold to the consumer.</div>\r\n            <div id=\"operation-link-column-wrapper\">\r\n                <select id=\"link-column-input\" data-type=\""
-    + container.escapeExpression(container.lambda((depth0 != null ? depth0.type : depth0), depth0))
-    + "\">\r\n"
-    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "                </select>\r\n                <button class=\"operation-submit add\" id=\"link-column-submit\">Link Column</button>\r\n            </div>\r\n        </div>\r\n";
-},"2":function(container,depth0,helpers,partials,data) {
-    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
-
-  return ((stack1 = helpers.unless.call(alias1,helpers.lookup.call(alias1,(depth0 != null ? depth0.link_columns : depth0),depth0,{"name":"lookup","hash":{},"data":data}),{"name":"unless","hash":{},"fn":container.program(3, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"3":function(container,depth0,helpers,partials,data) {
-    var alias1=container.lambda, alias2=container.escapeExpression;
-
-  return "                            <option value=\""
-    + alias2(alias1(depth0, depth0))
-    + "\">"
-    + alias2(alias1(depth0, depth0))
-    + "</option>\r\n";
-},"5":function(container,depth0,helpers,partials,data) {
-    var stack1;
-
-  return "        <div id=\"edit-column-wrapper\">\r\n            <div class=\"operation-title\">Link Cost</div>\r\n            <div class=\"operation-description\">Link the cost, to accurately calculate profit.</div>\r\n            <div id=\"operation-link-column-wrapper\">\r\n                <select id=\"link-column-input\" data-type=\""
-    + container.escapeExpression(container.lambda((depth0 != null ? depth0.type : depth0), depth0))
-    + "\">\r\n"
-    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "                </select>\r\n                <button class=\"operation-submit add\" id=\"link-column-submit\">Link Column</button>\r\n            </div>\r\n        </div>\r\n";
-},"7":function(container,depth0,helpers,partials,data) {
-    var stack1;
-
-  return "        <div id=\"edit-column-wrapper\">\r\n            <div class=\"operation-title\">Link Quantity</div>\r\n            <div class=\"operation-description\">Link the quantity, to maintain inventory after transaction.</div>\r\n            <div id=\"operation-link-column-wrapper\">\r\n                <select id=\"link-column-input\" data-type=\""
-    + container.escapeExpression(container.lambda((depth0 != null ? depth0.type : depth0), depth0))
-    + "\">\r\n"
-    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "                </select>\r\n                <button class=\"operation-submit add\" id=\"link-column-submit\">Link Column</button>\r\n            </div>\r\n        </div>\r\n";
-},"9":function(container,depth0,helpers,partials,data) {
-    return "        <div id=\"edit-column-wrapper\">\r\n            <div class=\"operation-title\">Link Name</div>\r\n            <div class=\"operation-description\">Link the name of the product that you would like to appear on the receipt.</div>\r\n            <div id=\"operation-link-column-wrapper\">\r\n                <input id=\"link-column-input\" data-type=\""
-    + container.escapeExpression(container.lambda((depth0 != null ? depth0.type : depth0), depth0))
-    + "\" />\r\n                <button class=\"operation-submit add\" id=\"link-column-submit\">Link Column</button>\r\n                <p class=\"name-description\">Use curly brace to capture column names ex. {{name}}</p>\r\n            </div>\r\n        </div>\r\n";
-},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
-
-  return "<div id=\"operation-popup-wrapper\">\r\n"
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","price",{"name":"ifCond","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "\r\n"
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","cost",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "\r\n"
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","quantity",{"name":"ifCond","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "\r\n"
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","name",{"name":"ifCond","hash":{},"fn":container.program(9, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "</div>";
-},"useData":true});
-
 /***/ })
-],[41]);
+],[42]);

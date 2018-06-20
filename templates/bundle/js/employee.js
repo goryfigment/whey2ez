@@ -1,5 +1,34 @@
 webpackJsonp([4],[
 /* 0 */
+/***/ (function(module, exports) {
+
+module.exports = function(v1, operator, v2, options) {
+    switch (operator) {
+        case '==':
+            return (v1 == v2) ? options.fn(this) : options.inverse(this);
+        case '===':
+            return (v1 === v2) ? options.fn(this) : options.inverse(this);
+        case '<':
+            return (v1 < v2) ? options.fn(this) : options.inverse(this);
+        case '<=':
+            return (v1 <= v2) ? options.fn(this) : options.inverse(this);
+        case '>':
+            return (v1 > v2) ? options.fn(this) : options.inverse(this);
+        case '>=':
+            return (v1 >= v2) ? options.fn(this) : options.inverse(this);
+        case '&&':
+            return (v1 && v2) ? options.fn(this) : options.inverse(this);
+        case '||':
+            return (v1 || v2) ? options.fn(this) : options.inverse(this);
+        case '!=':
+            return (v1 != v2) ? options.fn(this) : options.inverse(this);
+        default:
+            return options.inverse(this);
+    }
+};
+
+/***/ }),
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -130,35 +159,6 @@ function appendContextPath(contextPath, id) {
 
 
 /***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-module.exports = function(v1, operator, v2, options) {
-    switch (operator) {
-        case '==':
-            return (v1 == v2) ? options.fn(this) : options.inverse(this);
-        case '===':
-            return (v1 === v2) ? options.fn(this) : options.inverse(this);
-        case '<':
-            return (v1 < v2) ? options.fn(this) : options.inverse(this);
-        case '<=':
-            return (v1 <= v2) ? options.fn(this) : options.inverse(this);
-        case '>':
-            return (v1 > v2) ? options.fn(this) : options.inverse(this);
-        case '>=':
-            return (v1 >= v2) ? options.fn(this) : options.inverse(this);
-        case '&&':
-            return (v1 && v2) ? options.fn(this) : options.inverse(this);
-        case '||':
-            return (v1 || v2) ? options.fn(this) : options.inverse(this);
-        case '!=':
-            return (v1 != v2) ? options.fn(this) : options.inverse(this);
-        default:
-            return options.inverse(this);
-    }
-};
-
-/***/ }),
 /* 2 */,
 /* 3 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -242,7 +242,7 @@ exports.HandlebarsEnvironment = HandlebarsEnvironment;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 var _exception = __webpack_require__(3);
 
@@ -372,7 +372,7 @@ var _handlebarsException = __webpack_require__(3);
 
 var _handlebarsException2 = _interopRequireDefault(_handlebarsException);
 
-var _handlebarsUtils = __webpack_require__(0);
+var _handlebarsUtils = __webpack_require__(1);
 
 var Utils = _interopRequireWildcard(_handlebarsUtils);
 
@@ -514,7 +514,7 @@ function registerDefaultHelpers(instance) {
 
 exports.__esModule = true;
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 exports['default'] = function (instance) {
   instance.registerHelper('blockHelperMissing', function (context, options) {
@@ -563,7 +563,7 @@ exports.__esModule = true;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 var _exception = __webpack_require__(3);
 
@@ -693,7 +693,7 @@ module.exports = exports['default'];
 
 exports.__esModule = true;
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 exports['default'] = function (instance) {
   instance.registerHelper('if', function (conditional, options) {
@@ -781,7 +781,7 @@ module.exports = exports['default'];
 
 exports.__esModule = true;
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 exports['default'] = function (instance) {
   instance.registerHelper('with', function (context, options) {
@@ -844,7 +844,7 @@ function registerDefaultDecorators(instance) {
 
 exports.__esModule = true;
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 exports['default'] = function (instance) {
   instance.registerDecorator('inline', function (fn, props, container, options) {
@@ -880,7 +880,7 @@ module.exports = exports['default'];
 
 exports.__esModule = true;
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 var logger = {
   methodMap: ['debug', 'info', 'warn', 'error'],
@@ -969,7 +969,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'd
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj['default'] = obj; return newObj; } }
 
-var _utils = __webpack_require__(0);
+var _utils = __webpack_require__(1);
 
 var Utils = _interopRequireWildcard(_utils);
 
@@ -1368,11 +1368,30 @@ function upAndDownPopups(keyCode, $popup, $options, scroll) {
     }
 }
 
+function currencyFormat(cents) {
+    cents = Math.round(cents);
+
+    if (cents == 0) {
+        return cents.toFixed(2);
+    } else if(cents < 100){
+        if (cents > 0 || cents > -100) {
+            return (cents/100).toFixed(2);
+        } else {
+            cents = cents.toString();
+            return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
+        }
+    }else {
+        cents = cents.toString();
+        return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
+    }
+}
+
 module.exports = {
     numberCommaFormat: numberCommaFormat,
     replaceAll: replaceAll,
     scrollToElement: scrollToElement,
-    upAndDownPopups: upAndDownPopups
+    upAndDownPopups: upAndDownPopups,
+    currencyFormat: currencyFormat
 };
 
 /***/ }),
@@ -1411,17 +1430,19 @@ module.exports = {
 /* 57 */,
 /* 58 */,
 /* 59 */,
-/* 60 */
+/* 60 */,
+/* 61 */,
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(25);
-__webpack_require__(61);
+__webpack_require__(63);
 __webpack_require__(9);
 
 //handlebars
 //var inventoryTemplate = require('./../handlebars/inventory/inventory.hbs');
 //var rowTemplate = require('./../handlebars/inventory/row.hbs');
-var employeeOperationTemplate = __webpack_require__(62);
+var employeeOperationTemplate = __webpack_require__(64);
 
 //libraries
 var $ = __webpack_require__(6);
@@ -1470,7 +1491,7 @@ $(document).ready(function() {
         popupHandler(e, {type: "employee_type", columns: globals.columns});
     });
 
-    $(document).on('click', '#create-user-type-submit', function (e) {
+    $(document).on('click', '#create-user-type-submit', function () {
         var $operationOverlay = $('#operation-overlay');
 
         var visibleColumns = [];
@@ -1498,26 +1519,163 @@ $(document).ready(function() {
             dataType: 'json',
             type: "POST",
             success: function (response) {
-                console.log(JSON.stringify(response));
+                //console.log(JSON.stringify(response));
                 $operationOverlay.removeClass('active');
             },
             error: function (response) {
-                console.log(JSON.stringify(response.responseJSON['error_msg']));
+                if(response.status && response.status == 403) {
+                    var $settingResult = $('#settings-result');
+                    $settingResult.removeClass('success');
+                    $settingResult.addClass('denied');
+                    $settingResult.text('Permission Denied');
+                    $settingResult.show();
+                    $settingResult.fadeOut(2000);
+                } else {
+                    $('.operation-popup-container').find('.error').text(response.responseText).show()
+                }
             }
         });
     });
     //EMPLOYEE TYPE//
 
+    //GET EMPLOYEE TYPE//
+    $(document).on('click', '#user-type-settings', function (e) {
+        var userTypeId = $(this).closest('.user-type-item').attr('data-id');
+
+        var getData = {
+            'user_type': userTypeId
+        };
+
+        $.ajax({
+            url: globals.base_url + '/employee/get_employee_type/',
+            data: getData,
+            dataType: 'json',
+            type: "GET",
+            success: function (response) {
+                console.log(response);
+                response['type'] = "employee_type";
+                response['columns'] = globals.columns;
+                response['edit'] = true;
+                popupHandler(e, response);
+
+                $('#edit-user-type-submit').data('id', userTypeId);
+                $('#delete-user-type-submit').data('id', userTypeId);
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    var $settingResult = $('#settings-result');
+                    $settingResult.removeClass('success');
+                    $settingResult.addClass('denied');
+                    $settingResult.text('Permission Denied');
+                    $settingResult.show();
+                    $settingResult.fadeOut(2000);
+                } else {
+                    $('.operation-popup-container').find('.error').text(response.responseText).show()
+                }
+            }
+        });
+    });
+    //GET EMPLOYEE TYPE//
+
+
+    //EDIT EMPLOYEE TYPE//
+    $(document).on('click', '#edit-user-type-submit', function () {
+        var $operationOverlay = $('#operation-overlay');
+
+        var visibleColumns = [];
+        var postData = {
+            permissions: {}
+        };
+
+        $operationOverlay.find('.checkbox-input').each(function() {
+            var $checkboxInput = $(this);
+
+            if ($checkboxInput.attr('data-type') == 'columns' && $checkboxInput.prop('checked')) {
+                visibleColumns.push($checkboxInput.attr('data-name'));
+            } else {
+                postData['permissions'][$checkboxInput.attr('data-name')] = $checkboxInput.prop('checked');
+            }
+        });
+
+        postData['visible_columns'] = visibleColumns;
+        postData['name'] = $operationOverlay.find('#employee-type-input').val();
+        postData['user_type'] = $(this).data('id');
+
+        $.ajax({
+            headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
+            url: globals.base_url + '/employee/edit_user_type/',
+            data: JSON.stringify(postData),
+            dataType: 'json',
+            type: "POST",
+            success: function (response) {
+                console.log(JSON.stringify(response));
+
+                var $settingResult = $('#settings-result');
+                $settingResult.removeClass('denied');
+                $settingResult.addClass('success');
+                $settingResult.text('Saved!');
+                $settingResult.show();
+                $settingResult.fadeOut(2000);
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    var $settingResult = $('#settings-result');
+                    $settingResult.removeClass('success');
+                    $settingResult.addClass('denied');
+                    $settingResult.text('Permission Denied');
+                    $settingResult.show();
+                    $settingResult.fadeOut(2000);
+                } else {
+                    $('.operation-popup-container').find('.error').text(response.responseText).show()
+                }
+            }
+        });
+    });
+    //EDIT EMPLOYEE TYPE//
+
+
+    //DELETE EMPLOYEE TYPE//
+    $(document).on('click', '#delete-user-type-submit', function () {
+
+        var userTypeId = $(this).data('id');
+
+        $.ajax({
+            headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
+            url: globals.base_url + '/employee/delete_user_type/',
+            data: {'user_type': userTypeId},
+            dataType: 'json',
+            type: "POST",
+            success: function (response) {
+                $('#operation-overlay').removeClass('active');
+                $('.user-type-item[data-id="' + userTypeId + '"]').remove();
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    var $settingResult = $('#settings-result');
+                    $settingResult.removeClass('success');
+                    $settingResult.addClass('denied');
+                    $settingResult.text('Permission Denied');
+                    $settingResult.show();
+                    $settingResult.fadeOut(2000);
+                } else {
+                    $('.operation-popup-container').find('.error').text(response.responseText).show()
+                }
+            }
+        });
+    });
+    //DELETE EMPLOYEE TYPE//
+
+
     //CREATE USER//
     $(document).on('click', '#user-create', function (e) {
-        popupHandler(e, {type: "create_employee", user_types: globals.user_types, user_type_id: $(this).attr('data-id')});
+        popupHandler(e, {type: "create_employee", user_types: globals.user_types, user_type_id: parseInt($(this).attr('data-id'))});
     });
 
     $(document).on('change', '#assign-store-input', function () {
         var $input = $(this);
         var $inputDescriptionWrapper = $input.siblings('.input-description-wrapper');
         $inputDescriptionWrapper.find('.active').removeClass('active');
-        var $description = $inputDescriptionWrapper.find('.input-description[data-type="' + $input.val() + '"]')
+        var $description = $inputDescriptionWrapper.find('.input-description[data-type="' + $input.val() + '"]');
         $description.addClass('active');
     });
 
@@ -1548,53 +1706,10 @@ $(document).ready(function() {
             dataType: 'json',
             type: "POST",
             success: function (response) {
-
                 console.log(response);
             },
             error: function (response) {
                 console.log(JSON.stringify(response.responseJSON));
-                //var error = response.responseJSON['error_msg'];
-                //
-                //if (error == 'Username must be between 3 to 15 characters.') {
-                //    var $error = $('.error.username');
-                //    $error.text(error);
-                //    $error.show();
-                //} else if(error == 'Username exists.') {
-                //    $error = $('.error.username');
-                //    $error.text('Username is not available.');
-                //    $error.show();
-                //}
-                //
-                //if (error == 'Password must be 8 characters or more.') {
-                //    $error = $('.error.password');
-                //    $error.text(error);
-                //    $error.show();
-                //
-                //} else if(error == 'Invalid password.') {
-                //    $error = $('.error.password');
-                //    $error.text('Password must contain letter and digit.');
-                //    $error.show();
-                //}
-                //
-                //if(error == 'Invalid email.') {
-                //    $error = $('.error.email');
-                //    $error.text('Must be a valid email.');
-                //    $error.show();
-                //} else if(error == 'Email exists.') {
-                //    $error = $('.error.email');
-                //    $error.text('Email is not available.');
-                //    $error.show();
-                //}
-                //
-                //if(error == 'Must have a first name.') {
-                //    $error = $('.error.email');
-                //    $error.show();
-                //}
-                //
-                //if(error == 'Must have a last name.') {
-                //    $error = $('.error.email');
-                //    $error.show();
-                //}
             }
         });
     });
@@ -1602,44 +1717,210 @@ $(document).ready(function() {
 });
 
 /***/ }),
-/* 61 */
+/* 63 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 62 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(4);
 function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
-module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
+module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
+
+  return "    <div class=\"operation-popup-container\">\r\n        <div class=\"operation-title\">Employee Type</div>\r\n        <div class=\"operation-description\">Define a user's title and permissions.</div>\r\n\r\n"
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.program(4, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + "\r\n        <div id=\"permission-wrapper\">\r\n\r\n            <div class=\"operation-header\">Inventory Permissions</div>\r\n\r\n            <div class=\"operation-subtitle\">Columns</div>\r\n\r\n            <input type=\"checkbox\" id=\"add-columns-input\" data-name=\"add_column\" class=\"checkbox-input\" "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(6, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + " style=\"display: none\" />\r\n            <label for=\"add-columns-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Add Columns</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"edit-columns-input\" data-name=\"edit_column\" class=\"checkbox-input\" "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(9, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + " style=\"display: none\" />\r\n            <label for=\"edit-columns-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Edit Columns</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"delete-columns-input\" data-name=\"delete_column\" class=\"checkbox-input\" "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(11, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + " style=\"display: none\" />\r\n            <label for=\"delete-columns-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Delete Columns</span>\r\n            </label>\r\n\r\n            <div class=\"operation-subtitle\">Items</div>\r\n\r\n            <input type=\"checkbox\" id=\"add-items-input\" data-name=\"add_item\" class=\"checkbox-input\" "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(13, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + " style=\"display: none\" />\r\n            <label for=\"add-items-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Add Items</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"edit-items-input\" data-name=\"edit_item\" class=\"checkbox-input\" "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(15, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + " style=\"display: none\" />\r\n            <label for=\"edit-items-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Edit Items</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"delete-items-input\" data-name=\"delete_item\" class=\"checkbox-input\" "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(17, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + " style=\"display: none\" />\r\n            <label for=\"delete-items-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Delete Items</span>\r\n            </label>\r\n\r\n            <div class=\"operation-subtitle\">Other Actions</div>\r\n\r\n            <input type=\"checkbox\" id=\"import-input\" data-name=\"import\" class=\"checkbox-input\" "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(19, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + " style=\"display: none\" />\r\n            <label for=\"import-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Import</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"export-input\" data-name=\"export\" class=\"checkbox-input\" "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(21, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + " style=\"display: none\" />\r\n            <label for=\"export-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Export</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"drop-table-input\" data-name=\"drop_table\" class=\"checkbox-input\" "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(23, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + " style=\"display: none\" />\r\n            <label for=\"drop-table-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Drop Table</span>\r\n            </label>\r\n\r\n            <div class=\"operation-subtitle\">Operations</div>\r\n\r\n            <input type=\"checkbox\" id=\"receive-input\" data-name=\"receive\" class=\"checkbox-input\" "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(25, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + " style=\"display: none\" />\r\n            <label for=\"receive-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Receive</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"damage-input\" data-name=\"damage\" class=\"checkbox-input\" "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(27, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + " style=\"display: none\" />\r\n            <label for=\"damage-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Damage</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"reset-price-input\" data-name=\"reset_price\" class=\"checkbox-input\" "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(29, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + " style=\"display: none\" />\r\n            <label for=\"reset-price-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Reset Price</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"reset-cost-input\" data-name=\"reset_cost\" class=\"checkbox-input\" "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(31, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + " style=\"display: none\" />\r\n            <label for=\"reset-cost-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Reset Cost</span>\r\n            </label>\r\n\r\n            <div class=\"operation-subtitle\">Visible Columns</div>\r\n"
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(33, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\r\n            <div class=\"operation-header\">Transaction Permissions</div>\r\n\r\n            <input type=\"checkbox\" id=\"create-transaction-input\" data-name=\"create_transaction\" class=\"checkbox-input\" "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(36, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + " style=\"display: none\" />\r\n            <label for=\"create-transaction-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Create Transaction</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"edit-transaction-settings-input\" data-name=\"edit_transaction_settings\" class=\"checkbox-input\" "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(38, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + " style=\"display: none\" />\r\n            <label for=\"edit-transaction-settings-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Edit Transaction Settings</span>\r\n            </label>\r\n\r\n            <div class=\"operation-header\">Store</div>\r\n\r\n            <input type=\"checkbox\" id=\"create-store-input\" data-name=\"create_store\" class=\"checkbox-input\" "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(40, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + " style=\"display: none\" />\r\n            <label for=\"create-store-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Create Store</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"edit-store-input\" data-name=\"edit_store\" class=\"checkbox-input\" "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(42, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + " style=\"display: none\" />\r\n            <label for=\"edit-store-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Edit Store</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"delete-store-input\" data-name=\"delete_store\" class=\"checkbox-input\" "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(44, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + " style=\"display: none\" />\r\n            <label for=\"delete-store-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Delete Store</span>\r\n            </label>\r\n\r\n            <div class=\"operation-header\">Creating Users</div>\r\n\r\n            <input type=\"checkbox\" id=\"create-user-type-input\" data-name=\"create_user_type\" class=\"checkbox-input\" "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(46, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + " style=\"display: none\" />\r\n            <label for=\"create-user-type-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Create Employee Type</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"edit-user-permissions-input\" data-name=\"edit_permissions\" class=\"checkbox-input\" "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(48, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + " style=\"display: none\" />\r\n            <label for=\"edit-user-permissions-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Edit Employee Permissions</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"delete-user-permissions-input\" data-name=\"delete_user_type\" class=\"checkbox-input\" "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(50, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + " style=\"display: none\" />\r\n            <label for=\"delete-user-permissions-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Delete Employee Type</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"create-new-users-input\" data-name=\"create_user\" class=\"checkbox-input\" "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(52, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + " style=\"display: none\" />\r\n            <label for=\"create-new-users-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Create New Employees</span>\r\n            </label>\r\n        </div>\r\n\r\n        <div class=\"operation-button-wrapper\">\r\n            <div id=\"settings-result\"></div>\r\n"
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(54, data, 0, blockParams, depths),"inverse":container.program(56, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + "        </div>\r\n    </div>\r\n";
+},"2":function(container,depth0,helpers,partials,data) {
+    return "            <div class=\"permission-input-container\">\r\n                <label for=\"assign-store-input\">Employee Type Name</label>\r\n                <div class=\"error\"></div>\r\n                <input id=\"employee-type-input\" value=\""
+    + container.escapeExpression(container.lambda((depth0 != null ? depth0.name : depth0), depth0))
+    + "\" />\r\n            </div>\r\n";
+},"4":function(container,depth0,helpers,partials,data) {
+    return "            <div class=\"permission-input-container\">\r\n                <label for=\"assign-store-input\">Employee Type Name</label>\r\n                <div class=\"input-description\" data-type=\"all\">Admin, Manager, etc.</div>\r\n                <div class=\"error\"></div>\r\n                <input id=\"employee-type-input\" />\r\n            </div>\r\n";
+},"6":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return "    <div class=\"operation-popup-container\">\r\n        <div class=\"operation-title\">Employee Type</div>\r\n        <div class=\"operation-description\">Define a user's title and permissions.</div>\r\n\r\n        <div class=\"permission-input-container\">\r\n            <label for=\"assign-store-input\">User type Name</label>\r\n            <div class=\"input-description\" data-type=\"all\">Admin, Manager, etc.</div>\r\n            <input id=\"employee-type-input\" />\r\n        </div>\r\n\r\n        <div id=\"permission-wrapper\">\r\n\r\n            <div class=\"operation-title\">Inventory Permissions</div>\r\n\r\n            <div class=\"operation-subtitle\">Columns</div>\r\n\r\n            <input type=\"checkbox\" id=\"add-columns-input\" data-name=\"add_column\" class=\"checkbox-input\" checked style=\"display: none\" />\r\n            <label for=\"add-columns-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Add Columns</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"edit-columns-input\" data-name=\"edit_column\" class=\"checkbox-input\" checked style=\"display: none\" />\r\n            <label for=\"edit-columns-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Edit Columns</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"delete-columns-input\" data-name=\"delete_column\" class=\"checkbox-input\" checked style=\"display: none\" />\r\n            <label for=\"delete-columns-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Delete Columns</span>\r\n            </label>\r\n\r\n            <div class=\"operation-subtitle\">Items</div>\r\n\r\n            <input type=\"checkbox\" id=\"add-items-input\" data-name=\"add_item\" class=\"checkbox-input\" checked style=\"display: none\" />\r\n            <label for=\"add-items-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Add Items</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"edit-items-input\" data-name=\"edit_item\" class=\"checkbox-input\" checked style=\"display: none\" />\r\n            <label for=\"edit-items-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Edit Items</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"delete-items-input\" data-name=\"delete_item\" class=\"checkbox-input\" checked style=\"display: none\" />\r\n            <label for=\"delete-items-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Delete Items</span>\r\n            </label>\r\n\r\n            <div class=\"operation-subtitle\">Other Actions</div>\r\n\r\n            <input type=\"checkbox\" id=\"import-input\" data-name=\"import\" class=\"checkbox-input\" checked style=\"display: none\" />\r\n            <label for=\"import-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Import</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"export-input\" data-name=\"export\" class=\"checkbox-input\" checked style=\"display: none\" />\r\n            <label for=\"export-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Export</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"drop-table-input\" data-name=\"drop_table\" class=\"checkbox-input\" checked style=\"display: none\" />\r\n            <label for=\"drop-table-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Drop Table</span>\r\n            </label>\r\n\r\n            <div class=\"operation-subtitle\">Operations</div>\r\n\r\n            <input type=\"checkbox\" id=\"receive-input\" data-name=\"receive\" class=\"checkbox-input\" checked style=\"display: none\" />\r\n            <label for=\"receive-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Receive</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"damage-input\" data-name=\"damage\" class=\"checkbox-input\" checked style=\"display: none\" />\r\n            <label for=\"damage-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Damage</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"reset-price-input\" data-name=\"reset_price\" class=\"checkbox-input\" checked style=\"display: none\" />\r\n            <label for=\"reset-price-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Reset Price</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"reset-cost-input\" data-name=\"reset_cost\" class=\"checkbox-input\" checked style=\"display: none\" />\r\n            <label for=\"reset-cost-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Reset Cost</span>\r\n            </label>\r\n\r\n            <div class=\"operation-subtitle\">Visible Columns</div>\r\n"
-    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "\r\n            <div class=\"operation-title\">Transaction Permissions</div>\r\n\r\n            <input type=\"checkbox\" id=\"create-transaction-input\" data-name=\"create_transaction\" class=\"checkbox-input\" checked style=\"display: none\" />\r\n            <label for=\"create-transaction-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Create Transaction</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"edit-transaction-settings-input\" data-name=\"edit_transaction_settings\" class=\"checkbox-input\" checked style=\"display: none\" />\r\n            <label for=\"edit-transaction-settings-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Edit Transaction Settings</span>\r\n            </label>\r\n\r\n            <div class=\"operation-title\">Store</div>\r\n\r\n            <input type=\"checkbox\" id=\"create-store-input\" data-name=\"create_store\" class=\"checkbox-input\" checked style=\"display: none\" />\r\n            <label for=\"create-store-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Create Store</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"edit-store-input\" data-name=\"edit_store\" class=\"checkbox-input\" checked style=\"display: none\" />\r\n            <label for=\"edit-store-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Edit Store</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"delete-store-input\" data-name=\"delete_store\" class=\"checkbox-input\" checked style=\"display: none\" />\r\n            <label for=\"delete-store-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Delete Store</span>\r\n            </label>\r\n\r\n            <div class=\"operation-title\">Creating Users</div>\r\n\r\n            <input type=\"checkbox\" id=\"create-user-type-input\" data-name=\"create_user_type\" class=\"checkbox-input\" checked style=\"display: none\" />\r\n            <label for=\"create-user-type-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Create User Types</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"create-new-users-input\" data-name=\"create_user\" class=\"checkbox-input\" checked style=\"display: none\" />\r\n            <label for=\"create-new-users-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Create New Users</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"edit-user-permissions-input\" data-name=\"edit_permissions\" class=\"checkbox-input\" checked style=\"display: none\" />\r\n            <label for=\"edit-user-permissions-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Edit Users Permissions</span>\r\n            </label>\r\n        </div>\r\n\r\n        <div class=\"operation-button-wrapper\">\r\n            <button class=\"add\" id=\"create-user-type-submit\">Create User Type</button>\r\n        </div>\r\n    </div>\r\n";
-},"2":function(container,depth0,helpers,partials,data) {
-    var alias1=container.lambda, alias2=container.escapeExpression;
+  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.permission : depth0)) != null ? stack1.add_column : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"7":function(container,depth0,helpers,partials,data) {
+    return "checked";
+},"9":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.permission : depth0)) != null ? stack1.edit_column : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"11":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.permission : depth0)) != null ? stack1.delete_column : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"13":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.permission : depth0)) != null ? stack1.add_item : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"15":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.permission : depth0)) != null ? stack1.edit_item : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"17":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.permission : depth0)) != null ? stack1.delete_item : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"19":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.permission : depth0)) != null ? stack1.import_file : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"21":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.permission : depth0)) != null ? stack1.export_file : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"23":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.permission : depth0)) != null ? stack1.drop_table : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"25":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.permission : depth0)) != null ? stack1.receive : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"27":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.permission : depth0)) != null ? stack1.damage : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"29":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.permission : depth0)) != null ? stack1.reset_price : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"31":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.permission : depth0)) != null ? stack1.reset_cost : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"33":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
 
   return "                <input type=\"checkbox\" id=\""
     + alias2(alias1(depth0, depth0))
     + "-input\" data-name=\""
     + alias2(alias1(depth0, depth0))
-    + "\" data-type=\"columns\" class=\"checkbox-input\" checked style=\"display: none\" />\r\n                <label for=\""
+    + "\" data-type=\"columns\" class=\"checkbox-input\" "
+    + ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),(depths[1] != null ? depths[1].edit : depths[1]),{"name":"if","hash":{},"fn":container.program(34, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + " style=\"display: none\" />\r\n                <label for=\""
     + alias2(alias1(depth0, depth0))
     + "-input\" class=\"check-box-wrapper\">\r\n                    <span class=\"check-box\">\r\n                        <svg width=\"12px\" height=\"10px\">\r\n                            <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                        </svg>\r\n                    </span>\r\n                    <span class=\"check-box-label\">"
     + alias2(alias1(depth0, depth0))
     + "</span>\r\n                </label>\r\n";
-},"4":function(container,depth0,helpers,partials,data) {
+},"34":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1;
+
+  return ((stack1 = __default(__webpack_require__(77)).call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,((stack1 = (depths[1] != null ? depths[1].permission : depths[1])) != null ? stack1.visible_columns : stack1),{"name":"contains","hash":{},"fn":container.program(7, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"36":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.permission : depth0)) != null ? stack1.create_transaction : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"38":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.permission : depth0)) != null ? stack1.edit_transaction_settings : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"40":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.permission : depth0)) != null ? stack1.create_store : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"42":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.permission : depth0)) != null ? stack1.edit_store : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"44":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.permission : depth0)) != null ? stack1.delete_store : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"46":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.permission : depth0)) != null ? stack1.create_user_type : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"48":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.permission : depth0)) != null ? stack1.edit_permissions : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"50":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.permission : depth0)) != null ? stack1.delete_user_type : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"52":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.permission : depth0)) != null ? stack1.create_user : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"54":function(container,depth0,helpers,partials,data) {
+    return "                <button class=\"edit\" id=\"edit-user-type-submit\">Edit User Permissions</button>\r\n                <button class=\"delete\" id=\"delete-user-type-submit\">Delete Employee Type</button>\r\n";
+},"56":function(container,depth0,helpers,partials,data) {
+    return "                <button class=\"add\" id=\"create-user-type-submit\">Create User Type</button>\r\n";
+},"58":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
   return "        <div class=\"operation-title\">Create an Employee Account</div>\r\n        <div class=\"operation-description\">Create a user to connected to your account.</div>\r\n        <div id=\"create-user-wrapper\">\r\n            <label for=\"assign-store-input\">User Type</label>\r\n            <select class=\"select-input\" id=\"user-type-input\">\r\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.user_types : depth0),{"name":"each","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.user_types : depth0),{"name":"each","hash":{},"fn":container.program(59, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </select>\r\n\r\n            <label for=\"assign-store-input\">Store Assignment</label>\r\n            <div class=\"input-description-wrapper\">\r\n                <div class=\"input-description active\" data-type=\"all\">This user will be connected every store and main inventory.</div>\r\n                <div class=\"input-description\" data-type=\"main\">This user will only be connected to just the main inventory.</div>\r\n                <div class=\"input-description\" data-type=\"store\">This user will only be connected to one store.</div>\r\n            </div>\r\n            <select class=\"select-input\" id=\"assign-store-input\">\r\n                <option value=\"all\">All</option>\r\n                <option value=\"main\">Main</option>\r\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.stores : depth0),{"name":"each","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.stores : depth0),{"name":"each","hash":{},"fn":container.program(62, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </select>\r\n\r\n            <label for=\"assign-store-input\">First Name</label>\r\n            <input class=\"operation-text-input\" id=\"first-name-input\" />\r\n\r\n            <label for=\"assign-store-input\">Last Name</label>\r\n            <input class=\"operation-text-input\" id=\"last-name-input\" />\r\n\r\n            <label for=\"assign-store-input\">Username</label>\r\n            <input class=\"operation-text-input\" id=\"username-input\" />\r\n\r\n            <label for=\"assign-store-input\">Password</label>\r\n            <input type=\"password\" class=\"operation-text-input\" id=\"password-input\" />\r\n\r\n            <button class=\"add\" id=\"create-employee-submit\">Create Employee</button>\r\n        </div>\r\n";
-},"5":function(container,depth0,helpers,partials,data) {
+},"59":function(container,depth0,helpers,partials,data) {
+    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
+
+  return "                    <option value=\""
+    + alias2(alias1((depth0 != null ? depth0.id : depth0), depth0))
+    + "\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.user_type_id : depth0),"==",(depth0 != null ? depth0.id : depth0),{"name":"ifCond","hash":{},"fn":container.program(60, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">"
+    + alias2(alias1((depth0 != null ? depth0.name : depth0), depth0))
+    + "</option>\r\n";
+},"60":function(container,depth0,helpers,partials,data) {
+    return "selected";
+},"62":function(container,depth0,helpers,partials,data) {
     var alias1=container.lambda, alias2=container.escapeExpression;
 
   return "                    <option value=\""
@@ -1647,15 +1928,42 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + "\">"
     + alias2(alias1((depth0 != null ? depth0.name : depth0), depth0))
     + "</option>\r\n";
-},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
   return "<div id=\"operation-popup-wrapper\">\r\n"
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","employee_type",{"name":"ifCond","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","employee_type",{"name":"ifCond","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\r\n\r\n"
-    + ((stack1 = __default(__webpack_require__(1)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","create_employee",{"name":"ifCond","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","create_employee",{"name":"ifCond","hash":{},"fn":container.program(58, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "</div>";
-},"useData":true});
+},"useData":true,"useDepths":true});
+
+/***/ }),
+/* 65 */,
+/* 66 */,
+/* 67 */,
+/* 68 */,
+/* 69 */,
+/* 70 */,
+/* 71 */,
+/* 72 */,
+/* 73 */,
+/* 74 */,
+/* 75 */,
+/* 76 */,
+/* 77 */
+/***/ (function(module, exports) {
+
+module.exports = function(elem, list, options) {
+    console.log(list)
+    console.log(elem)
+    if(list.indexOf(elem) > -1) {
+        console.log(elem)
+        console.log(list)
+        return options.fn(this);
+    }
+    return options.inverse(this);
+};
 
 /***/ })
-],[60]);
+],[62]);

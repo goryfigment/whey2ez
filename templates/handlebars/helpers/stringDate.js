@@ -23,5 +23,4 @@ module.exports = function(epoch) {
     }
 
     return month + '/' + day + '/' + year + ' ' + hour + ':' + min + ampm
-
 };

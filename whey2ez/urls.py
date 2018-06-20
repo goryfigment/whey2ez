@@ -42,11 +42,16 @@ urlpatterns = [
 
     # Employee
     url(r'^employee/create_user_type/$', employee.create_user_type, name='create_user_type'),
+    url(r'^employee/edit_user_type/$', employee.edit_user_type, name='edit_user_type'),
+    url(r'^employee/delete_user_type/$', employee.delete_user_type, name='delete_user_type'),
     url(r'^employee/register/$', employee.create_employee, name='create_employee'),
+    url(r'^employee/get_employee_type/$', employee.get_employee_type, name='get_employee_type'),
 
     # Transaction
     url(r'^inventory/search/$', transaction.inventory_search, name='inventory_search'),
     url(r'^transaction/get_transaction/$', transaction.get_transaction, name='get_transaction'),
     url(r'^transaction/create_transaction/$', transaction.create_transaction, name='create_transaction'),
     url(r'^transaction/save_settings/$', transaction.save_settings, name='transaction_settings'),
+    url(r'^transaction/save_receipt_settings/$', transaction.save_receipt_settings, name='save_receipt_settings'),
+    url(r'^transaction/receipt/$', transaction.get_receipt, name='receipt'),
 ]

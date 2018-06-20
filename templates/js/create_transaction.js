@@ -9,7 +9,6 @@ var helper = require('./../js/helpers.js');
 var searchItemTemplate = require('./../handlebars/create_transaction/search_item.hbs');
 var resultItemTemplate = require('./../handlebars/create_transaction/result_item.hbs');
 var discountItemTemplate = require('./../handlebars/create_transaction/discount_item.hbs');
-var receiptTemplate = require('./../handlebars/create_transaction/receipt.hbs');
 
 
 function init() {
@@ -33,13 +32,35 @@ function calculateTotal() {
         subtotal += parseFloat($(this).find('.transaction-price').text());
     });
 
-    var tax = Math.round(subtotal*taxRate*100)/100;
-    var total = subtotal + tax;
+    subtotal = helper.currencyFormat(subtotal*100);
+
+
+
+    var tax = helper.currencyFormat((Math.round(subtotal*taxRate*100)/100)*100);
+    var total = helper.currencyFormat(subtotal*100 + tax*100);
 
     var $receiptResultWrapper = $('#receipt-result-wrapper');
-    $receiptResultWrapper.find('#subtotal').html(subtotal.toFixed(2));
-    $receiptResultWrapper.find('#tax').html(tax.toFixed(2));
-    $receiptResultWrapper.find('#total').html(total.toFixed(2));
+    $receiptResultWrapper.find('#subtotal').html(subtotal);
+    $receiptResultWrapper.find('#tax').html(tax);
+    $receiptResultWrapper.find('#total').html(total);
+}
+
+function getReceipt(data) {
+    $.ajax({
+        headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
+        url: globals.base_url + '/transaction/receipt/',
+        data: JSON.stringify({'transaction': data}),
+        dataType: 'json',
+        type: "POST",
+        success: function (response) {
+            if(response['success']){
+                console.log(JSON.stringify(response));
+            }
+        },
+        error: function (response) {
+            alert('ERROR CREATING RECEIPT')
+        }
+    });
 }
 
 $(document).ready(function() {
@@ -126,9 +147,9 @@ $(document).ready(function() {
         $searchPopup.removeClass('active');
         $searchInput.val(itemData['name']);
 
-        var generatedHtml = resultItemTemplate(itemData);
-
-        $resultContainer.append(generatedHtml);
+        var $generatedHtml = $(resultItemTemplate(itemData));
+        $generatedHtml.data('item', itemData);
+        $resultContainer.append($generatedHtml);
 
         calculateTotal();
     });
@@ -165,9 +186,36 @@ $(document).ready(function() {
         var $quantityInput = $(this);
         var $transactionItem = $quantityInput.closest('.transaction-item');
         var $transactionPrice = $transactionItem.find('.transaction-price');
-        var price = parseFloat($quantityInput.attr('data-each'))*parseInt($quantityInput.val());
+        var $discountItem = $transactionItem.find('.discount-item');
+        var $eachText = $quantityInput.siblings('.each-text');
+        var quantity = parseInt($quantityInput.val());
+        var itemSubtotal = (parseFloat($transactionItem.data('item')['price'])*100)*quantity;
 
-        $transactionPrice.html(price.toFixed(2));
+        if (quantity == 0) {
+            quantity = 1
+        }
+
+        if($discountItem.attr('data-type') == 'percent') {
+
+            var discount = parseFloat($discountItem.attr('data-percent'))/100 * itemSubtotal;
+            $discountItem.find('.discount').text(helper.currencyFormat(discount)+'-');
+            var itemTotal = itemSubtotal - discount;
+            var eachDiscountedItem = helper.currencyFormat(itemTotal/quantity);
+            $quantityInput.attr('data-each', eachDiscountedItem);
+            $eachText.text('@ ' + eachDiscountedItem + ' ea)');
+        } else if($discountItem.attr('data-type') == 'dollar') {
+            discount = parseFloat($discountItem.find('.discount-delete').attr('data-discount'))*100;
+            itemTotal = itemSubtotal - discount;
+            eachDiscountedItem = helper.currencyFormat(Math.ceil(itemTotal/quantity));
+            $quantityInput.attr('data-each', eachDiscountedItem);
+            $eachText.text('@ ' + eachDiscountedItem + ' ea)');
+        } else {
+            itemTotal = itemSubtotal;
+        }
+
+        var price = helper.currencyFormat(itemTotal);
+
+        $transactionPrice.text(helper.currencyFormat(itemTotal));
         calculateTotal();
     });
 
@@ -188,6 +236,13 @@ $(document).ready(function() {
         var $discountSubmitWrapper = $discountWrapper.siblings('#discount-submit-wrapper');
         var $transactionPrice = $transactionItem.find('.transaction-price');
         var transactionPrice = parseFloat($transactionPrice.text());
+        var $quantityInput = $transactionItem.find('.quantity-input');
+        var quantity = parseInt($quantityInput.val());
+        if(quantity == 0){
+            quantity = 1;
+        }
+
+        var $eachText = $quantityInput.siblings('.each-text');
 
         if(moneyValue != '') {
             if(numberRegex.test(moneyValue)) {
@@ -196,7 +251,12 @@ $(document).ready(function() {
                 $discountButton.removeClass('active');
                 $discountSubmitWrapper.removeClass('active');
 
-                $transactionPrice.text((transactionPrice - discount).toFixed(2));
+                var itemTotalDiscounted = transactionPrice*100 - discount*100;
+                var eachDiscountedItem = helper.currencyFormat(itemTotalDiscounted/quantity);
+
+                $quantityInput.attr('data-each', eachDiscountedItem);
+                $eachText.text('@ ' + eachDiscountedItem + ' ea)');
+                $transactionPrice.text(helper.currencyFormat(itemTotalDiscounted));
                 calculateTotal();
             } else {
                 alert('Must be a number!')
@@ -208,7 +268,12 @@ $(document).ready(function() {
                 $discountButton.removeClass('active');
                 $discountSubmitWrapper.removeClass('active');
 
-                $transactionPrice.text((transactionPrice - discount).toFixed(2));
+                itemTotalDiscounted = transactionPrice*100 - discount*100;
+                eachDiscountedItem = helper.currencyFormat(itemTotalDiscounted/quantity);
+
+                $quantityInput.attr('data-each', eachDiscountedItem);
+                $eachText.text('@ ' + eachDiscountedItem + ' ea)');
+                $transactionPrice.text(helper.currencyFormat(itemTotalDiscounted));
                 calculateTotal();
             } else {
                 alert('Must be a number!')
@@ -230,9 +295,23 @@ $(document).ready(function() {
         var $transactionPrice = $transactionItem.find('.transaction-price');
         var price = parseFloat($transactionPrice.text());
         var discount = parseFloat($discountDelete.attr('data-discount'));
+        var $quantityInput = $transactionItem.find('.quantity-input');
+        var $eachText = $quantityInput.siblings('.each-text');
+        var quantity = parseInt($quantityInput.val());
+        if(quantity == 0){
+            quantity = 1;
+        }
+
 
         $discountDelete.closest('.discount-item').remove();
-        $transactionPrice.text((price + discount).toFixed(2));
+        var itemSubtotal = price*100 + discount*100;
+        var eachItem = helper.currencyFormat(itemSubtotal/quantity);
+
+        $quantityInput.attr('data-each', eachItem);
+        $eachText.text('@ ' + eachItem + ' ea)');
+
+        $transactionPrice.text(helper.currencyFormat(itemSubtotal));
+
         calculateTotal();
 
         $transactionItem.find('.discount-button').addClass('active');
@@ -241,12 +320,14 @@ $(document).ready(function() {
     $(document).on('click', '#transaction-submit-button', function () {
         var storeId = $(this).data('id');
         var storeType = $(this).data('type');
-        alert(storeType)
         var paymentType = $('.payment-type.selected').attr('data-payment_type');
         var memo = $('#memo-input').val().trim();
         var $receiptResultWrapper = $('#receipt-result-wrapper');
         var subtotal = $receiptResultWrapper.find('#subtotal').text();
         var tax = $receiptResultWrapper.find('#tax-rate').data('tax');
+        var taxRate = $receiptResultWrapper.find('#tax-rate').text();
+        var taxTotal = $receiptResultWrapper.find('#tax').text();
+        var total = $receiptResultWrapper.find('#total').text();
         var items = {};
 
         $('.transaction-item').each(function() {
@@ -255,7 +336,7 @@ $(document).ready(function() {
             var itemId = $transactionItem.attr('data-id');
             var itemName = $transactionItem.find('.transaction-name').text();
             var discount =  parseFloat($(this).find('.discount').text().replace('-', ''));
-            var price = $(this).find('.quantity-input').attr('data-each');
+            var price = $transactionItem.data('item')['price'];
             if (itemId in items) {
                 items[itemId]['quantity'] +=  quantity;
                 items[itemId]['discount'] +=  discount;
@@ -268,6 +349,11 @@ $(document).ready(function() {
             }
         });
 
+        for (var key in items) {
+            var current_item = items[key];
+            current_item['discount'] = helper.currencyFormat(parseFloat(current_item['discount'])*100);
+        }
+
         var postData = {
             'payment_type': paymentType,
             'subtotal': subtotal,
@@ -275,7 +361,11 @@ $(document).ready(function() {
             'memo': memo,
             'items': items,
             'store_type': storeType,
-            'store_id': storeId
+            'store_id': storeId,
+            'tax_rate': taxRate,
+            'tax_total': taxTotal,
+            'total': total,
+            'tax_percent': globals.tax_percent
         };
 
         $.ajax({
@@ -285,48 +375,28 @@ $(document).ready(function() {
             dataType: 'json',
             type: "POST",
             success: function (response) {
-                if(response['success']){
-                    console.log(JSON.stringify(response));
-                    alert('Transaction Created!');
+                console.log(JSON.stringify(response));
 
-                    var $receiptSection = $('#receipt-section');
-                    $receiptSection.empty();
-                    $receiptSection.append(receiptTemplate({'tax_percent': globals.tax_percent}));
-                    $receiptSection.find('#tax-rate').data('tax', globals.tax);
-
-                    buildMessage();
-
-
-                    function buildMessage() {
-                        //Create an ePOS-Print Builder object
-                        var builder = new epson.ePOSBuilder();
-                        // Create a print document
-                        builder.addTextLang('en');
-                        builder.addTextSmooth(true);
-                        builder.addTextFont(builder.FONT_A);
-                        builder.addTextSize(3, 3);
-                        builder.addText('Hello,\tWorld!\n');
-                        builder.addCut(builder.CUT_FEED);
-                        // Acquire the print document
-                        var request = builder.toString();
-                        //alert(request);
-
-                        //Set the end point address
-                        var address = 'http://192.168.22.205/cgi-bin/epos/service.cgi?devid=local_printer&timeout=10000';
-                        // Create an ePOS-Print object
-                        var epos = new epson.ePOSPrint(address);
-                        // Send the print document
-                        epos.send(request);
-                    }
-
-
-
-
-                } else {
-                    alert('ERROR CREATING TRANSACTION')
+                for (var key in postData['items']) {
+                    var current_item = items[key];
+                    current_item['paid'] = helper.currencyFormat(parseFloat(current_item['price'])*100 - parseFloat(current_item['discount'])*100);
                 }
 
+                getReceipt(postData);
 
+                alert('Transaction Created!');
+
+                var $receiptSection = $('#receipt-section');
+                $receiptSection.empty();
+                $receiptSection.append(receiptTemplate({'tax_percent': globals.tax_percent}));
+                $receiptSection.find('#tax-rate').data('tax', globals.tax);
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    alert('Permission Denied');
+                } else {
+                    alert(response.responseText);
+                }
             }
         });
     });
