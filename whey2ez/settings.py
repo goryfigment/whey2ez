@@ -84,28 +84,38 @@ WSGI_APPLICATION = 'whey2ez.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'whey2ez',
+        'USER': 'gethypebaby',
+        'PASSWORD': 'sol2133080',
+        'HOST': 'whey2ez.c8ifh9asotnn.us-east-1.rds.amazonaws.com',
+        'PORT': '3306'
+    }
+}
 
-if DEBUG:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'whey2ez',
-            'USER': 'root',
-            'PASSWORD': '',
-            'HOST': '127.0.0.1',
-            'PORT': '3306'
-        }
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'whey2ez$whey2ez',
-            'USER': 'whey2ez',
-            'PASSWORD': '',
-            'HOST': 'whey2ez.mysql.pythonanywhere-services.com',
-        }
-    }
+# if DEBUG:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.mysql',
+#             'NAME': 'whey2ez',
+#             'USER': 'root',
+#             'PASSWORD': '',
+#             'HOST': '127.0.0.1',
+#             'PORT': '3306'
+#         }
+#     }
+# else:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.mysql',
+#             'NAME': 'whey2ez$whey2ez',
+#             'USER': 'whey2ez',
+#             'PASSWORD': '',
+#             'HOST': 'whey2ez.mysql.pythonanywhere-services.com',
+#         }
+#     }
 
 
 # Password validation
