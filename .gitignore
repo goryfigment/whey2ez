@@ -102,5 +102,4 @@ migrations
 node_modules
 database.py
 settings_secret.py
-treasure_trails_format.json
-item_log.json
+settings.py

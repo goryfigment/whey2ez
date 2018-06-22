@@ -1,5 +1,3 @@
-var Handlebars = require('handlebars');
-
 module.exports = function(epoch) {
     var dateObject = new Date(parseInt(epoch) * 1000);
     var ampm = 'AM';

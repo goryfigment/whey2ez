@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'webpack_loader',
-    'whey2ez'
+    'whey2ez',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -84,6 +84,7 @@ WSGI_APPLICATION = 'whey2ez.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
+
 if DEBUG:
     DATABASES = {
         'default': {

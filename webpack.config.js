@@ -15,13 +15,10 @@ module.exports = {
         register: './templates/js/register.js',
         login: './templates/js/login.js',
         overview: './templates/js/overview.js',
-        //reports: './templates/js/reports.js',
         inventory: './templates/js/inventory.js',
         employee: './templates/js/employee.js',
-        //dashboard: './templates/js/dashboard.js',
         transaction: './templates/js/transaction.js',
-        create_transaction: './templates/js/create_transaction.js',
-        //store: './templates/js/store.js'
+        create_transaction: './templates/js/create_transaction.js'
     },
     output: {path: __dirname + '/templates/bundle', filename: 'js/[name].js', publicPath: '/templates/bundle/'},
     module: {
@@ -50,11 +47,8 @@ module.exports = {
         new HtmlWebpackPlugin({filename: 'login.html', chunks: ['vendors','login'], minify: {collapseWhitespace: true}, hash: true, template: './templates/login.html'}),
         new HtmlWebpackPlugin({filename: 'overview.html', chunks: ['vendors','overview'], minify: {collapseWhitespace: true}, hash: true, template: './templates/overview.html'}),
         new HtmlWebpackPlugin({filename: 'inventory.html', chunks: ['vendors','inventory'], minify: {collapseWhitespace: true}, hash: true, template: './templates/inventory.html'}),
-        //new HtmlWebpackPlugin({filename: 'reports.html', chunks: ['vendors','reports'], minify: {collapseWhitespace: true}, hash: true, template: './templates/reports.html'}),
         new HtmlWebpackPlugin({filename: 'employee.html', chunks: ['vendors','employee'], minify: {collapseWhitespace: true}, hash: true, template: './templates/employee.html'}),
-        //new HtmlWebpackPlugin({filename: 'dashboard.html', chunks: ['vendors','dashboard'], minify: {collapseWhitespace: true}, hash: true, template: './templates/dashboard.html'}),
         new HtmlWebpackPlugin({filename: 'transaction.html', chunks: ['vendors','transaction'], minify: {collapseWhitespace: true}, hash: true, template: './templates/transaction.html'}),
         new HtmlWebpackPlugin({filename: 'create_transaction.html', chunks: ['vendors','create_transaction'], minify: {collapseWhitespace: true}, hash: true, template: './templates/create_transaction.html'}),
-        //new HtmlWebpackPlugin({filename: 'store.html', chunks: ['vendors','store'], minify: {collapseWhitespace: true}, hash: true, template: './templates/store.html'}),
     ]
 };

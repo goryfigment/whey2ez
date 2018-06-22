@@ -1,5 +1,3 @@
-var Handlebars = require('handlebars');
-
 module.exports = function(data, column) {
     var html = "";
 
