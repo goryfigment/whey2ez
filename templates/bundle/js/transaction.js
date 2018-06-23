@@ -2156,17 +2156,18 @@ module.exports = function(val) {
 /* 54 */,
 /* 55 */,
 /* 56 */,
-/* 57 */
+/* 57 */,
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(26);
-__webpack_require__(58);
+__webpack_require__(59);
 __webpack_require__(8);
 
 //handlebars
-var transactionTemplate = __webpack_require__(59);
-var transactionOperationTemplate = __webpack_require__(60);
-var receiptSettingsTemplate = __webpack_require__(61);
+var transactionTemplate = __webpack_require__(60);
+var transactionOperationTemplate = __webpack_require__(61);
+var receiptSettingsTemplate = __webpack_require__(62);
 
 //libraries
 var $ = __webpack_require__(7);
@@ -2592,13 +2593,13 @@ $(document).ready(function() {
 });
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(4);
@@ -2734,7 +2735,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true});
 
 /***/ }),
-/* 60 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(4);
@@ -2794,7 +2795,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true});
 
 /***/ }),
-/* 61 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(4);
@@ -2894,7 +2895,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=container.escapeExpression;
 
   return "\r\n        <div id=\"receipt-item-wrapper\" class=\"font-1\">\r\n            <div class=\"receipt-item\">\r\n                <span class=\"transaction-item\">"
-    + alias2(__default(__webpack_require__(62)).call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1),(depth0 != null ? depth0.example_item : depth0),{"name":"nameRegex","hash":{},"data":data}))
+    + alias2(__default(__webpack_require__(63)).call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1),(depth0 != null ? depth0.example_item : depth0),{"name":"nameRegex","hash":{},"data":data}))
     + "</span>\r\n                <span>"
     + alias2(__default(__webpack_require__(6)).call(alias1,400,"-",__default(__webpack_require__(6)).call(alias1,2,"*",helpers.lookup.call(alias1,(depth0 != null ? depth0.example_item : depth0),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.price : stack1),{"name":"lookup","hash":{},"data":data}),{"name":"currencyMath","hash":{},"data":data}),{"name":"currencyMath","hash":{},"data":data}))
     + "</span>\r\n            </div>\r\n\r\n            <div class=\"receipt-item-details\">\r\n                <span class=\"transaction-quantity\">(2 @ "
@@ -2925,7 +2926,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true});
 
 /***/ }),
-/* 62 */
+/* 63 */
 /***/ (function(module, exports) {
 
 module.exports = function(name_regex, item) {
@@ -2940,4 +2941,4 @@ module.exports = function(name_regex, item) {
 };
 
 /***/ })
-],[57]);
+],[58]);

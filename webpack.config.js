@@ -52,5 +52,10 @@ module.exports = {
         new HtmlWebpackPlugin({filename: 'store.html', chunks: ['vendors','store'], minify: {collapseWhitespace: true}, hash: true, template: './templates/store.html'}),
         new HtmlWebpackPlugin({filename: 'transaction.html', chunks: ['vendors','transaction'], minify: {collapseWhitespace: true}, hash: true, template: './templates/transaction.html'}),
         new HtmlWebpackPlugin({filename: 'create_transaction.html', chunks: ['vendors','create_transaction'], minify: {collapseWhitespace: true}, hash: true, template: './templates/create_transaction.html'}),
-    ]
+    ],
+    resolve: {
+        alias: {
+           handlebars: 'handlebars/dist/handlebars.min.js'
+        }
+    }
 };
