@@ -132,6 +132,7 @@ def get_transaction(request):
     total_data = transaction_total(transactions)
 
     return JsonResponse({
+        'inventory': len(current_boss.business.inventory),
         'transactions': total_data['transactions'],
         'total': total_data['total'],
         'start_time': start_time,

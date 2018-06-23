@@ -1,9 +1,6 @@
 import json
 import re
-import bcrypt
-import string
-import random
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
+from django.http import HttpResponseRedirect, HttpResponseBadRequest
 from whey2ez.modules.base import render_json
 import whey2ez.modules.checker as checker
 import whey2ez.modules.base as helper
@@ -69,8 +66,6 @@ def register(request):
         data = {'success': False,  'error_msg': 'Email exists.'}
         return HttpResponseBadRequest(json.dumps(data), 'application/json')
 
-    code = ''.join(random.SystemRandom().choice(string.ascii_lowercase + string.ascii_uppercase + string.digits) for _ in range(6))
-
     settings = Settings.objects.create()
     business = Business.objects.create(name=business_name)
     boss = Boss.objects.create(settings=settings, business=business)
@@ -80,7 +75,6 @@ def register(request):
         password=helper.create_password(password),
         first_name=first_name,
         last_name=last_name,
-        code=code,
         boss=boss
     )
 

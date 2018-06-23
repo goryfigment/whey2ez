@@ -68,7 +68,7 @@
 
             <div id="main-content-container">
                 <div class="body-wrapper active" id="employee-wrapper">
-                {% if employees %}
+                {% if employees_list %}
                     <table id="user-table" class="table-container">
                             <thead>
                                 <tr>
@@ -92,7 +92,7 @@
                         <span id="empty-user-icon"><i class="fas fa-user-astronaut"></i></span>
                         <div id="empty-container">
                             <div>You have no Employees!</div>
-                            {% if user_types %}
+                            {% if user_type_list %}
                                 <a class="create-user-link" id="user-create" data-id="{{user_type_list.0.id}}">Create a '{{user_type_list.0.name}}' Account!</a>
                             {% else %}
                                 <div class="get-started-text">Get Started by:</div>

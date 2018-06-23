@@ -3,10 +3,12 @@ from django.contrib import admin
 from whey2ez.controllers import site, account_handler, inventory, employee, operation, transaction
 
 urlpatterns = [
+    url(r'^$', site.site, name='site'),
     url(r'^admin/', admin.site.urls),
     url(r'^register/$', site.register, name='register_page'),
     url(r'^login/$', site.login, name='login_page'),
     url(r'^inventory/$', site.inventory, name='inventory_page'),
+    url(r'^store/$', site.store, name='store_page'),
     url(r'^employee/$', site.employee, name='employee_page'),
     url(r'^transaction/$', site.transaction, name='transaction_page'),
     url(r'^create_transaction/$', site.create_transaction_page, name='create_transaction_page'),

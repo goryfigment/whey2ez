@@ -17,6 +17,7 @@ module.exports = {
         overview: './templates/js/overview.js',
         inventory: './templates/js/inventory.js',
         employee: './templates/js/employee.js',
+        store: './templates/js/store.js',
         transaction: './templates/js/transaction.js',
         create_transaction: './templates/js/create_transaction.js'
     },
@@ -48,6 +49,7 @@ module.exports = {
         new HtmlWebpackPlugin({filename: 'overview.html', chunks: ['vendors','overview'], minify: {collapseWhitespace: true}, hash: true, template: './templates/overview.html'}),
         new HtmlWebpackPlugin({filename: 'inventory.html', chunks: ['vendors','inventory'], minify: {collapseWhitespace: true}, hash: true, template: './templates/inventory.html'}),
         new HtmlWebpackPlugin({filename: 'employee.html', chunks: ['vendors','employee'], minify: {collapseWhitespace: true}, hash: true, template: './templates/employee.html'}),
+        new HtmlWebpackPlugin({filename: 'store.html', chunks: ['vendors','store'], minify: {collapseWhitespace: true}, hash: true, template: './templates/store.html'}),
         new HtmlWebpackPlugin({filename: 'transaction.html', chunks: ['vendors','transaction'], minify: {collapseWhitespace: true}, hash: true, template: './templates/transaction.html'}),
         new HtmlWebpackPlugin({filename: 'create_transaction.html', chunks: ['vendors','create_transaction'], minify: {collapseWhitespace: true}, hash: true, template: './templates/create_transaction.html'}),
     ]

@@ -89,18 +89,22 @@
                     {{/unless}}
                 {{/unless}}
             {{/unless}}
-            {{#unless link_columns.quantity}}
-                <a id="quantity-link">Link your 'Quantity' Column!</a>
-            {{/unless}}
-            {{#unless link_columns.price}}
-                <a id="price-link">Link your 'Price' Column!</a>
-            {{/unless}}
-            {{#unless link_columns.cost}}
-                <a id="cost-link">Link your 'Cost' Column!</a>
-            {{/unless}}
-            {{#unless link_columns.name}}
-                <a id="name-link">Link your 'Name' Column!</a>
-            {{/unless}}
+            {{#if inventory}}
+                {{#unless link_columns.quantity}}
+                    <a id="quantity-link">Link your 'Quantity' Column!</a>
+                {{/unless}}
+                {{#unless link_columns.price}}
+                    <a id="price-link">Link your 'Price' Column!</a>
+                {{/unless}}
+                {{#unless link_columns.cost}}
+                    <a id="cost-link">Link your 'Cost' Column!</a>
+                {{/unless}}
+                {{#unless link_columns.name}}
+                    <a id="name-link">Link your 'Name' Column!</a>
+                {{/unless}}
+            {{else}}
+                <a href="/inventory/">Create an Inventory</a>
+            {{/if}}
         </div>
     </div>
 {{/if}}

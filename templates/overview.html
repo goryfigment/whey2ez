@@ -87,11 +87,15 @@
                                 {% if not link_dict.price or not link_dict.cost %}
                                     <div class="get-started-text">Before you can view overview report:</div>
                                 {% endif %}
-                                {% if not link_dict.price %}
-                                    <a id="price-link">Link your 'Price' Column!</a>
-                                {% endif %}
-                                {% if not link_dict.cost %}
-                                    <a id="cost-link">Link your 'Cost' Column!</a>
+                                {% if inventory %}
+                                    {% if not link_dict.price %}
+                                        <a id="price-link">Link your 'Price' Column!</a>
+                                    {% endif %}
+                                    {% if not link_dict.cost %}
+                                        <a id="cost-link">Link your 'Cost' Column!</a>
+                                    {% endif %}
+                                {% else %}
+                                    <a href="/inventory/">Create an Inventory</a>
                                 {% endif %}
                             </div>
                         </div>

@@ -2,7 +2,7 @@ from django.shortcuts import render
 from whey2ez.modules.base import get_base_url
 from django.http import HttpResponseRedirect
 from django.forms.models import model_to_dict
-from whey2ez.modules.base import decimal_format, transaction_total, get_transactions, get_utc_epoch_time, get_boss, get_establishment
+from whey2ez.modules.base import decimal_format, get_transactions, get_utc_epoch_time, get_boss, get_establishment
 from whey2ez.models import UserType, Employee, User, ItemLog
 import json, time
 
@@ -21,6 +21,10 @@ def server_error(request):
     }
 
     return render(request, '500.html', data)
+
+
+def site(request):
+    return HttpResponseRedirect('/login/')
 
 
 def register(request):
@@ -132,7 +136,6 @@ def transaction(request):
     user_business = current_boss.business
     user_settings['business_tax'] = decimal_format(float(user_business.tax)*100, 3, False)
     user_settings['ip_address'] = user_settings['ip_address'].split('.')
-    user_settings['example_item'] = next(iter(user_business.inventory.items()))[1]
     user_settings['link_columns'] = user_business.link_columns
 
     data = {
@@ -150,6 +153,9 @@ def transaction(request):
         'date_range': user_settings['date_range'],
         'receipt_settings': json.dumps(user_settings)
     }
+
+    if len(user_business.inventory):
+        user_settings['example_item'] = next(iter(user_business.inventory.items()))[1]
 
     return render(request, 'transaction.html', data)
 
@@ -197,9 +203,6 @@ def overview_page(request):
         end_time = get_utc_epoch_time()
         transactions = get_transactions(current_user.boss, start_time=start_time, end_time=end_time)
 
-    start_epoch = int(start_time)
-    end_epoch = int(end_time)
-
     data = {
         'base_url': get_base_url(),
         'business_id': user_business.id,
@@ -209,10 +212,34 @@ def overview_page(request):
         'link_dict': user_business.link_columns,
         'date_range': date_range,
         'transactions': json.dumps(transactions),
-        'start_epoch': start_epoch,
-        'end_epoch': end_epoch,
-        'start_time': time.strftime('%b %#d, %Y %#I:%M%p', time.localtime(start_epoch)),
-        'end_time': time.strftime('%b %#d, %Y %#I:%M%p', time.localtime(end_epoch))
+        'inventory': len(user_business.inventory)
     }
 
+    if len(transactions):
+        start_epoch = int(start_time)
+        end_epoch = int(end_time)
+
+        data['start_epoch'] = start_epoch
+        data['end_epoch'] = end_epoch
+        data['start_time'] = time.strftime('%b %#d, %Y %#I:%M%p', time.localtime(start_epoch))
+        data['end_time'] = time.strftime('%b %#d, %Y %#I:%M%p', time.localtime(end_time))
+
     return render(request, 'overview.html', data)
+
+
+def store(request):
+    current_user = request.user
+    current_boss = get_boss(current_user)
+    user_business = current_boss.business
+
+    # If user is login redirect to overview
+    if not request.user.is_authenticated():
+        return HttpResponseRedirect('/login/')
+
+    data = {
+        'business_id': user_business.id,
+        'business_name': user_business.name,
+        'stores': list(user_business.stores.all().values())
+    }
+
+    return render(request, 'store.html', data)

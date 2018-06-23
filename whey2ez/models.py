@@ -9,7 +9,7 @@ def get_utc_epoch_time():
 
 
 class Store(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100)
     tax = models.CharField(default='0.00', max_length=12)
     # quantity
     link_columns = JSONField()
@@ -24,7 +24,7 @@ class Store(models.Model):
 
 class Business(models.Model):
     stores = models.ManyToManyField(Store)
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100)
     tax = models.CharField(default='0.00', max_length=12)
     # cost, quantity, price
     link_columns = JSONField()
