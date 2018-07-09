@@ -1,4 +1,4 @@
-import re, time
+import time, numpy
 from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.forms.models import model_to_dict
 import pandas as pd
@@ -8,6 +8,7 @@ import whey2ez.modules.checker as checker
 from whey2ez.modules.base import get_boss, get_establishment, sort_inventory
 from whey2ez.models import ItemLog, UserType
 from whey2ez.decorators import login_required, user_permission, data_required
+
 
 
 @login_required
@@ -258,7 +259,13 @@ def read_excel(request):
             if index == 0:
                 json_data['headers'].append(column)
 
-            current_data = str(excel_file[column][index])
+            current_data = excel_file[column][index]
+
+            try:
+                current_data = str(current_data)
+            except:
+                current_data = str(current_data.encode('utf-8', 'ignore'))
+
             if current_data == 'nan':
                 current_data = ""
             else:
