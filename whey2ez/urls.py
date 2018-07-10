@@ -17,7 +17,7 @@ urlpatterns = [
     # Account Handler
     url(r'^account/register/$', account_handler.register, name='register'),
     url(r'^account/login/$', account_handler.user_login, name='login'),
-    url(r'^account/logout/$', account_handler.user_logout, name='logout'),
+    url(r'^logout/$', account_handler.user_logout, name='logout'),
 
     # Operation
     url(r'^operation/link_columns/$', operation.link_columns, name='link_columns'),

@@ -217,8 +217,9 @@ def delete_column(request):
     user_types = UserType.objects.filter(boss=current_boss)
     for user_type in user_types:
         permission = user_type.permission
-        permission.visible_columns.remove(column_name)
-        permission.save()
+        if column_name in permission.visible_columns:
+            permission.visible_columns.remove(column_name)
+            permission.save()
 
     user_inventory = sort_inventory(user_settings, establishment.inventory)
 
@@ -394,6 +395,7 @@ def drop_table(request):
 
         user_settings = current_boss.settings
         user_settings.order_by = "none"
+        user_settings.transaction_filter['filter'] = ['ALL']
         user_settings.save()
 
         return JsonResponse({'columns': establishment.columns['columns'], 'inventory': establishment.inventory}, safe=False)

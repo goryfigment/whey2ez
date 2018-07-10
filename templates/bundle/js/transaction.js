@@ -2177,11 +2177,11 @@ __webpack_require__(27);
 function init() {
     //Start Date
     var d1 = new Date();
-    d1.setHours(globals.start_time, 0, 0, 0);
+    d1.setHours(globals.start_point, 0, 0, 0);
 
     //End Date
     var d2 = new Date();
-    d2.setHours(globals.start_time, 0, 0, 0);
+    d2.setHours(globals.start_point, 0, 0, 0);
     d2.setDate(d1.getDate() + 1);
 
     if (globals.date_range == '7') {
@@ -2196,7 +2196,7 @@ function init() {
 
     $('#receipt-wrapper').append(receiptSettingsTemplate(globals.receipt_settings));
 
-    $('#date-start-input [value="' + globals.start_time + '"]').prop('selected', true);
+    $('#date-start-input [value="' + globals.start_point + '"]').prop('selected', true);
     $('#date-range-input [value="' + globals.date_range + '"]').prop('selected', true);
 }
 
@@ -2230,6 +2230,9 @@ function getTransactionReport(start_time, end_time) {
         type: "GET",
         success: function (response) {
             //console.log(response);
+
+            globals.start_time = response['start_time'];
+            globals.end_time = response['end_time'];
 
             var $transactionWrapper = $('#transaction-wrapper');
             response['link_columns'] = globals.link_columns;
@@ -2305,9 +2308,11 @@ $(document).ready(function() {
                 $inventoryWrapper.empty();
                 $inventoryWrapper.append(transactionTemplate({
                     'columns': globals.columns,
-                    'link_columns': response,
+                    'link_columns': response['link_columns'],
                     'transaction': globals.transaction,
-                    //'start_time':
+                    'inventory': response['inventory'],
+                    'start_time': globals.start_time,
+                    'end_time': globals.end_time
                 }));
 
                 // Remove popup

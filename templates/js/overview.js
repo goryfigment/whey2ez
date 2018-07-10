@@ -15,15 +15,14 @@ require('./../library/calendar/calendar.js');
 
 function init() {
     google.charts.load('current', {packages: ['corechart', 'line']});
-    console.log(globals.transactions);
 
     //Start Date
     var d1 = new Date();
-    d1.setHours(globals.start_time, 0, 0, 0);
+    d1.setHours(globals.start_point, 0, 0, 0);
 
     //End Date
     var d2 = new Date();
-    d2.setHours(globals.start_time, 0, 0, 0);
+    d2.setHours(globals.start_point, 0, 0, 0);
     d2.setDate(d1.getDate() + 1);
 
     if (globals.date_range == '7') {
@@ -35,13 +34,34 @@ function init() {
     } else {
         getTransactionReport(d1.valueOf()/1000, d2.valueOf()/1000 - 1);
     }
-
-    if (globals.date_range == '*') {
-        createOverviewGraph(globals.transactions)
-    } else {
-        createOverviewGraph(globals.transactions, globals.start_epoch, globals.end_epoch);
-    }
 }
+
+function getTransactionReport(start_time, end_time) {
+    var postData = {
+        'start_time': start_time,
+        'end_time': end_time
+    };
+
+    $.ajax({
+        url: globals.base_url + '/transaction/get_transaction/',
+        data: postData,
+        dataType: 'json',
+        type: "GET",
+        success: function (response) {
+            globals.transactions = response['transactions'];
+            //console.log(response);
+
+            if (globals.transactions.length || (globals.link_columns.cost && globals.link_columns.price)) {
+                if (globals.date_range == '*') {
+                    createOverviewGraph(globals.transactions);
+                } else {
+                    createOverviewGraph(globals.transactions, globals.start_epoch, globals.end_epoch);
+                }
+            }
+        }
+    });
+}
+
 
 function createOverviewGraph(transactions, startTime, endTime) {
     var transactionGraphArray = [];
@@ -142,7 +162,7 @@ function createOverviewGraph(transactions, startTime, endTime) {
                 templateTotal += currentTotal;
             }
         }
-        transactionGraphArray.push([initialTimestamp, parseFloat(currencyFormat(hourTotal))]);
+        transactionGraphArray.push([initialTimestamp, parseFloat(helper.currencyFormat(hourTotal))]);
     }
 
     function callback() {
@@ -153,11 +173,11 @@ function createOverviewGraph(transactions, startTime, endTime) {
     var $overviewTotalWrapper = $('#overview-total-wrapper');
     $overviewTotalWrapper.empty();
     $overviewTotalWrapper.append(overviewTotalTemplate({
-        'cash': currencyFormat(templateCash),
-        'credit': currencyFormat(templateCredit),
-        'discount': currencyFormat(templateDiscount),
-        'tax': currencyFormat(templateTax),
-        'total': currencyFormat(templateTotal)
+        'cash': helper.currencyFormat(templateCash),
+        'credit': helper.currencyFormat(templateCredit),
+        'discount': helper.currencyFormat(templateDiscount),
+        'tax': helper.currencyFormat(templateTax),
+        'total': helper.currencyFormat(templateTotal)
     }));
 }
 
@@ -253,6 +273,23 @@ $(document).ready(function() {
 
                 // CACHE THE DATA
                 globals.link_columns = response;
+
+                // Hide Links that was linked
+                if (globals.link_columns.price){
+                    $('#price-link').hide();
+                }
+
+                if (globals.link_columns.cost){
+                    $('#cost-link').hide();
+                }
+
+                if(globals.link_columns.cost && globals.link_columns.price) {
+                    if (globals.date_range == '*') {
+                        createOverviewGraph(globals.transactions);
+                    } else {
+                        createOverviewGraph(globals.transactions, globals.start_epoch, globals.end_epoch);
+                    }
+                }
             },
             error: function (response) {
                 console.log(JSON.stringify(response.responseJSON['error_msg']));

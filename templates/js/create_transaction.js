@@ -9,7 +9,7 @@ var helper = require('./../js/helpers.js');
 var searchItemTemplate = require('./../handlebars/create_transaction/search_item.hbs');
 var resultItemTemplate = require('./../handlebars/create_transaction/result_item.hbs');
 var discountItemTemplate = require('./../handlebars/create_transaction/discount_item.hbs');
-
+var receiptTemplate = require('./../handlebars/create_transaction/receipt.hbs');
 
 function init() {
     $('#inventory-search').focus();
@@ -33,8 +33,6 @@ function calculateTotal() {
     });
 
     subtotal = helper.currencyFormat(subtotal*100);
-
-
 
     var tax = helper.currencyFormat((Math.round(subtotal*taxRate*100)/100)*100);
     var total = helper.currencyFormat(subtotal*100 + tax*100);

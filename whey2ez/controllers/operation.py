@@ -39,7 +39,7 @@ def link_columns(request):
 
     establishment.save()
 
-    return JsonResponse(establishment.link_columns, safe=False)
+    return JsonResponse({'link_columns': establishment.link_columns, 'inventory': len(user_inventory)}, safe=False)
 
 
 def inventory_operation(request, action, operation, link_column, callback_function):

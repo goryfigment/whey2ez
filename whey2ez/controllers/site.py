@@ -34,7 +34,7 @@ def register(request):
 
     # If user is login redirect to overview
     if request.user.is_authenticated():
-        return HttpResponseRedirect('/dashboard/')
+        return HttpResponseRedirect('/inventory/')
 
     return render(request, 'register.html', data)
 
@@ -46,7 +46,7 @@ def login(request):
 
     # If user is login redirect to overview
     if request.user.is_authenticated():
-        return HttpResponseRedirect('/dashboard/')
+        return HttpResponseRedirect('/inventory/')
 
     return render(request, 'login.html', data)
 
@@ -149,9 +149,10 @@ def transaction(request):
         'business_name': user_business.name,
         'stores': list(user_business.stores.all().values()),
         'settings': user_settings,
-        'start_time': user_settings['start_time'],
+        'start_point': user_settings['start_time'],
         'date_range': user_settings['date_range'],
-        'receipt_settings': json.dumps(user_settings)
+        'receipt_settings': json.dumps(user_settings),
+        'all': 'ALL'
     }
 
     if len(user_business.inventory):
@@ -212,7 +213,8 @@ def overview_page(request):
         'link_dict': user_business.link_columns,
         'date_range': date_range,
         'transactions': json.dumps(transactions),
-        'inventory': len(user_business.inventory)
+        'inventory': len(user_business.inventory),
+        'start_point': user_settings['start_time']
     }
 
     if len(transactions):

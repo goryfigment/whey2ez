@@ -1448,7 +1448,7 @@ var helper = __webpack_require__(9);
 var searchItemTemplate = __webpack_require__(66);
 var resultItemTemplate = __webpack_require__(67);
 var discountItemTemplate = __webpack_require__(68);
-
+var receiptTemplate = __webpack_require__(70);
 
 function init() {
     $('#inventory-search').focus();
@@ -1472,8 +1472,6 @@ function calculateTotal() {
     });
 
     subtotal = helper.currencyFormat(subtotal*100);
-
-
 
     var tax = helper.currencyFormat((Math.round(subtotal*taxRate*100)/100)*100);
     var total = helper.currencyFormat(subtotal*100 + tax*100);
@@ -1913,6 +1911,21 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + "-</span>\r\n    <span class=\"discount-delete\" data-discount=\""
     + alias3(alias2((depth0 != null ? depth0.total : depth0), depth0))
     + "\"><i class=\"fas fa-ban\"></i></span>\r\n</div>";
+},"useData":true});
+
+/***/ }),
+/* 69 */,
+/* 70 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Handlebars = __webpack_require__(4);
+function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
+module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var helper;
+
+  return "<div id=\"receipt-details\">\r\n    <div id=\"receipt-header\">Receipt</div>\r\n</div>\r\n\r\n<div id=\"receipt-item-container\"></div>\r\n\r\n<div id=\"receipt-result-wrapper\">\r\n    <div id=\"subtotal-wrapper\"><span class=\"receipt-subtitle\">Subtotal</span><span id=\"subtotal\">0.00</span></div>\r\n    <div id=\"tax-wrapper\"><span class=\"receipt-subtitle\">Tax</span><span id=\"tax-rate\">("
+    + container.escapeExpression(((helper = (helper = helpers.tax_percent || (depth0 != null ? depth0.tax_percent : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : (container.nullContext || {}),{"name":"tax_percent","hash":{},"data":data}) : helper)))
+    + "%)</span><span id=\"tax\">0.00</span></div>\r\n    <div id=\"total-wrapper\"><span class=\"receipt-subtitle\">Total</span><span id=\"total\">0.00</span></div>\r\n</div>\r\n";
 },"useData":true});
 
 /***/ })
