@@ -3,9 +3,9 @@ require('./../css/overview.css');
 require('./../library/fontawesome/fontawesome.js');
 
 //handlebars
-//var transactionTemplate = require('./../handlebars/transaction/transaction.hbs');
-//var rowTemplate = require('./../handlebars/inventory/row.hbs');
+
 var overviewOperationTemplate = require('./../handlebars/overview/overview_operation.hbs');
+var overviewTemplate = require('./../handlebars/overview/overview.hbs');
 var overviewTotalTemplate = require('./../handlebars/overview/overview_total.hbs');
 
 //libraries
@@ -16,30 +16,106 @@ require('./../library/calendar/calendar.js');
 function init() {
     google.charts.load('current', {packages: ['corechart', 'line']});
 
+    var dates = createDates('today');
+    var d1 = dates[0];
+    var d2 = dates[1];
+
+    globals.start_date = d1;
+    globals.end_date = d2;
+
+    if (globals.date_range == '7') {
+        d1.setDate(d2.getDate() - 7);
+        getTransactionReport(d1, d2, 'today');
+    } else if(globals.date_range == '*') {
+        d1 = '*';
+        getTransactionReport(d1, d2, 'today');
+    } else {
+        getTransactionReport(d1, d2, 'today');
+    }
+}
+
+function salesSummary(transactions) {
+    var totalTax = 0;
+    var totalDiscounts = 0;
+    var totalCash = 0;
+    var totalCredit = 0;
+    var total = 0;
+
+    var totalAmerican = 0;
+    var totalDiscover = 0;
+    var totalMaster = 0;
+    var totalVisa = 0;
+
+    //#Quantity
+    var cashQuantity = 0;
+    var creditQuantity = 0;
+    var americanQuantity = 0;
+    var discoverQuantity = 0;
+    var masterQuantity = 0;
+    var visaQuantity = 0;
+
+    function incrementItem(item, quantity, value){
+        item += value;
+        quantity += 1;
+    }
+
+    for (var i = 0; i < transactions.length; i++) {
+        var transaction = transactions[i];
+        var subtotal = parseFloat(transaction['subtotal'])*100;
+        var paymentType = transaction['payment_type'];
+        totalTax += parseFloat(transaction['tax'])*100;
+        total += subtotal;
+
+        var items = transaction['items'];
+        for (var d = 0; d <= items.length; d++) {
+            var item = items[d];
+            totalDiscounts += parseFloat(item['discount'])*100;
+        }
+
+        if(paymentType == "Cash") {
+            incrementItem(totalCash, cashQuantity, subtotal);
+        } else {
+            incrementItem(totalCredit, creditQuantity, subtotal);
+        }
+
+        if(paymentType == "American Express") {
+            incrementItem(totalAmerican, americanQuantity, subtotal);
+        } else if(paymentType == "Discover") {
+            incrementItem(totalDiscover, discoverQuantity, subtotal);
+        } else if(paymentType == "MasterCard") {
+            incrementItem(totalMaster, masterQuantity, subtotal);
+        } else if(paymentType == "Visa") {
+            incrementItem(totalVisa, visaQuantity, subtotal);
+        }
+    }
+}
+
+function createDates(type){
     //Start Date
     var d1 = new Date();
     d1.setHours(globals.start_point, 0, 0, 0);
+
+    if(type == 'yesterday') {
+        d1.setDate(d1.getDate() - 1);
+    }
 
     //End Date
     var d2 = new Date();
     d2.setHours(globals.start_point, 0, 0, 0);
     d2.setDate(d1.getDate() + 1);
 
-    if (globals.date_range == '7') {
-        d1.setDate(d2.getDate() - 7);
-        getTransactionReport(d1.valueOf()/1000, d2.valueOf()/1000 - 1);
-    } else if(globals.date_range == '*') {
-        d1 = '*';
-        getTransactionReport(d1, d2);
-    } else {
-        getTransactionReport(d1.valueOf()/1000, d2.valueOf()/1000 - 1);
-    }
+    return [d1, d2];
 }
 
-function getTransactionReport(start_time, end_time) {
+function getTransactionReport(startTime, endTime, type) {
+    if (startTime != '*') {
+        var epochStartTime = startTime.valueOf()/1000;
+        var epochEndTime = endTime.valueOf()/1000 - 1;
+    }
+
     var postData = {
-        'start_time': start_time,
-        'end_time': end_time
+        'start_time': epochStartTime,
+        'end_time': epochEndTime
     };
 
     $.ajax({
@@ -50,12 +126,17 @@ function getTransactionReport(start_time, end_time) {
         success: function (response) {
             globals.transactions = response['transactions'];
             //console.log(response);
+            response['link_columns'] = globals.link_columns;
+
+            var $overviewWrapper = $('#overview-wrapper');
+            $overviewWrapper.empty();
+            $overviewWrapper.append(overviewTemplate(response));
 
             if (globals.transactions.length || (globals.link_columns.cost && globals.link_columns.price)) {
                 if (globals.date_range == '*') {
-                    createOverviewGraph(globals.transactions);
+                    createOverviewGraph(globals.transactions, false, false, type);
                 } else {
-                    createOverviewGraph(globals.transactions, globals.start_epoch, globals.end_epoch);
+                    createOverviewGraph(globals.transactions, startTime, endTime, type);
                 }
             }
         }
@@ -63,27 +144,8 @@ function getTransactionReport(start_time, end_time) {
 }
 
 
-function createOverviewGraph(transactions, startTime, endTime) {
+function createOverviewGraph(transactions, startTime, endTime, type) {
     var transactionGraphArray = [];
-
-    // if startTime and endTime is not given the assume end time is now and start time is end time + hour range
-    //if (!startTime && !endTime) {
-    //    // Add one to date to include this hour too
-    //    endTime = new Date();
-    //    endTime.setMinutes(0, 0, 0);
-    //
-    //    startTime = new Date();
-    //    startTime.setMinutes(0, 0, 0);
-    //    startTime.setHours(endTime.getHours() - 24);
-    //} else {
-    //
-    //}
-
-    startTime = new Date(parseInt(startTime)*1000);
-    startTime.setMinutes(0, 0, 0);
-    endTime = new Date(parseInt(endTime)*1000);
-    endTime.setMinutes(0, 0, 0);
-
     var hourRange = Math.abs(endTime - startTime) / 3.6e6;
     var dayRange = Math.abs(endTime - startTime) / 8.64e7;
 
@@ -100,7 +162,7 @@ function createOverviewGraph(transactions, startTime, endTime) {
     } else {
         seperation = 'day';
         differenceTime = 86399999;
-        loopRange = dayRange;
+        loopRange = Math.round(dayRange);
 
         function addDate(time) {
             time.setDate(time.getDate() + 1);
@@ -128,26 +190,29 @@ function createOverviewGraph(transactions, startTime, endTime) {
         // Loop through the transaction
         for (var i = 0; i < transactions.length; i++) {
             var transaction = transactions[i];
-            var items = transaction['items'];
 
             //convert to milliseconds epoch
             var milliEpoch = parseInt(transaction['date']) * 1000;
 
             // If between current hour then calculate
             if(milliEpoch >= initialTime && milliEpoch <= rangeTime) {
+
                 // Remove transaction from array
                 transactions.splice(i, 1);
+                i -= 1;
                 // Calculate current transaction total (subtotal + tax - discount)
                 var currentDiscount = 0;
                 // Loop through the items to calculate discount
-                for (var key in items) {
-                    var item = items[key];
+                var items = transaction['items'];
+                for (var d = 0; d <= items.length; d++) {
+                    var item = items[d];
                     currentDiscount += parseFloat(item['discount'])*100;
                 }
 
                 var currentSubtotal = parseFloat(transaction['subtotal'])*100;
-                var currentTax = Math.round(currentSubtotal*parseFloat(transaction['tax']));
-                var currentTotal = currentSubtotal - currentDiscount + currentTax;
+                var currentTax = parseFloat(transaction['tax'])*100;
+                //var currentTax = helper.currencyMath(currentSubtotal, '*', transaction['tax'], true, false);
+                var currentTotal = currentSubtotal - currentDiscount + parseFloat(transaction['tax']);
 
                 hourTotal += currentTotal;
 
@@ -179,6 +244,8 @@ function createOverviewGraph(transactions, startTime, endTime) {
         'tax': helper.currencyFormat(templateTax),
         'total': helper.currencyFormat(templateTotal)
     }));
+
+    $('#'+type+'-button').addClass('active');
 }
 
 function tabHandler($clickedTab) {
@@ -287,9 +354,11 @@ $(document).ready(function() {
                     if (globals.date_range == '*') {
                         createOverviewGraph(globals.transactions);
                     } else {
-                        createOverviewGraph(globals.transactions, globals.start_epoch, globals.end_epoch);
+                        createOverviewGraph(globals.transactions, globals.start_date, globals.end_date);
                     }
                 }
+
+                $('#' + type + '-button').addClass('active');
             },
             error: function (response) {
                 console.log(JSON.stringify(response.responseJSON['error_msg']));
@@ -297,6 +366,52 @@ $(document).ready(function() {
         });
     });
     //LINK COLUMNS//
+
+    //OVERVIEW//
+    $(document).on('click', '.graph-button:not(.active)', function () {
+        var type = $(this).attr('data-type');
+        var dates = createDates(type);
+        var d1 = dates[0];
+        var d2 = dates[1];
+
+        if (globals.date_range == '7') {
+            d1.setDate(d2.getDate() - 7);
+            getTransactionReport(d1, d2, type);
+        } else if(globals.date_range == '*') {
+            d1 = '*';
+            getTransactionReport(d1, d2, type);
+        } else {
+            getTransactionReport(d1, d2, type);
+        }
+    });
+    //OVERVIEW//
+
+    // CALENDAR //
+    $(document).on('click', '#calendar-submit', function () {
+        var $calendarWrapper = $(this).closest('#calendar-wrapper');
+        var $calendarInputWrapper = $calendarWrapper.find('#calendar-input-wrapper');
+        var firstDateString = $calendarInputWrapper.attr('data-first-selected-date');
+        var lastDateString = $calendarInputWrapper.attr('data-last-selected-date');
+
+        if(typeof firstDateString == 'undefined' || firstDateString == '') {
+            firstDateString = lastDateString.replace('23:59:59', '00:00:00');
+        } else if(typeof lastDateString == 'undefined' || lastDateString == '') {
+            if(firstDateString.indexOf('00:00:00') !== -1) {
+                lastDateString = firstDateString.replace('00:00:00', '23:59:59');
+            } else {
+                lastDateString = firstDateString.replace('23:59:59', '00:00:00');
+            }
+        }
+
+        var firstDate = new Date(firstDateString);
+        var lastDate = new Date(lastDateString);
+        console.log(lastDate)
+
+        getTransactionReport(firstDate, lastDate, '');
+
+        $calendarWrapper.find('#calendar-exit').click();
+    });
+    // CALENDAR //
 });
 
 function createOverviewChart(seperation, array) {
@@ -307,7 +422,7 @@ function createOverviewChart(seperation, array) {
     data.addRows(array);
 
     if(seperation == 'hour') {
-        var dateRegex = "MMM d, h:mma - h:mma";
+        var dateRegex = "MMM d, h:mma - h:59a";
     } else if(seperation == 'day') {
         dateRegex = "MMM d, h:mma";
     }
@@ -391,41 +506,3 @@ function createOverviewChart(seperation, array) {
 
     chart.draw(data, options);
 }
-
-    //  google.charts.load('current', {'packages':['timeline']});
-    //google.charts.setOnLoadCallback(drawChart);
-    //
-    //function drawChart() {
-    //  var data = new google.visualization.DataTable();
-    //  data.addColumn('string', 'Team');
-    //  data.addColumn('date', 'Season Start Date');
-    //  data.addColumn('date', 'Season End Date');
-    //
-    //  data.addRows([
-    //    ['Baltimore Ravens',     new Date(2000, 8, 5), new Date(2001, 1, 5)],
-    //    ['New England Patriots', new Date(2001, 8, 5), new Date(2002, 1, 5)],
-    //    ['Tampa Bay Buccaneers', new Date(2002, 8, 5), new Date(2003, 1, 5)],
-    //    ['New England Patriots', new Date(2003, 8, 5), new Date(2004, 1, 5)],
-    //    ['New England Patriots', new Date(2004, 8, 5), new Date(2005, 1, 5)],
-    //    ['Pittsburgh Steelers',  new Date(2005, 8, 5), new Date(2006, 1, 5)],
-    //    ['Indianapolis Colts',   new Date(2006, 8, 5), new Date(2007, 1, 5)],
-    //    ['New York Giants',      new Date(2007, 8, 5), new Date(2008, 1, 5)],
-    //    ['Pittsburgh Steelers',  new Date(2008, 8, 5), new Date(2009, 1, 5)],
-    //    ['New Orleans Saints',   new Date(2009, 8, 5), new Date(2010, 1, 5)],
-    //    ['Green Bay Packers',    new Date(2010, 8, 5), new Date(2011, 1, 5)],
-    //    ['New York Giants',      new Date(2011, 8, 5), new Date(2012, 1, 5)],
-    //    ['Baltimore Ravens',     new Date(2012, 8, 5), new Date(2013, 1, 5)],
-    //    ['Seattle Seahawks',     new Date(2013, 8, 5), new Date(2014, 1, 5)],
-    //  ]);
-    //
-    //  var options = {
-    //    height: 450,
-    //    timeline: {
-    //      groupByRowLabel: true
-    //    }
-    //  };
-    //
-    //  var chart = new google.visualization.Timeline(document.getElementById('chart_div'));
-    //
-    //  chart.draw(data, options);
-    //}

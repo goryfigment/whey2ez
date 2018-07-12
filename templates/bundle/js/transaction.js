@@ -505,12 +505,41 @@ function currencyFormat(cents) {
     }
 }
 
+function currencyMath(leftVal, operator, curRightVal, round, both) {
+    leftVal = parseFloat(leftVal);
+    curRightVal = parseFloat(curRightVal) * 100;
+
+    if (both == 'true') {
+        leftVal = leftVal * 100;
+    }
+
+    var cents = {
+        "+": curRightVal + leftVal,
+        "-": curRightVal - leftVal,
+        "*": curRightVal * leftVal,
+        "/": curRightVal / leftVal,
+        "%": curRightVal % leftVal
+    }[operator];
+
+    if (round == 'true') {
+        cents = Math.round(cents);
+    }
+
+    if (cents == 0) {
+        return cents.toFixed(2);
+    } else {
+        cents = cents.toString();
+        return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
+    }
+}
+
 module.exports = {
     numberCommaFormat: numberCommaFormat,
     replaceAll: replaceAll,
     scrollToElement: scrollToElement,
     upAndDownPopups: upAndDownPopups,
-    currencyFormat: currencyFormat
+    currencyFormat: currencyFormat,
+    currencyMath: currencyMath
 };
 
 /***/ }),
@@ -2653,7 +2682,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     var stack1, alias1=container.lambda, alias2=container.escapeExpression, alias3=depth0 != null ? depth0 : (container.nullContext || {});
 
   return "                                    <tr>\r\n                                        <td class=\"number-column\">\r\n                                            "
-    + alias2(alias1((depth0 != null ? depth0.date : depth0), depth0))
+    + alias2(alias1((depth0 != null ? depth0.timestamp : depth0), depth0))
     + "\r\n                                        </td>\r\n                                        <td class=\"name-column\">\r\n"
     + ((stack1 = helpers.each.call(alias3,((stack1 = (depth0 != null ? depth0.items : depth0)) != null ? stack1.list : stack1),{"name":"each","hash":{},"fn":container.program(11, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                                        </td>\r\n                                        <td class=\"number-column\">\r\n"

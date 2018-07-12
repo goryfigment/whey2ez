@@ -450,12 +450,41 @@ function currencyFormat(cents) {
     }
 }
 
+function currencyMath(leftVal, operator, curRightVal, round, both) {
+    leftVal = parseFloat(leftVal);
+    curRightVal = parseFloat(curRightVal) * 100;
+
+    if (both == 'true') {
+        leftVal = leftVal * 100;
+    }
+
+    var cents = {
+        "+": curRightVal + leftVal,
+        "-": curRightVal - leftVal,
+        "*": curRightVal * leftVal,
+        "/": curRightVal / leftVal,
+        "%": curRightVal % leftVal
+    }[operator];
+
+    if (round == 'true') {
+        cents = Math.round(cents);
+    }
+
+    if (cents == 0) {
+        return cents.toFixed(2);
+    } else {
+        cents = cents.toString();
+        return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
+    }
+}
+
 module.exports = {
     numberCommaFormat: numberCommaFormat,
     replaceAll: replaceAll,
     scrollToElement: scrollToElement,
     upAndDownPopups: upAndDownPopups,
-    currencyFormat: currencyFormat
+    currencyFormat: currencyFormat,
+    currencyMath: currencyMath
 };
 
 /***/ }),
@@ -1448,7 +1477,7 @@ var helper = __webpack_require__(9);
 var searchItemTemplate = __webpack_require__(66);
 var resultItemTemplate = __webpack_require__(67);
 var discountItemTemplate = __webpack_require__(68);
-var receiptTemplate = __webpack_require__(70);
+var receiptTemplate = __webpack_require__(69);
 
 function init() {
     $('#inventory-search').focus();
@@ -1914,8 +1943,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true});
 
 /***/ }),
-/* 69 */,
-/* 70 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(4);

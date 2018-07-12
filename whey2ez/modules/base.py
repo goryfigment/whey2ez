@@ -62,7 +62,7 @@ def transaction_total(transactions):
     for trans in transactions:
         item_discount = 0
         trans['total'] = 0
-        trans['date'] = epoch_strftime(trans['date'], '%b %#d, %Y %I:%M%p')
+        trans['timestamp'] = epoch_strftime(trans['date'], '%b %#d, %Y %I:%M%p')
 
         for item in trans['items']['list']:
             item_discount += float(item['discount'])

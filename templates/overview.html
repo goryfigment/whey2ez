@@ -10,10 +10,7 @@
         globals.base_url = '{{base_url}}';
         globals.columns = {{columns|safe}};
         globals.link_columns = {{link_columns|safe}};
-        globals.transactions = {{transactions|safe}};
         globals.date_range = '{{ date_range }}';
-        globals.start_epoch = '{{ start_epoch }}';
-        globals.end_epoch = '{{ end_epoch }}';
         globals.start_point = '{{ start_point }}';
     </script>
 </head>
@@ -78,48 +75,7 @@
 
             <div id="main-content-container">
                 <div class="body-wrapper active" id="overview-wrapper">
-                    {% if not transactions or not link_dict.price or not link_dict.cost %}
-                        <div id="empty-overview-wrapper">
-                            <span id="empty-overview-icon"><i class="fas fa-tachometer-alt"></i></span>
-                            <div id="empty-container">
-                                {% if not transactions %}
-                                    <div>You have no Transactions!</div>
-                                {% endif %}
-                                {% if not link_dict.price or not link_dict.cost %}
-                                    <div class="get-started-text">Before you can view overview report:</div>
-                                {% endif %}
-                                {% if inventory %}
-                                    {% if not link_dict.price %}
-                                        <a id="price-link">Link your 'Price' Column!</a>
-                                    {% endif %}
-                                    {% if not link_dict.cost %}
-                                        <a id="cost-link">Link your 'Cost' Column!</a>
-                                    {% endif %}
-                                {% else %}
-                                    <a href="/inventory/">Create an Inventory</a>
-                                {% endif %}
-                            </div>
-                        </div>
-                    {% else %}
-                        <div id="overview-header">
-                            <span id="time-range">From {{start_time}} - {{end_time}} <span id="calendar-edit"><i class="far fa-edit"></i></span></span>
-                            <button class="graph-button active" id="today-button">Today</button>
-                            <button class="graph-button" id="yesterday-button">Yesterday</button>
-                        </div>
-                        <div id="overview-container">
-                            <div id="overview-title">Payment Overview</div>
-                            <div id="overview-graph-wrapper">
-                                <div id="overview-graph-container">
-                                    <div id="y-axis-title">Total</div>
-                                    <div id="overview-chart"></div>
-                                </div>
-                                <div id="x-axis-title">Date</div>
-                            </div>
-                        </div>
-                        <div id="overview-total-wrapper">
 
-                        </div>
-                    {% endif %}
                 </div>
 
                 <div class="body-wrapper" id="sale-report-wrapper">
@@ -134,7 +90,7 @@
     </div>
 
     <div id="operation-overlay"></div>
-
+    <%= require('html-loader!./library/calendar/calendar.html') %>
     <script src="{% static 'library/google_charts/google_charts.js' %}" ></script>
 </body>
 </html>

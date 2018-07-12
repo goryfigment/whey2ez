@@ -1,4 +1,4 @@
-import json, re, time
+import re, time
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.forms.models import model_to_dict
 from whey2ez.models import Transaction
@@ -108,7 +108,7 @@ def create_transaction(request):
         items={"list": item_list}
     )
 
-    return JsonResponse({'transaction': model_to_dict(transaction),  'success': True}, safe=False)
+    return JsonResponse({'transaction': model_to_dict(transaction), 'success': True}, safe=False)
 
 
 @login_required

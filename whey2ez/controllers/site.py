@@ -194,15 +194,6 @@ def overview_page(request):
     user_business = current_boss.business
 
     date_range = user_settings['date_range']
-    start_time = None
-    end_time = None
-
-    if date_range == '*':
-        transactions = get_transactions(current_user.boss)
-    else:
-        start_time = get_utc_epoch_time(days=date_range)
-        end_time = get_utc_epoch_time()
-        transactions = get_transactions(current_user.boss, start_time=start_time, end_time=end_time)
 
     data = {
         'base_url': get_base_url(),
@@ -210,21 +201,10 @@ def overview_page(request):
         'business_name': user_business.name,
         'columns': json.dumps(user_business.columns['columns']),
         'link_columns': json.dumps(user_business.link_columns),
-        'link_dict': user_business.link_columns,
         'date_range': date_range,
-        'transactions': json.dumps(transactions),
         'inventory': len(user_business.inventory),
         'start_point': user_settings['start_time']
     }
-
-    if len(transactions):
-        start_epoch = int(start_time)
-        end_epoch = int(end_time)
-
-        data['start_epoch'] = start_epoch
-        data['end_epoch'] = end_epoch
-        data['start_time'] = time.strftime('%b %#d, %Y %#I:%M%p', time.localtime(start_epoch))
-        data['end_time'] = time.strftime('%b %#d, %Y %#I:%M%p', time.localtime(end_time))
 
     return render(request, 'overview.html', data)
 

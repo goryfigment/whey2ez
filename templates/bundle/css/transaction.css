@@ -254,7 +254,7 @@
 }
 /*CALENDAR*/@font-face {
     font-family: VT323;
-    src: url(/templates/assets/fonts/VT323-Regular.ttf);
+    src: url(/templates/bundle/assets/fonts/VT323-Regular.ttf);
     font-weight: normal;
     font-style: normal;
 }
