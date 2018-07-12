@@ -2926,6 +2926,8 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + alias2(alias1((depth0 != null ? depth0.text : depth0), depth0))
     + "</div>\r\n";
 },"15":function(container,depth0,helpers,partials,data) {
+    return "                <div class=\"receipt-line font-1 align-left\" data-receipt_id=\"1\"></div>\r\n";
+},"17":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=container.escapeExpression;
 
   return "\r\n        <div id=\"receipt-item-wrapper\" class=\"font-1\">\r\n            <div class=\"receipt-item\">\r\n                <span class=\"transaction-item\">"
@@ -2951,11 +2953,11 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + "            </div>\r\n            <div id=\"add-header-button\">Add</div>\r\n        </div>\r\n\r\n        <div id=\"footer-input-wrapper\">\r\n            <div class=\"receipt-settings-title\">Receipt Footer</div>\r\n            <div id=\"footer-container\" class=\"line-container\">\r\n"
     + ((stack1 = helpers.each.call(alias1,((stack1 = (depth0 != null ? depth0.footer : depth0)) != null ? stack1.lines : stack1),{"name":"each","hash":{},"fn":container.program(9, data, 0),"inverse":container.program(11, data, 0),"data":data})) != null ? stack1 : "")
     + "            </div>\r\n            <div id=\"add-footer-button\">Add</div>\r\n        </div>\r\n    </div>\r\n\r\n    <div id=\"save-receipt-settings-wrapper\">\r\n        <div id=\"receipt-settings-result\"></div>\r\n        <button id=\"save-receipt-settings\" class=\"add\">Save Settings</button>\r\n    </div>\r\n</div>\r\n<div id=\"receipt-preview-wrapper\">\r\n    <div class=\"receipt-super-title\">Receipt Preview</div>\r\n\r\n    <div id=\"receipt-container\">\r\n        <div id=\"receipt-header-wrapper\">\r\n"
-    + ((stack1 = helpers.each.call(alias1,((stack1 = (depth0 != null ? depth0.header : depth0)) != null ? stack1.lines : stack1),{"name":"each","hash":{},"fn":container.program(13, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(alias1,((stack1 = (depth0 != null ? depth0.header : depth0)) != null ? stack1.lines : stack1),{"name":"each","hash":{},"fn":container.program(13, data, 0),"inverse":container.program(15, data, 0),"data":data})) != null ? stack1 : "")
     + "        </div>\r\n\r\n        <br />\r\n        <br />\r\n"
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.example_item : depth0),{"name":"if","hash":{},"fn":container.program(15, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.example_item : depth0),{"name":"if","hash":{},"fn":container.program(17, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\r\n        <br />\r\n        <br />\r\n\r\n        <div id=\"receipt-footer-wrapper\">\r\n"
-    + ((stack1 = helpers.each.call(alias1,((stack1 = (depth0 != null ? depth0.footer : depth0)) != null ? stack1.lines : stack1),{"name":"each","hash":{},"fn":container.program(13, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(alias1,((stack1 = (depth0 != null ? depth0.footer : depth0)) != null ? stack1.lines : stack1),{"name":"each","hash":{},"fn":container.program(13, data, 0),"inverse":container.program(15, data, 0),"data":data})) != null ? stack1 : "")
     + "        </div>\r\n    </div>\r\n</div>\r\n";
 },"useData":true});
 

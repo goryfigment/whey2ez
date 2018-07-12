@@ -158,6 +158,8 @@
         <div id="receipt-header-wrapper">
             {{#each header.lines}}
                 <div class="receipt-line font-{{size}} align-{{align}}" data-receipt_id="{{inc @index}}">{{text}}</div>
+            {{else}}
+                <div class="receipt-line font-1 align-left" data-receipt_id="1"></div>
             {{/each}}
         </div>
 
@@ -206,6 +208,8 @@
         <div id="receipt-footer-wrapper">
             {{#each footer.lines}}
                 <div class="receipt-line font-{{size}} align-{{align}}" data-receipt_id="{{inc @index}}">{{text}}</div>
+            {{else}}
+                <div class="receipt-line font-1 align-left" data-receipt_id="1"></div>
             {{/each}}
         </div>
     </div>
