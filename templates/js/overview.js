@@ -118,6 +118,8 @@ function getTransactionReport(startTime, endTime, type) {
         'end_time': epochEndTime
     };
 
+    console.log(postData);
+
     $.ajax({
         url: globals.base_url + '/transaction/get_transaction/',
         data: postData,
@@ -139,6 +141,10 @@ function getTransactionReport(startTime, endTime, type) {
                     createOverviewGraph(globals.transactions, startTime, endTime, type);
                 }
             }
+        },
+        error: function (response) {
+            console.log('error!')
+            console.log(JSON.stringify(response.responseJSON['error_msg']));
         }
     });
 }
