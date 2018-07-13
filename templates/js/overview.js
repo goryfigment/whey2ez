@@ -21,9 +21,6 @@ function init() {
     globals.start_date = d1;
     globals.end_date = d2;
 
-    console.log(d1)
-    console.log(d2)
-
     if (globals.date_range == '7') {
         d1.setDate(d2.getDate() - 7);
         getTransactionReport(d1, d2, 'today');
@@ -114,6 +111,9 @@ function getTransactionReport(startTime, endTime, type) {
     if (startTime != '*') {
         var epochStartTime = startTime.valueOf()/1000;
         var epochEndTime = endTime.valueOf()/1000;
+    } else {
+        epochStartTime = '*'
+        epochEndTime = '*'
     }
 
     var postData = {
