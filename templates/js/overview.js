@@ -14,14 +14,15 @@ var helper = require('./../js/helpers.js');
 require('./../library/calendar/calendar.js');
 
 function init() {
-    google.charts.load('current', {packages: ['corechart', 'line']});
-
     var dates = createDates('today');
     var d1 = dates[0];
     var d2 = dates[1];
 
     globals.start_date = d1;
     globals.end_date = d2;
+
+    console.log(d1)
+    console.log(d2)
 
     if (globals.date_range == '7') {
         d1.setDate(d2.getDate() - 7);
@@ -32,6 +33,8 @@ function init() {
     } else {
         getTransactionReport(d1, d2, 'today');
     }
+
+    google.charts.load('current', {packages: ['corechart', 'line']});
 }
 
 function salesSummary(transactions) {
