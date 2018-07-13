@@ -120,6 +120,8 @@ def employee(request):
         'columns': json.dumps(user_business.columns['columns'])
     }
 
+    print data
+
     return render(request, 'employee.html', data)
 
 
