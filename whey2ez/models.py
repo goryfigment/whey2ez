@@ -95,7 +95,7 @@ class Permission(models.Model):
 
 
 class UserType(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100)
     permission = models.OneToOneField(Permission, on_delete=models.CASCADE)
     boss = models.ForeignKey(Boss)
 
