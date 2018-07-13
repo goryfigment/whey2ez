@@ -2195,6 +2195,7 @@ __webpack_require__(8);
 
 //handlebars
 var transactionTemplate = __webpack_require__(60);
+var emptyTransactionTemplate = __webpack_require__(72);
 var transactionOperationTemplate = __webpack_require__(61);
 var receiptSettingsTemplate = __webpack_require__(62);
 
@@ -2258,15 +2259,20 @@ function getTransactionReport(start_time, end_time) {
         dataType: 'json',
         type: "GET",
         success: function (response) {
-            //console.log(response);
-
             globals.start_time = response['start_time'];
             globals.end_time = response['end_time'];
 
             var $transactionWrapper = $('#transaction-wrapper');
             response['link_columns'] = globals.link_columns;
             $transactionWrapper.empty();
-            $transactionWrapper.append(transactionTemplate(response));
+
+            globals.transactions = response['transactions'];
+
+            if(response['inventory'].length == 0 || response['transactions'].length == 0 || !response['link_columns']['price'] || !response['link_columns']['cost'] || !response['link_columns']['quantity'] || !response['link_columns']['name']) {
+                $transactionWrapper.append(emptyTransactionTemplate(response));
+            } else {
+                $transactionWrapper.append(transactionTemplate(response));
+            }
         }
     });
 }
@@ -2335,14 +2341,21 @@ $(document).ready(function() {
                 // Show updated inventory
                 var $inventoryWrapper = $('#transaction-wrapper');
                 $inventoryWrapper.empty();
-                $inventoryWrapper.append(transactionTemplate({
+
+                var data = {
                     'columns': globals.columns,
                     'link_columns': response['link_columns'],
-                    'transaction': globals.transaction,
+                    'transactions': globals.transactions,
                     'inventory': response['inventory'],
                     'start_time': globals.start_time,
                     'end_time': globals.end_time
-                }));
+                };
+
+                if(data['inventory'].length == 0 || data['inventory'].length == 0 || !data['link_columns']['price'] || !data['link_columns']['cost'] || !data['link_columns']['quantity'] || !data['link_columns']['name']) {
+                    $inventoryWrapper.append(emptyTransactionTemplate(data));
+                } else {
+                    $inventoryWrapper.append(transactionTemplate(data));
+                }
 
                 // Remove popup
                 $('#operation-overlay').removeClass('active');
@@ -2639,133 +2652,63 @@ $(document).ready(function() {
 var Handlebars = __webpack_require__(4);
 function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
 module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
-    var stack1;
-
-  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.quantity : stack1),{"name":"if","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"2":function(container,depth0,helpers,partials,data) {
-    var stack1;
-
-  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.price : stack1),{"name":"if","hash":{},"fn":container.program(3, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+    return "        All <span id=\"calendar-edit\"><i class=\"far fa-edit\"></i></span>\r\n";
 },"3":function(container,depth0,helpers,partials,data) {
-    var stack1;
-
-  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.cost : stack1),{"name":"if","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"4":function(container,depth0,helpers,partials,data) {
-    var stack1;
-
-  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1),{"name":"if","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"5":function(container,depth0,helpers,partials,data) {
-    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=container.lambda, alias3=container.escapeExpression;
-
-  return "                    <div id=\"time-range\">\r\n"
-    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.start_time : depth0),"==","*",{"name":"ifCond","hash":{},"fn":container.program(6, data, 0),"inverse":container.program(8, data, 0),"data":data})) != null ? stack1 : "")
-    + "                    </div>\r\n\r\n                    <div id=\"table-scroll-wrapper\">\r\n                        <table class=\"table-container\">\r\n                            <thead>\r\n                                <tr>\r\n                                    <th>Date</th>\r\n                                    <th>Product</th>\r\n                                    <th>Qty</th>\r\n                                    <th>Price</th>\r\n                                    <th>Subtotal</th>\r\n                                    <th>Tax</th>\r\n                                    <th>Discount</th>\r\n                                    <th>Type</th>\r\n                                    <th>Total</th>\r\n                                </tr>\r\n                            </thead>\r\n\r\n                            <tbody>\r\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.transactions : depth0),{"name":"each","hash":{},"fn":container.program(10, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "                            </tbody>\r\n                        </table>\r\n                    </div>\r\n\r\n                    <div id=\"total-wrapper\">\r\n                        <span>Cash: "
-    + alias3(alias2(((stack1 = (depth0 != null ? depth0.total : depth0)) != null ? stack1.cash : stack1), depth0))
-    + "</span>\r\n                        <span>Credit: "
-    + alias3(alias2(((stack1 = (depth0 != null ? depth0.total : depth0)) != null ? stack1.credit : stack1), depth0))
-    + "</span>\r\n                        <span>Total: "
-    + alias3(alias2(((stack1 = (depth0 != null ? depth0.total : depth0)) != null ? stack1.total : stack1), depth0))
-    + "</span>\r\n                    </div>\r\n";
-},"6":function(container,depth0,helpers,partials,data) {
-    return "                            All <span id=\"calendar-edit\"><i class=\"far fa-edit\"></i></span>\r\n";
-},"8":function(container,depth0,helpers,partials,data) {
     var alias1=container.lambda, alias2=container.escapeExpression;
 
-  return "                            From "
+  return "        From "
     + alias2(alias1((depth0 != null ? depth0.start_time : depth0), depth0))
     + " - "
     + alias2(alias1((depth0 != null ? depth0.end_time : depth0), depth0))
     + "<span id=\"calendar-edit\"><i class=\"far fa-edit\"></i></span>\r\n";
-},"10":function(container,depth0,helpers,partials,data) {
+},"5":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=container.lambda, alias2=container.escapeExpression, alias3=depth0 != null ? depth0 : (container.nullContext || {});
 
-  return "                                    <tr>\r\n                                        <td class=\"number-column\">\r\n                                            "
+  return "                <tr>\r\n                    <td class=\"number-column\">\r\n                        "
     + alias2(alias1((depth0 != null ? depth0.timestamp : depth0), depth0))
-    + "\r\n                                        </td>\r\n                                        <td class=\"name-column\">\r\n"
-    + ((stack1 = helpers.each.call(alias3,((stack1 = (depth0 != null ? depth0.items : depth0)) != null ? stack1.list : stack1),{"name":"each","hash":{},"fn":container.program(11, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "                                        </td>\r\n                                        <td class=\"number-column\">\r\n"
-    + ((stack1 = helpers.each.call(alias3,((stack1 = (depth0 != null ? depth0.items : depth0)) != null ? stack1.list : stack1),{"name":"each","hash":{},"fn":container.program(13, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "                                        </td>\r\n                                        <td class=\"number-column\">\r\n"
-    + ((stack1 = helpers.each.call(alias3,((stack1 = (depth0 != null ? depth0.items : depth0)) != null ? stack1.list : stack1),{"name":"each","hash":{},"fn":container.program(15, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "                                        </td>\r\n                                        <td class=\"number-column\">"
+    + "\r\n                    </td>\r\n                    <td class=\"name-column\">\r\n"
+    + ((stack1 = helpers.each.call(alias3,((stack1 = (depth0 != null ? depth0.items : depth0)) != null ? stack1.list : stack1),{"name":"each","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "                    </td>\r\n                    <td class=\"number-column\">\r\n"
+    + ((stack1 = helpers.each.call(alias3,((stack1 = (depth0 != null ? depth0.items : depth0)) != null ? stack1.list : stack1),{"name":"each","hash":{},"fn":container.program(8, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "                    </td>\r\n                    <td class=\"number-column\">\r\n"
+    + ((stack1 = helpers.each.call(alias3,((stack1 = (depth0 != null ? depth0.items : depth0)) != null ? stack1.list : stack1),{"name":"each","hash":{},"fn":container.program(10, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "                    </td>\r\n                    <td class=\"number-column\">"
     + alias2(alias1((depth0 != null ? depth0.subtotal : depth0), depth0))
-    + "</td>\r\n                                        <td class=\"number-column\">"
+    + "</td>\r\n                    <td class=\"number-column\">"
     + alias2(alias1((depth0 != null ? depth0.tax : depth0), depth0))
-    + "</td>\r\n                                        <td class=\"number-column\"><span class=\"minus-sign\"><i class=\"fas fa-minus\"></i></span>"
+    + "</td>\r\n                    <td class=\"number-column\"><span class=\"minus-sign\"><i class=\"fas fa-minus\"></i></span>"
     + alias2(alias1((depth0 != null ? depth0.discount : depth0), depth0))
-    + "</td>\r\n                                        <td>"
+    + "</td>\r\n                    <td>"
     + alias2(alias1((depth0 != null ? depth0.payment_type : depth0), depth0))
-    + "</td>\r\n                                        <td class=\"number-column\">"
+    + "</td>\r\n                    <td class=\"number-column\">"
     + alias2(alias1((depth0 != null ? depth0.total : depth0), depth0))
-    + "</td>\r\n                                    </tr>\r\n";
-},"11":function(container,depth0,helpers,partials,data) {
-    return "                                                <div class=\"product_name\">"
+    + "</td>\r\n                </tr>\r\n";
+},"6":function(container,depth0,helpers,partials,data) {
+    return "                            <div class=\"product_name\">"
     + container.escapeExpression(container.lambda((depth0 != null ? depth0.name : depth0), depth0))
     + "</div>\r\n";
-},"13":function(container,depth0,helpers,partials,data) {
-    return "                                                <div>"
+},"8":function(container,depth0,helpers,partials,data) {
+    return "                            <div>"
     + container.escapeExpression(container.lambda((depth0 != null ? depth0.quantity : depth0), depth0))
     + "</div>\r\n";
-},"15":function(container,depth0,helpers,partials,data) {
-    return "                                                <div>"
+},"10":function(container,depth0,helpers,partials,data) {
+    return "                            <div>"
     + container.escapeExpression(container.lambda((depth0 != null ? depth0.price : depth0), depth0))
     + "</div>\r\n";
-},"17":function(container,depth0,helpers,partials,data) {
-    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
-
-  return "    <div id=\"time-range\">\r\n"
-    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.start_time : depth0),"==","*",{"name":"ifCond","hash":{},"fn":container.program(18, data, 0),"inverse":container.program(20, data, 0),"data":data})) != null ? stack1 : "")
-    + "    </div>\r\n    <div id=\"empty-transaction-wrapper\">\r\n        <span id=\"empty-transaction-icon\"><i class=\"fas fa-shopping-cart\"></i></span>\r\n        <div id=\"empty-container\">\r\n            <div>You have no Transactions!</div>\r\n"
-    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.quantity : stack1),{"name":"unless","hash":{},"fn":container.program(22, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.inventory : depth0),{"name":"if","hash":{},"fn":container.program(27, data, 0),"inverse":container.program(36, data, 0),"data":data})) != null ? stack1 : "")
-    + "        </div>\r\n    </div>\r\n";
-},"18":function(container,depth0,helpers,partials,data) {
-    return "            All <span id=\"calendar-edit\"><i class=\"far fa-edit\"></i></span>\r\n";
-},"20":function(container,depth0,helpers,partials,data) {
-    var alias1=container.lambda, alias2=container.escapeExpression;
-
-  return "            From "
-    + alias2(alias1((depth0 != null ? depth0.start_time : depth0), depth0))
-    + " - "
-    + alias2(alias1((depth0 != null ? depth0.end_time : depth0), depth0))
-    + "<span id=\"calendar-edit\"><i class=\"far fa-edit\"></i></span>\r\n";
-},"22":function(container,depth0,helpers,partials,data) {
-    var stack1;
-
-  return ((stack1 = helpers.unless.call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.price : stack1),{"name":"unless","hash":{},"fn":container.program(23, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"23":function(container,depth0,helpers,partials,data) {
-    var stack1;
-
-  return ((stack1 = helpers.unless.call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.cost : stack1),{"name":"unless","hash":{},"fn":container.program(24, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"24":function(container,depth0,helpers,partials,data) {
-    var stack1;
-
-  return ((stack1 = helpers.unless.call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1),{"name":"unless","hash":{},"fn":container.program(25, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"25":function(container,depth0,helpers,partials,data) {
-    return "                            <div class=\"get-started-text\">Before you can make a transaction:</div>\r\n";
-},"27":function(container,depth0,helpers,partials,data) {
-    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
-
-  return ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.quantity : stack1),{"name":"unless","hash":{},"fn":container.program(28, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.price : stack1),{"name":"unless","hash":{},"fn":container.program(30, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.cost : stack1),{"name":"unless","hash":{},"fn":container.program(32, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1),{"name":"unless","hash":{},"fn":container.program(34, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"28":function(container,depth0,helpers,partials,data) {
-    return "                    <a id=\"quantity-link\">Link your 'Quantity' Column!</a>\r\n";
-},"30":function(container,depth0,helpers,partials,data) {
-    return "                    <a id=\"price-link\">Link your 'Price' Column!</a>\r\n";
-},"32":function(container,depth0,helpers,partials,data) {
-    return "                    <a id=\"cost-link\">Link your 'Cost' Column!</a>\r\n";
-},"34":function(container,depth0,helpers,partials,data) {
-    return "                    <a id=\"name-link\">Link your 'Name' Column!</a>\r\n";
-},"36":function(container,depth0,helpers,partials,data) {
-    return "                <a href=\"/inventory/\">Create an Inventory</a>\r\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    var stack1;
+    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=container.lambda, alias3=container.escapeExpression;
 
-  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.transactions : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(17, data, 0),"data":data})) != null ? stack1 : "");
+  return "<div id=\"time-range\">\r\n"
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.start_time : depth0),"==","*",{"name":"ifCond","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
+    + "</div>\r\n\r\n<div id=\"table-scroll-wrapper\">\r\n    <table class=\"table-container\">\r\n        <thead>\r\n            <tr>\r\n                <th>Date</th>\r\n                <th>Product</th>\r\n                <th>Qty</th>\r\n                <th>Price</th>\r\n                <th>Subtotal</th>\r\n                <th>Tax</th>\r\n                <th>Discount</th>\r\n                <th>Type</th>\r\n                <th>Total</th>\r\n            </tr>\r\n        </thead>\r\n\r\n        <tbody>\r\n"
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.transactions : depth0),{"name":"each","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "        </tbody>\r\n    </table>\r\n</div>\r\n\r\n<div id=\"total-wrapper\">\r\n    <span>Cash: "
+    + alias3(alias2(((stack1 = (depth0 != null ? depth0.total : depth0)) != null ? stack1.cash : stack1), depth0))
+    + "</span>\r\n    <span>Credit: "
+    + alias3(alias2(((stack1 = (depth0 != null ? depth0.total : depth0)) != null ? stack1.credit : stack1), depth0))
+    + "</span>\r\n    <span>Total: "
+    + alias3(alias2(((stack1 = (depth0 != null ? depth0.total : depth0)) != null ? stack1.total : stack1), depth0))
+    + "</span>\r\n</div>";
 },"useData":true});
 
 /***/ }),
@@ -2975,6 +2918,75 @@ module.exports = function(name_regex, item) {
 
     return name_regex;
 };
+
+/***/ }),
+/* 64 */,
+/* 65 */,
+/* 66 */,
+/* 67 */,
+/* 68 */,
+/* 69 */,
+/* 70 */,
+/* 71 */,
+/* 72 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Handlebars = __webpack_require__(4);
+function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
+module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
+    return "        All <span id=\"calendar-edit\"><i class=\"far fa-edit\"></i></span>\r\n";
+},"3":function(container,depth0,helpers,partials,data) {
+    var alias1=container.lambda, alias2=container.escapeExpression;
+
+  return "        From "
+    + alias2(alias1((depth0 != null ? depth0.start_time : depth0), depth0))
+    + " - "
+    + alias2(alias1((depth0 != null ? depth0.end_time : depth0), depth0))
+    + "<span id=\"calendar-edit\"><i class=\"far fa-edit\"></i></span>\r\n";
+},"5":function(container,depth0,helpers,partials,data) {
+    return "            <div>You have no Transactions!</div>\r\n";
+},"7":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers.unless.call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.price : stack1),{"name":"unless","hash":{},"fn":container.program(8, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"8":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers.unless.call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.cost : stack1),{"name":"unless","hash":{},"fn":container.program(9, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"9":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers.unless.call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1),{"name":"unless","hash":{},"fn":container.program(10, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"10":function(container,depth0,helpers,partials,data) {
+    return "                        <div class=\"get-started-text\">Before you can make a transaction:</div>\r\n";
+},"12":function(container,depth0,helpers,partials,data) {
+    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
+
+  return ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.quantity : stack1),{"name":"unless","hash":{},"fn":container.program(13, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.price : stack1),{"name":"unless","hash":{},"fn":container.program(15, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.cost : stack1),{"name":"unless","hash":{},"fn":container.program(17, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1),{"name":"unless","hash":{},"fn":container.program(19, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"13":function(container,depth0,helpers,partials,data) {
+    return "                <a id=\"quantity-link\">Link your 'Quantity' Column!</a>\r\n";
+},"15":function(container,depth0,helpers,partials,data) {
+    return "                <a id=\"price-link\">Link your 'Price' Column!</a>\r\n";
+},"17":function(container,depth0,helpers,partials,data) {
+    return "                <a id=\"cost-link\">Link your 'Cost' Column!</a>\r\n";
+},"19":function(container,depth0,helpers,partials,data) {
+    return "                <a id=\"name-link\">Link your 'Name' Column!</a>\r\n";
+},"21":function(container,depth0,helpers,partials,data) {
+    return "            <a href=\"/inventory/\">Create an Inventory</a>\r\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
+
+  return "<div id=\"time-range\">\r\n"
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.start_time : depth0),"==","*",{"name":"ifCond","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
+    + "</div>\r\n<div id=\"empty-transaction-wrapper\">\r\n    <span id=\"empty-transaction-icon\"><i class=\"fas fa-shopping-cart\"></i></span>\r\n    <div id=\"empty-container\">\r\n"
+    + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.transactions : depth0),{"name":"unless","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.quantity : stack1),{"name":"unless","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.inventory : depth0),{"name":"if","hash":{},"fn":container.program(12, data, 0),"inverse":container.program(21, data, 0),"data":data})) != null ? stack1 : "")
+    + "    </div>\r\n</div>";
+},"useData":true});
 
 /***/ })
 ],[58]);

@@ -51,10 +51,11 @@ def receipt_printer(settings, transaction):
     epson.text('\n\n')
 
     # Do header
-    for header in headers:
-        size = int(header['size'])
-        epson.set(align=header['align'], font="a", height=size, width=size)
-        epson.text(header['text']+'\n')
+    if len(headers):
+        for header in headers:
+            size = int(header['size'])
+            epson.set(align=header['align'], font="a", height=size, width=size)
+            epson.text(header['text']+'\n')
 
     # Then do items
     for key, item in transaction['items'].iteritems():
@@ -80,10 +81,11 @@ def receipt_printer(settings, transaction):
     epson.text('\n\n\n')
 
     # Do footer
-    for footer in footers:
-        size = int(footer['size'])
+    if len(footers):
+        for footer in footers:
+            size = int(footer['size'])
 
-        epson.set(align=footer['align'], font="a", height=size, width=size)
-        epson.text(footer['text']+'\n')
+            epson.set(align=footer['align'], font="a", height=size, width=size)
+            epson.text(footer['text']+'\n')
 
     epson.cut()

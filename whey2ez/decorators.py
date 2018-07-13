@@ -7,7 +7,6 @@ def login_required(function):
         if request.user.is_authenticated():
             return function(request, *args, **kwargs)
         else:
-            print 'test'
             raise PermissionDenied('User not login.')
     wrap.__doc__ = function.__doc__
     wrap.__name__ = function.__name__

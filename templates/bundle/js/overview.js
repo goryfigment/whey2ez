@@ -2241,7 +2241,7 @@ function createDates(type){
 function getTransactionReport(startTime, endTime, type) {
     if (startTime != '*') {
         var epochStartTime = startTime.valueOf()/1000;
-        var epochEndTime = endTime.valueOf()/1000 - 1;
+        var epochEndTime = endTime.valueOf()/1000;
     }
 
     var postData = {

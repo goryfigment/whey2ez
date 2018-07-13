@@ -4,6 +4,7 @@ require('./../library/fontawesome/fontawesome.js');
 
 //handlebars
 var transactionTemplate = require('./../handlebars/transaction/transaction.hbs');
+var emptyTransactionTemplate = require('./../handlebars/transaction/empty_transaction.hbs');
 var transactionOperationTemplate = require('./../handlebars/transaction/transaction_operation.hbs');
 var receiptSettingsTemplate = require('./../handlebars/transaction/receipt_settings.hbs');
 
@@ -67,15 +68,20 @@ function getTransactionReport(start_time, end_time) {
         dataType: 'json',
         type: "GET",
         success: function (response) {
-            //console.log(response);
-
             globals.start_time = response['start_time'];
             globals.end_time = response['end_time'];
 
             var $transactionWrapper = $('#transaction-wrapper');
             response['link_columns'] = globals.link_columns;
             $transactionWrapper.empty();
-            $transactionWrapper.append(transactionTemplate(response));
+
+            globals.transactions = response['transactions'];
+
+            if(response['inventory'].length == 0 || response['transactions'].length == 0 || !response['link_columns']['price'] || !response['link_columns']['cost'] || !response['link_columns']['quantity'] || !response['link_columns']['name']) {
+                $transactionWrapper.append(emptyTransactionTemplate(response));
+            } else {
+                $transactionWrapper.append(transactionTemplate(response));
+            }
         }
     });
 }
@@ -144,14 +150,21 @@ $(document).ready(function() {
                 // Show updated inventory
                 var $inventoryWrapper = $('#transaction-wrapper');
                 $inventoryWrapper.empty();
-                $inventoryWrapper.append(transactionTemplate({
+
+                var data = {
                     'columns': globals.columns,
                     'link_columns': response['link_columns'],
-                    'transaction': globals.transaction,
+                    'transactions': globals.transactions,
                     'inventory': response['inventory'],
                     'start_time': globals.start_time,
                     'end_time': globals.end_time
-                }));
+                };
+
+                if(data['inventory'].length == 0 || data['inventory'].length == 0 || !data['link_columns']['price'] || !data['link_columns']['cost'] || !data['link_columns']['quantity'] || !data['link_columns']['name']) {
+                    $inventoryWrapper.append(emptyTransactionTemplate(data));
+                } else {
+                    $inventoryWrapper.append(transactionTemplate(data));
+                }
 
                 // Remove popup
                 $('#operation-overlay').removeClass('active');

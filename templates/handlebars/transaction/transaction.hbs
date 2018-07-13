@@ -1,110 +1,61 @@
-{{#if transactions}}
-    {{#if link_columns.quantity}}
-        {{#if link_columns.price}}
-            {{#if link_columns.cost}}
-                {{#if link_columns.name}}
-                    <div id="time-range">
-                        {{#ifCond start_time '==' '*'}}
-                            All <span id="calendar-edit"><i class="far fa-edit"></i></span>
-                        {{else}}
-                            From {{start_time}} - {{end_time}}<span id="calendar-edit"><i class="far fa-edit"></i></span>
-                        {{/ifCond}}
-                    </div>
+<div id="time-range">
+    {{#ifCond start_time '==' '*'}}
+        All <span id="calendar-edit"><i class="far fa-edit"></i></span>
+    {{else}}
+        From {{start_time}} - {{end_time}}<span id="calendar-edit"><i class="far fa-edit"></i></span>
+    {{/ifCond}}
+</div>
 
-                    <div id="table-scroll-wrapper">
-                        <table class="table-container">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Product</th>
-                                    <th>Qty</th>
-                                    <th>Price</th>
-                                    <th>Subtotal</th>
-                                    <th>Tax</th>
-                                    <th>Discount</th>
-                                    <th>Type</th>
-                                    <th>Total</th>
-                                </tr>
-                            </thead>
+<div id="table-scroll-wrapper">
+    <table class="table-container">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Product</th>
+                <th>Qty</th>
+                <th>Price</th>
+                <th>Subtotal</th>
+                <th>Tax</th>
+                <th>Discount</th>
+                <th>Type</th>
+                <th>Total</th>
+            </tr>
+        </thead>
 
-                            <tbody>
-                                {{#each transactions}}
-                                    <tr>
-                                        <td class="number-column">
-                                            {{timestamp}}
-                                        </td>
-                                        <td class="name-column">
-                                            {{#each items.list}}
-                                                <div class="product_name">{{name}}</div>
-                                            {{/each}}
-                                        </td>
-                                        <td class="number-column">
-                                            {{#each items.list}}
-                                                <div>{{quantity}}</div>
-                                            {{/each}}
-                                        </td>
-                                        <td class="number-column">
-                                            {{#each items.list}}
-                                                <div>{{price}}</div>
-                                            {{/each}}
-                                        </td>
-                                        <td class="number-column">{{subtotal}}</td>
-                                        <td class="number-column">{{tax}}</td>
-                                        <td class="number-column"><span class="minus-sign"><i class="fas fa-minus"></i></span>{{discount}}</td>
-                                        <td>{{payment_type}}</td>
-                                        <td class="number-column">{{total}}</td>
-                                    </tr>
-                                {{/each}}
-                            </tbody>
-                        </table>
-                    </div>
+        <tbody>
+            {{#each transactions}}
+                <tr>
+                    <td class="number-column">
+                        {{timestamp}}
+                    </td>
+                    <td class="name-column">
+                        {{#each items.list}}
+                            <div class="product_name">{{name}}</div>
+                        {{/each}}
+                    </td>
+                    <td class="number-column">
+                        {{#each items.list}}
+                            <div>{{quantity}}</div>
+                        {{/each}}
+                    </td>
+                    <td class="number-column">
+                        {{#each items.list}}
+                            <div>{{price}}</div>
+                        {{/each}}
+                    </td>
+                    <td class="number-column">{{subtotal}}</td>
+                    <td class="number-column">{{tax}}</td>
+                    <td class="number-column"><span class="minus-sign"><i class="fas fa-minus"></i></span>{{discount}}</td>
+                    <td>{{payment_type}}</td>
+                    <td class="number-column">{{total}}</td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
 
-                    <div id="total-wrapper">
-                        <span>Cash: {{ total.cash }}</span>
-                        <span>Credit: {{ total.credit }}</span>
-                        <span>Total: {{ total.total }}</span>
-                    </div>
-                {{/if}}
-            {{/if}}
-        {{/if}}
-    {{/if}}
-{{else}}
-    <div id="time-range">
-        {{#ifCond start_time '==' '*'}}
-            All <span id="calendar-edit"><i class="far fa-edit"></i></span>
-        {{else}}
-            From {{start_time}} - {{end_time}}<span id="calendar-edit"><i class="far fa-edit"></i></span>
-        {{/ifCond}}
-    </div>
-    <div id="empty-transaction-wrapper">
-        <span id="empty-transaction-icon"><i class="fas fa-shopping-cart"></i></span>
-        <div id="empty-container">
-            <div>You have no Transactions!</div>
-            {{#unless link_columns.quantity}}
-                {{#unless link_columns.price}}
-                    {{#unless link_columns.cost}}
-                        {{#unless link_columns.name}}
-                            <div class="get-started-text">Before you can make a transaction:</div>
-                        {{/unless}}
-                    {{/unless}}
-                {{/unless}}
-            {{/unless}}
-            {{#if inventory}}
-                {{#unless link_columns.quantity}}
-                    <a id="quantity-link">Link your 'Quantity' Column!</a>
-                {{/unless}}
-                {{#unless link_columns.price}}
-                    <a id="price-link">Link your 'Price' Column!</a>
-                {{/unless}}
-                {{#unless link_columns.cost}}
-                    <a id="cost-link">Link your 'Cost' Column!</a>
-                {{/unless}}
-                {{#unless link_columns.name}}
-                    <a id="name-link">Link your 'Name' Column!</a>
-                {{/unless}}
-            {{else}}
-                <a href="/inventory/">Create an Inventory</a>
-            {{/if}}
-        </div>
-    </div>
-{{/if}}
+<div id="total-wrapper">
+    <span>Cash: {{ total.cash }}</span>
+    <span>Credit: {{ total.credit }}</span>
+    <span>Total: {{ total.total }}</span>
+</div>
