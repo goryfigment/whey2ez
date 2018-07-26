@@ -129,8 +129,10 @@ def data_required(required_data, request_type):
     def decorator(function):
         def wrap(request, *args, **kwargs):
             if request_type == "POST":
+                request.POST = request.POST.dict()
                 query_request = request.POST
             elif request_type == "GET":
+                request.GET = request.GET.dict()
                 query_request = request.GET
             elif request_type == "FILES":
                 query_request = request.FILES

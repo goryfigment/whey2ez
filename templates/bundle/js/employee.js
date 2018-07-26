@@ -1451,17 +1451,19 @@ module.exports = g;
 /* 49 */,
 /* 50 */,
 /* 51 */,
-/* 52 */
+/* 52 */,
+/* 53 */,
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(26);
-__webpack_require__(53);
+__webpack_require__(55);
 __webpack_require__(8);
 
 //handlebars
 //var inventoryTemplate = require('./../handlebars/inventory/inventory.hbs');
 //var rowTemplate = require('./../handlebars/inventory/row.hbs');
-var employeeOperationTemplate = __webpack_require__(54);
+var employeeOperationTemplate = __webpack_require__(56);
 
 //libraries
 var $ = __webpack_require__(7);
@@ -1736,13 +1738,13 @@ $(document).ready(function() {
 });
 
 /***/ }),
-/* 53 */
+/* 55 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 54 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(4);
@@ -1878,7 +1880,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"34":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1;
 
-  return ((stack1 = __default(__webpack_require__(55)).call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,((stack1 = (depths[1] != null ? depths[1].permission : depths[1])) != null ? stack1.visible_columns : stack1),{"name":"contains","hash":{},"fn":container.program(7, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+  return ((stack1 = __default(__webpack_require__(57)).call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,((stack1 = (depths[1] != null ? depths[1].permission : depths[1])) != null ? stack1.visible_columns : stack1),{"name":"contains","hash":{},"fn":container.program(7, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "");
 },"36":function(container,depth0,helpers,partials,data) {
     var stack1;
 
@@ -1958,7 +1960,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true,"useDepths":true});
 
 /***/ }),
-/* 55 */
+/* 57 */
 /***/ (function(module, exports) {
 
 module.exports = function(elem, list, options) {
@@ -1969,4 +1971,4 @@ module.exports = function(elem, list, options) {
 };
 
 /***/ })
-],[52]);
+],[54]);

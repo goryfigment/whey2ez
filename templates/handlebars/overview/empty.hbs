@@ -1,0 +1,51 @@
+{{#ifCond type '==' 'summary'}}
+    <div id="empty-summary-wrapper">
+        <span id="empty-summary-icon"><i class="fas fa-receipt"></i></span>
+        <div id="empty-container">
+            {{#unless transactions}}
+                <div>You have no Transactions!</div>
+            {{/unless}}
+            {{#unless link_columns.price}}
+                {{#unless link_columns.cost}}
+                    <div class="get-started-text">Before you can view overview report:</div>
+                {{/unless}}
+            {{/unless}}
+            {{#if inventory}}
+                {{#unless link_columns.price}}
+                    <a id="price-link">Link your 'Price' Column!</a>
+                {{/unless}}
+                {{#unless link_columns.cost}}
+                    <a id="cost-link">Link your 'Cost' Column!</a>
+                {{/unless}}
+            {{else}}
+                <a href="/inventory/">Create an Inventory</a>
+            {{/if}}
+        </div>
+    </div>
+{{/ifCond}}
+
+{{#ifCond type '==' 'overview'}}
+    <div id="empty-overview-wrapper">
+        <span id="empty-overview-icon"><i class="fas fa-tachometer-alt"></i></span>
+        <div id="empty-container">
+            {{#unless transactions}}
+                <div>You have no Transactions!</div>
+            {{/unless}}
+            {{#unless link_columns.price}}
+                {{#unless link_columns.cost}}
+                    <div class="get-started-text">Before you can view overview report:</div>
+                {{/unless}}
+            {{/unless}}
+            {{#if inventory}}
+                {{#unless link_columns.price}}
+                    <a id="price-link">Link your 'Price' Column!</a>
+                {{/unless}}
+                {{#unless link_columns.cost}}
+                    <a id="cost-link">Link your 'Cost' Column!</a>
+                {{/unless}}
+            {{else}}
+                <a href="/inventory/">Create an Inventory</a>
+            {{/if}}
+        </div>
+    </div>
+{{/ifCond}}

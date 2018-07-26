@@ -1463,21 +1463,24 @@ module.exports = g;
 /* 61 */,
 /* 62 */,
 /* 63 */,
-/* 64 */
+/* 64 */,
+/* 65 */,
+/* 66 */,
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(26);
-__webpack_require__(65);
+__webpack_require__(68);
 __webpack_require__(8);
 
 var $ = __webpack_require__(7);
 var helper = __webpack_require__(9);
 
 //handlebars
-var searchItemTemplate = __webpack_require__(66);
-var resultItemTemplate = __webpack_require__(67);
-var discountItemTemplate = __webpack_require__(68);
-var receiptTemplate = __webpack_require__(69);
+var searchItemTemplate = __webpack_require__(69);
+var resultItemTemplate = __webpack_require__(70);
+var discountItemTemplate = __webpack_require__(71);
+var receiptTemplate = __webpack_require__(72);
 
 function init() {
     $('#inventory-search').focus();
@@ -1869,13 +1872,13 @@ $(document).ready(function() {
 });
 
 /***/ }),
-/* 65 */
+/* 68 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 66 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(4);
@@ -1889,7 +1892,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,"
 },"useData":true});
 
 /***/ }),
-/* 67 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(4);
@@ -1913,7 +1916,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,"
 },"useData":true});
 
 /***/ }),
-/* 68 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(4);
@@ -1943,7 +1946,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true});
 
 /***/ }),
-/* 69 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(4);
@@ -1957,4 +1960,4 @@ module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,"
 },"useData":true});
 
 /***/ })
-],[64]);
+],[67]);

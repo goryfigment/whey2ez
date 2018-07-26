@@ -2186,18 +2186,20 @@ module.exports = function(val) {
 /* 55 */,
 /* 56 */,
 /* 57 */,
-/* 58 */
+/* 58 */,
+/* 59 */,
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(26);
-__webpack_require__(59);
+__webpack_require__(61);
 __webpack_require__(8);
 
 //handlebars
-var transactionTemplate = __webpack_require__(60);
-var emptyTransactionTemplate = __webpack_require__(72);
-var transactionOperationTemplate = __webpack_require__(61);
-var receiptSettingsTemplate = __webpack_require__(62);
+var transactionTemplate = __webpack_require__(62);
+var emptyTransactionTemplate = __webpack_require__(63);
+var transactionOperationTemplate = __webpack_require__(64);
+var receiptSettingsTemplate = __webpack_require__(65);
 
 //libraries
 var $ = __webpack_require__(7);
@@ -2640,13 +2642,13 @@ $(document).ready(function() {
 });
 
 /***/ }),
-/* 59 */
+/* 61 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 60 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(4);
@@ -2712,7 +2714,68 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true});
 
 /***/ }),
-/* 61 */
+/* 63 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Handlebars = __webpack_require__(4);
+function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
+module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
+    return "        All <span id=\"calendar-edit\"><i class=\"far fa-edit\"></i></span>\r\n";
+},"3":function(container,depth0,helpers,partials,data) {
+    var alias1=container.lambda, alias2=container.escapeExpression;
+
+  return "        From "
+    + alias2(alias1((depth0 != null ? depth0.start_time : depth0), depth0))
+    + " - "
+    + alias2(alias1((depth0 != null ? depth0.end_time : depth0), depth0))
+    + "<span id=\"calendar-edit\"><i class=\"far fa-edit\"></i></span>\r\n";
+},"5":function(container,depth0,helpers,partials,data) {
+    return "            <div>You have no Transactions!</div>\r\n";
+},"7":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers.unless.call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.price : stack1),{"name":"unless","hash":{},"fn":container.program(8, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"8":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers.unless.call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.cost : stack1),{"name":"unless","hash":{},"fn":container.program(9, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"9":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return ((stack1 = helpers.unless.call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1),{"name":"unless","hash":{},"fn":container.program(10, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"10":function(container,depth0,helpers,partials,data) {
+    return "                        <div class=\"get-started-text\">Before you can make a transaction:</div>\r\n";
+},"12":function(container,depth0,helpers,partials,data) {
+    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
+
+  return ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.quantity : stack1),{"name":"unless","hash":{},"fn":container.program(13, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.price : stack1),{"name":"unless","hash":{},"fn":container.program(15, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.cost : stack1),{"name":"unless","hash":{},"fn":container.program(17, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1),{"name":"unless","hash":{},"fn":container.program(19, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"13":function(container,depth0,helpers,partials,data) {
+    return "                <a id=\"quantity-link\">Link your 'Quantity' Column!</a>\r\n";
+},"15":function(container,depth0,helpers,partials,data) {
+    return "                <a id=\"price-link\">Link your 'Price' Column!</a>\r\n";
+},"17":function(container,depth0,helpers,partials,data) {
+    return "                <a id=\"cost-link\">Link your 'Cost' Column!</a>\r\n";
+},"19":function(container,depth0,helpers,partials,data) {
+    return "                <a id=\"name-link\">Link your 'Name' Column!</a>\r\n";
+},"21":function(container,depth0,helpers,partials,data) {
+    return "            <a href=\"/inventory/\">Create an Inventory</a>\r\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
+
+  return "<div id=\"time-range\">\r\n"
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.start_time : depth0),"==","*",{"name":"ifCond","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
+    + "</div>\r\n<div id=\"empty-transaction-wrapper\">\r\n    <span id=\"empty-transaction-icon\"><i class=\"fas fa-shopping-cart\"></i></span>\r\n    <div id=\"empty-container\">\r\n"
+    + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.transactions : depth0),{"name":"unless","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.quantity : stack1),{"name":"unless","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.inventory : depth0),{"name":"if","hash":{},"fn":container.program(12, data, 0),"inverse":container.program(21, data, 0),"data":data})) != null ? stack1 : "")
+    + "    </div>\r\n</div>";
+},"useData":true});
+
+/***/ }),
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(4);
@@ -2772,7 +2835,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true});
 
 /***/ }),
-/* 62 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(4);
@@ -2874,7 +2937,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=container.escapeExpression;
 
   return "\r\n        <div id=\"receipt-item-wrapper\" class=\"font-1\">\r\n            <div class=\"receipt-item\">\r\n                <span class=\"transaction-item\">"
-    + alias2(__default(__webpack_require__(63)).call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1),(depth0 != null ? depth0.example_item : depth0),{"name":"nameRegex","hash":{},"data":data}))
+    + alias2(__default(__webpack_require__(66)).call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1),(depth0 != null ? depth0.example_item : depth0),{"name":"nameRegex","hash":{},"data":data}))
     + "</span>\r\n                <span>"
     + alias2(__default(__webpack_require__(6)).call(alias1,400,"-",__default(__webpack_require__(6)).call(alias1,2,"*",helpers.lookup.call(alias1,(depth0 != null ? depth0.example_item : depth0),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.price : stack1),{"name":"lookup","hash":{},"data":data}),{"name":"currencyMath","hash":{},"data":data}),{"name":"currencyMath","hash":{},"data":data}))
     + "</span>\r\n            </div>\r\n\r\n            <div class=\"receipt-item-details\">\r\n                <span class=\"transaction-quantity\">(2 @ "
@@ -2905,7 +2968,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true});
 
 /***/ }),
-/* 63 */
+/* 66 */
 /***/ (function(module, exports) {
 
 module.exports = function(name_regex, item) {
@@ -2919,74 +2982,5 @@ module.exports = function(name_regex, item) {
     return name_regex;
 };
 
-/***/ }),
-/* 64 */,
-/* 65 */,
-/* 66 */,
-/* 67 */,
-/* 68 */,
-/* 69 */,
-/* 70 */,
-/* 71 */,
-/* 72 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Handlebars = __webpack_require__(4);
-function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
-module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
-    return "        All <span id=\"calendar-edit\"><i class=\"far fa-edit\"></i></span>\r\n";
-},"3":function(container,depth0,helpers,partials,data) {
-    var alias1=container.lambda, alias2=container.escapeExpression;
-
-  return "        From "
-    + alias2(alias1((depth0 != null ? depth0.start_time : depth0), depth0))
-    + " - "
-    + alias2(alias1((depth0 != null ? depth0.end_time : depth0), depth0))
-    + "<span id=\"calendar-edit\"><i class=\"far fa-edit\"></i></span>\r\n";
-},"5":function(container,depth0,helpers,partials,data) {
-    return "            <div>You have no Transactions!</div>\r\n";
-},"7":function(container,depth0,helpers,partials,data) {
-    var stack1;
-
-  return ((stack1 = helpers.unless.call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.price : stack1),{"name":"unless","hash":{},"fn":container.program(8, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"8":function(container,depth0,helpers,partials,data) {
-    var stack1;
-
-  return ((stack1 = helpers.unless.call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.cost : stack1),{"name":"unless","hash":{},"fn":container.program(9, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"9":function(container,depth0,helpers,partials,data) {
-    var stack1;
-
-  return ((stack1 = helpers.unless.call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1),{"name":"unless","hash":{},"fn":container.program(10, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"10":function(container,depth0,helpers,partials,data) {
-    return "                        <div class=\"get-started-text\">Before you can make a transaction:</div>\r\n";
-},"12":function(container,depth0,helpers,partials,data) {
-    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
-
-  return ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.quantity : stack1),{"name":"unless","hash":{},"fn":container.program(13, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.price : stack1),{"name":"unless","hash":{},"fn":container.program(15, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.cost : stack1),{"name":"unless","hash":{},"fn":container.program(17, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1),{"name":"unless","hash":{},"fn":container.program(19, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"13":function(container,depth0,helpers,partials,data) {
-    return "                <a id=\"quantity-link\">Link your 'Quantity' Column!</a>\r\n";
-},"15":function(container,depth0,helpers,partials,data) {
-    return "                <a id=\"price-link\">Link your 'Price' Column!</a>\r\n";
-},"17":function(container,depth0,helpers,partials,data) {
-    return "                <a id=\"cost-link\">Link your 'Cost' Column!</a>\r\n";
-},"19":function(container,depth0,helpers,partials,data) {
-    return "                <a id=\"name-link\">Link your 'Name' Column!</a>\r\n";
-},"21":function(container,depth0,helpers,partials,data) {
-    return "            <a href=\"/inventory/\">Create an Inventory</a>\r\n";
-},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
-
-  return "<div id=\"time-range\">\r\n"
-    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.start_time : depth0),"==","*",{"name":"ifCond","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
-    + "</div>\r\n<div id=\"empty-transaction-wrapper\">\r\n    <span id=\"empty-transaction-icon\"><i class=\"fas fa-shopping-cart\"></i></span>\r\n    <div id=\"empty-container\">\r\n"
-    + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.transactions : depth0),{"name":"unless","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.quantity : stack1),{"name":"unless","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.inventory : depth0),{"name":"if","hash":{},"fn":container.program(12, data, 0),"inverse":container.program(21, data, 0),"data":data})) != null ? stack1 : "")
-    + "    </div>\r\n</div>";
-},"useData":true});
-
 /***/ })
-],[58]);
+],[60]);

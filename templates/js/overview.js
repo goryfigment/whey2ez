@@ -3,9 +3,10 @@ require('./../css/overview.css');
 require('./../library/fontawesome/fontawesome.js');
 
 //handlebars
-
+var emptyTemplate = require('./../handlebars/overview/empty.hbs');
 var overviewOperationTemplate = require('./../handlebars/overview/overview_operation.hbs');
 var overviewTemplate = require('./../handlebars/overview/overview.hbs');
+
 var overviewTotalTemplate = require('./../handlebars/overview/overview_total.hbs');
 
 //libraries
@@ -14,6 +15,8 @@ var helper = require('./../js/helpers.js');
 require('./../library/calendar/calendar.js');
 
 function init() {
+    google.charts.load('current', {packages: ['corechart', 'line']});
+
     var dates = createDates('today');
     var d1 = dates[0];
     var d2 = dates[1];
@@ -30,11 +33,11 @@ function init() {
     } else {
         getTransactionReport(d1, d2, 'today');
     }
-
-    google.charts.load('current', {packages: ['corechart', 'line']});
 }
 
-function salesSummary(transactions) {
+function salesSummary(response) {
+    var transactions = response['transactions'];
+
     var totalTax = 0;
     var totalDiscounts = 0;
     var totalCash = 0;
@@ -88,6 +91,8 @@ function salesSummary(transactions) {
             incrementItem(totalVisa, visaQuantity, subtotal);
         }
     }
+
+
 }
 
 function createDates(type){
@@ -112,16 +117,14 @@ function getTransactionReport(startTime, endTime, type) {
         var epochStartTime = startTime.valueOf()/1000;
         var epochEndTime = endTime.valueOf()/1000;
     } else {
-        epochStartTime = '*'
-        epochEndTime = '*'
+        epochStartTime = '*';
+        epochEndTime = '*';
     }
 
     var postData = {
         'start_time': epochStartTime,
         'end_time': epochEndTime
     };
-
-    console.log(postData);
 
     $.ajax({
         url: globals.base_url + '/transaction/get_transaction/',
@@ -134,19 +137,27 @@ function getTransactionReport(startTime, endTime, type) {
             response['link_columns'] = globals.link_columns;
 
             var $overviewWrapper = $('#overview-wrapper');
+            var $summaryWrapper = $('#sale-report-wrapper');
             $overviewWrapper.empty();
-            $overviewWrapper.append(overviewTemplate(response));
+            $summaryWrapper.empty();
+            //$overviewWrapper.append(overviewTemplate(response));
 
-            if (globals.transactions.length || (globals.link_columns.cost && globals.link_columns.price)) {
+            if (response['inventory'] != 0 && globals.transactions.length && (globals.link_columns.cost && globals.link_columns.price)) {
+                $overviewWrapper.append(overviewTemplate(response));
                 if (globals.date_range == '*') {
                     createOverviewGraph(globals.transactions, false, false, type);
                 } else {
                     createOverviewGraph(globals.transactions, startTime, endTime, type);
+                    salesSummary(response);
                 }
+            } else {
+                response['type'] = 'overview';
+                $overviewWrapper.append(emptyTemplate(response));
+                response['type'] = 'summary';
+                $summaryWrapper.append(emptyTemplate(response));
             }
         },
         error: function (response) {
-            console.log('error!')
             console.log(JSON.stringify(response.responseJSON['error_msg']));
         }
     });
@@ -334,16 +345,6 @@ $(document).ready(function() {
             success: function (response) {
                 //console.log(JSON.stringify(response));
 
-                // Show updated inventory
-                //var $inventoryWrapper = $('#transaction-wrapper');
-                //$inventoryWrapper.empty();
-                //$inventoryWrapper.append(transactionTemplate({
-                //    'columns': globals.columns,
-                //    'link_columns': response,
-                //    'transaction': globals.transaction,
-                //    //'start_time':
-                //}));
-
                 // Remove popup
                 $('#operation-overlay').removeClass('active');
 
@@ -414,7 +415,6 @@ $(document).ready(function() {
 
         var firstDate = new Date(firstDateString);
         var lastDate = new Date(lastDateString);
-        console.log(lastDate)
 
         getTransactionReport(firstDate, lastDate, '');
 

@@ -25,7 +25,7 @@
 /* SIDE BAR */
 
 /* EMPTY OVERVIEW */
-#empty-overview-wrapper {
+#empty-overview-wrapper, #empty-summary-wrapper {
     height: 100%;
     display: -ms-flexbox;
     display: flex;
@@ -35,7 +35,7 @@
         justify-content: center;
 }
 
-#empty-overview-icon {
+#empty-overview-icon, #empty-summary-icon {
     font-size: 260px;
     padding: 20px;
     color: #6c7fdb;

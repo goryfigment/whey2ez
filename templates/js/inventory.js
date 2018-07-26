@@ -72,7 +72,7 @@ function getLogReport(start_time, end_time) {
         dataType: 'json',
         type: "GET",
         success: function (response) {
-            console.log(response);
+            //console.log(response);
 
             var $logWrapper = $('#log-wrapper');
             globals.item_log = response['item_log'];
@@ -205,7 +205,7 @@ $(document).ready(function() {
             dataType: 'json',
             type: "POST",
             success: function (response) {
-                console.log(JSON.stringify(response));
+                //console.log(JSON.stringify(response));
                 $operationOverlay.removeClass('active');
                 var $inventoryTable = $('#inventory-table tbody');
                 $inventoryTable.prepend(rowTemplate({'item': response['item'], 'columns': globals.columns}));
@@ -478,7 +478,7 @@ $(document).ready(function() {
             dataType: 'json',
             type: "POST",
             success: function (response) {
-                console.log(JSON.stringify(response));
+                //console.log(JSON.stringify(response));
                 $operationOverlay.removeClass('active');
                 $('#inventory-table [data-id="' + itemId + '"]').remove();
                 globals.inventory = response['inventory'];
@@ -530,7 +530,7 @@ $(document).ready(function() {
             contentType: false,
             processData: false,
             success: function (response) {
-                console.log(JSON.stringify(response));
+                //console.log(JSON.stringify(response));
                 popupHandler(e, {type: "import2", import_data: response});
             }
         });
@@ -601,7 +601,7 @@ $(document).ready(function() {
             dataType: 'json',
             type: "POST",
             success: function (response) {
-                console.log(JSON.stringify(response));
+                //console.log(JSON.stringify(response));
                 $('#operation-overlay').removeClass('active');
                 var $inventoryWrapper = $('#inventory-wrapper');
                 $inventoryWrapper.empty();
@@ -1171,7 +1171,7 @@ $(document).ready(function() {
                 $('#operation-overlay').removeClass('active');
 
                 // CACHE THE DATA
-                globals.link_columns = response;
+                globals.link_columns = response['link_columns'];
             },
             error: function (response) {
                 if(response.status && response.status == 403) {
