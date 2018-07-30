@@ -1,18 +1,103 @@
-<div id="overview-header">
-    <span id="time-range">From {{start_time}} - {{end_time}} <span id="calendar-edit"><i class="far fa-edit"></i></span></span>
-    <button class="graph-button" id="today-button" data-type="today">Today</button>
-    <button class="graph-button" id="yesterday-button" data-type="yesterday">Yesterday</button>
-</div>
-<div id="overview-container">
-    <div id="overview-title">Payment Overview</div>
-    <div id="overview-graph-wrapper">
-        <div id="overview-graph-container">
-            <div id="y-axis-title">Total</div>
-            <div id="overview-chart"></div>
-        </div>
-        <div id="x-axis-title">Date</div>
-    </div>
-</div>
-<div id="overview-total-wrapper">
 
+<div id="sales-summary-container">
+    <div id="sales-summary-title">Sales Summary Overview</div>
+    <div id="sales-result-wrapper">
+        <div id="sales-total-wrapper">
+            <h3 class="sales-title">Net Sales</h3>
+
+            <div id="sales-total-container">
+                <ul class="summary-list">
+                    <li class="sales-item">
+                        <span class="list-label">Cash</span>
+                        <span class="list-result">{{total_cash}}</span>
+                    </li>
+                    <li class="sales-item credit-item">
+                        <span class="list-label">Credit</span>
+                        <span class="list-result">{{total_credit}}</span>
+                    </li>
+                    <div class="inner-item-wrapper">
+                        {{#ifCond american_quantity '>' 0}}
+                            <li class="sales-item">
+                                <span class="list-label">American Express</span>
+                                <span class="list-result">{{total_american}}</span>
+                            </li>
+                        {{/ifCond}}
+                        {{#ifCond discover_quantity '>' 0}}
+                            <li class="sales-item">
+                                <span class="list-label">Discover</span>
+                                <span class="list-result">{{total_discover}}</span>
+                            </li>
+                        {{/ifCond}}
+                        {{#ifCond master_quantity '>' 0}}
+                            <li class="sales-item">
+                                <span class="list-label">MasterCard</span>
+                                <span class="list-result">{{total_master}}</span>
+                            </li>
+                        {{/ifCond}}
+                        {{#ifCond visa_quantity '>' 0}}
+                            <li class="sales-item">
+                                <span class="list-label">Visa</span>
+                                <span class="list-result">{{total_visa}}</span>
+                            </li>
+                        {{/ifCond}}
+                    </div>
+                    <li class="sales-item">
+                        <span class="list-label">Tax</span>
+                        <span class="list-result">{{total_tax}}</span>
+                    </li>
+                    <li class="sales-item">
+                        <span class="list-label">Discounts</span>
+                        <span class="list-result">{{total_discount}}</span>
+                    </li>
+                    <li class="sales-item">
+                        <span class="list-label">Total</span>
+                        <span class="list-result">{{total}}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="sales-quantity-wrapper">
+            <h3 class="sales-title">Total Transactions: {{total_transactions}}</h3>
+
+            <ul class="summary-list">
+                <li class="sales-item">
+                    <span class="list-label">Cash Transactions</span>
+                    <span class="list-result">{{cash_quantity}}</span>
+                </li>
+
+                <li class="sales-item credit-item">
+                    <span class="list-label">Credit Transactions</span>
+                    <span class="list-result">{{credit_quantity}}</span>
+                </li>
+
+                <div class="inner-item-wrapper">
+                    {{#ifCond american_quantity '>' 0}}
+                        <li class="sales-item">
+                            <span class="list-label">American Express</span>
+                            <span class="list-result">{{american_quantity}}</span>
+                        </li>
+                    {{/ifCond}}
+                    {{#ifCond discover_quantity '>' 0}}
+                        <li class="sales-item">
+                            <span class="list-label">Discover</span>
+                            <span class="list-result">{{discover_quantity}}</span>
+                        </li>
+                    {{/ifCond}}
+                    {{#ifCond master_quantity '>' 0}}
+                        <li class="sales-item">
+                            <span class="list-label">MasterCard</span>
+                            <span class="list-result">{{master_quantity}}</span>
+                        </li>
+                    {{/ifCond}}
+                    {{#ifCond visa_quantity '>' 0}}
+                        <li class="sales-item">
+                            <span class="list-label">Visa</span>
+                            <span class="list-result">{{visa_quantity}}</span>
+                        </li>
+                    {{/ifCond}}
+                </div>
+            </ul>
+        </div>
+    </div>
 </div>

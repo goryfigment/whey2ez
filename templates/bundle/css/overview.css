@@ -1,3 +1,7 @@
+#main-content-container {
+    height: calc(100% - 106px);
+}
+
 /* SIDE BAR */
 .business-name {
     cursor: pointer;
@@ -25,7 +29,7 @@
 /* SIDE BAR */
 
 /* EMPTY OVERVIEW */
-#empty-overview-wrapper, #empty-summary-wrapper {
+#empty-overview-wrapper, #empty-summary-wrapper, #empty-product-wrapper {
     height: 100%;
     display: -ms-flexbox;
     display: flex;
@@ -35,7 +39,7 @@
         justify-content: center;
 }
 
-#empty-overview-icon, #empty-summary-icon {
+#empty-overview-icon, #empty-summary-icon, #empty-product-icon {
     font-size: 260px;
     padding: 20px;
     color: #6c7fdb;
@@ -73,7 +77,7 @@
 /* CALENDAR */
 
 /* OVERVIEW GRAPH */
-#overview-header {
+#date-header {
     display: -ms-flexbox;
     display: flex;
     -ms-flex-align: center;
@@ -163,7 +167,115 @@
         align-items: center;
     border-top: #494949 solid 1px;
 }
-/* OVERVIEW GRAPH *//*CALENDAR*/
+/* OVERVIEW GRAPH */
+
+/* SALES SUMMARY */
+#sale-report-wrapper {
+    height: calc(100% - 20px);
+}
+
+#sales-summary-title {
+    margin: 20px;
+    font-size: 21px;
+    color: #fff;
+}
+
+.sales-title {
+    color: #ffffff;
+    margin-left: 20px;
+    font-size: 16px;
+}
+
+#sales-result-wrapper {
+    display: -ms-flexbox;
+    display: flex;
+}
+
+#sales-total-wrapper, #sales-quantity-wrapper {
+    width: 40%;
+}
+
+.list-label {
+    margin-right: auto;
+    color: #ffffff;
+}
+
+.summary-list {
+    padding: 0;
+    background: #0e0e0e;
+    min-width: 150px;
+    margin: 20px;
+}
+
+.sales-item:first-child {
+    border-top: #3d3d3d 1px solid;
+}
+
+.sales-item {
+    list-style-type: none;
+    display: -ms-flexbox;
+    display: flex;
+    padding: 5px 10px;
+    border-bottom: #3d3d3d 1px solid;
+    border-radius: 2px;
+}
+
+.sales-item.credit-item {
+    border-bottom: #3d3d3d 1px dashed;
+}
+
+.inner-item-wrapper {
+    border-bottom: #3c3b3b 1px solid;
+    color: #a9aed8 !important;
+}
+
+.inner-item-wrapper .sales-item {
+    width: 90%;
+    margin-left: auto;
+    border: none;
+}
+/* SALES SUMMARY */
+
+/* PRODUCT REPORT */
+
+#circle-chart-wrapper {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: center;
+        justify-content: center;
+    -ms-flex-align: center;
+        align-items: center;
+    padding: 20px 0;
+    height: calc(100% - 40px);
+}
+
+#quantity-chart, #profit-chart {
+    height: 230px;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+        align-items: center;
+    -ms-flex-pack: center;
+        justify-content: center
+}
+
+.pie-container {
+    padding: 0 25px;
+    height: -webkit-fit-content;
+    height: -moz-fit-content;
+    height: fit-content;
+}
+
+.pie-container:first-child {
+    border-right: #464646 dotted 2px;
+    padding: 0 24px;
+}
+
+.chart-title {
+    color: #ffffff;
+}
+
+/* PRODUCT REPORT *//*CALENDAR*/
 #overlay {
     position: absolute;
     top: 0;

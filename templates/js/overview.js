@@ -6,6 +6,9 @@ require('./../library/fontawesome/fontawesome.js');
 var emptyTemplate = require('./../handlebars/overview/empty.hbs');
 var overviewOperationTemplate = require('./../handlebars/overview/overview_operation.hbs');
 var overviewTemplate = require('./../handlebars/overview/overview.hbs');
+var salesSummaryTemplate = require('./../handlebars/overview/sales_summary.hbs');
+var productTemplate = require('./../handlebars/overview/product_report.hbs');
+var dateHeaderTemplate = require('./../handlebars/overview/date_header.hbs');
 
 var overviewTotalTemplate = require('./../handlebars/overview/overview_total.hbs');
 
@@ -35,6 +38,50 @@ function init() {
     }
 }
 
+function productReport(response) {
+    var transactions = response['transactions'];
+
+    var productData = {};
+
+    var quantityList = [['Item', 'Sell Quantity']];
+    var productList = [['Item', 'Profit']];
+
+    for (var i = 0; i < transactions.length; i++) {
+        var items = transactions[i]['items']['list'];
+
+        for (var g = 0; g < items.length; g++) {
+            var item = items[g];
+            var itemId = item['id'].toString();
+
+            var profit = parseFloat(item['price']) - parseFloat(item['cost']);
+
+            if (!(itemId in productData)) {
+                productData[itemId] = {};
+                productData[itemId]['name'] = item['name'];
+                productData[itemId]['quantity'] = 0;
+                productData[itemId]['profit'] = 0;
+            }
+
+            productData[itemId]['quantity'] += parseInt(item['quantity']);
+            productData[itemId]['profit'] += profit;
+        }
+    }
+
+    for (var key in productData) {
+        var currentItem = productData[key];
+
+        quantityList.push([currentItem['name'], currentItem['quantity']]);
+        productList.push([currentItem['name'], currentItem['profit']]);
+    }
+
+    function callback() {
+        createPieChart(quantityList.slice(0, 10), document.getElementById('quantity-chart'));
+        createPieChart(productList.slice(0, 10), document.getElementById('profit-chart'));
+    }
+
+    google.charts.setOnLoadCallback(callback);
+}
+
 function salesSummary(response) {
     var transactions = response['transactions'];
 
@@ -57,11 +104,6 @@ function salesSummary(response) {
     var masterQuantity = 0;
     var visaQuantity = 0;
 
-    function incrementItem(item, quantity, value){
-        item += value;
-        quantity += 1;
-    }
-
     for (var i = 0; i < transactions.length; i++) {
         var transaction = transactions[i];
         var subtotal = parseFloat(transaction['subtotal'])*100;
@@ -76,23 +118,50 @@ function salesSummary(response) {
         }
 
         if(paymentType == "Cash") {
-            incrementItem(totalCash, cashQuantity, subtotal);
+            totalCash += subtotal;
+            cashQuantity += 1;
         } else {
-            incrementItem(totalCredit, creditQuantity, subtotal);
+            totalCredit += subtotal;
+            creditQuantity += 1;
         }
 
         if(paymentType == "American Express") {
-            incrementItem(totalAmerican, americanQuantity, subtotal);
+            totalAmerican += subtotal;
+            americanQuantity += 1;
         } else if(paymentType == "Discover") {
-            incrementItem(totalDiscover, discoverQuantity, subtotal);
+            totalDiscover += subtotal;
+            discoverQuantity += 1;
         } else if(paymentType == "MasterCard") {
-            incrementItem(totalMaster, masterQuantity, subtotal);
+            totalMaster += subtotal;
+            masterQuantity += 1;
         } else if(paymentType == "Visa") {
-            incrementItem(totalVisa, visaQuantity, subtotal);
+            totalVisa += subtotal;
+            visaQuantity += 1;
         }
     }
 
+    var data = {
+        'total_tax': helper.currencyFormat(totalTax),
+        'total_discount': helper.currencyFormat(totalDiscounts),
+        'total_cash': helper.currencyFormat(totalCash),
+        'total_credit': helper.currencyFormat(totalCredit),
+        'total': helper.currencyFormat(total),
 
+        'total_american': helper.currencyFormat(totalAmerican),
+        'total_discover': helper.currencyFormat(totalDiscover),
+        'total_master': helper.currencyFormat(totalMaster),
+        'total_visa': helper.currencyFormat(totalVisa),
+
+        'cash_quantity': cashQuantity,
+        'credit_quantity': creditQuantity,
+        'american_quantity': americanQuantity,
+        'discover_quantity': discoverQuantity,
+        'master_quantity': masterQuantity,
+        'visa_quantity': visaQuantity
+    };
+
+    var $salesSummaryWrapper = $('#sale-report-wrapper');
+    $salesSummaryWrapper.append(salesSummaryTemplate(data));
 }
 
 function createDates(type){
@@ -133,28 +202,37 @@ function getTransactionReport(startTime, endTime, type) {
         type: "GET",
         success: function (response) {
             globals.transactions = response['transactions'];
-            //console.log(response);
             response['link_columns'] = globals.link_columns;
 
             var $overviewWrapper = $('#overview-wrapper');
             var $summaryWrapper = $('#sale-report-wrapper');
+            var $dateHeaderWrapper = $('#date-header-wrapper');
+            var $productWrapper = $('#product-wrapper');
+
             $overviewWrapper.empty();
             $summaryWrapper.empty();
-            //$overviewWrapper.append(overviewTemplate(response));
+            $dateHeaderWrapper.empty();
+            $productWrapper.empty();
+
+            $dateHeaderWrapper.append(dateHeaderTemplate(response));
 
             if (response['inventory'] != 0 && globals.transactions.length && (globals.link_columns.cost && globals.link_columns.price)) {
                 $overviewWrapper.append(overviewTemplate(response));
+                $productWrapper.append(productTemplate({}));
+                salesSummary(response);
+                productReport(response);
                 if (globals.date_range == '*') {
                     createOverviewGraph(globals.transactions, false, false, type);
                 } else {
                     createOverviewGraph(globals.transactions, startTime, endTime, type);
-                    salesSummary(response);
                 }
             } else {
                 response['type'] = 'overview';
                 $overviewWrapper.append(emptyTemplate(response));
                 response['type'] = 'summary';
                 $summaryWrapper.append(emptyTemplate(response));
+                response['type'] = 'product';
+                $productWrapper.append(emptyTemplate(response));
             }
         },
         error: function (response) {
@@ -512,6 +590,33 @@ function createOverviewChart(seperation, array) {
 
     var overviewChart = document.getElementById('overview-chart');
     var chart = new google.visualization.LineChart(overviewChart);
+
+    chart.draw(data, options);
+}
+
+function createPieChart(array, wrapper) {
+    var data = google.visualization.arrayToDataTable(array);
+
+    var number_formatter = new google.visualization.NumberFormat({
+        fractionDigits: '2'
+    });
+
+    number_formatter.format(data, 1);
+
+    var options = {
+        backgroundColor: 'transparent',
+        height: 200,
+        width: 400,
+        chartArea: {
+            left: '3%',
+            right: '25%',
+            width: '100%',
+            height: '100%'
+        },
+        legend: {textStyle: {color: '83c6e3', fontSize: 10}}
+    };
+
+    var chart = new google.visualization.PieChart(wrapper);
 
     chart.draw(data, options);
 }

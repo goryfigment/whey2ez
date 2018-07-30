@@ -2137,6 +2137,9 @@ __webpack_require__(8);
 var emptyTemplate = __webpack_require__(38);
 var overviewOperationTemplate = __webpack_require__(39);
 var overviewTemplate = __webpack_require__(40);
+var salesSummaryTemplate = __webpack_require__(74);
+var productTemplate = __webpack_require__(76);
+var dateHeaderTemplate = __webpack_require__(75);
 
 var overviewTotalTemplate = __webpack_require__(41);
 
@@ -2166,6 +2169,50 @@ function init() {
     }
 }
 
+function productReport(response) {
+    var transactions = response['transactions'];
+
+    var productData = {};
+
+    var quantityList = [['Item', 'Sell Quantity']];
+    var productList = [['Item', 'Profit']];
+
+    for (var i = 0; i < transactions.length; i++) {
+        var items = transactions[i]['items']['list'];
+
+        for (var g = 0; g < items.length; g++) {
+            var item = items[g];
+            var itemId = item['id'].toString();
+
+            var profit = parseFloat(item['price']) - parseFloat(item['cost']);
+
+            if (!(itemId in productData)) {
+                productData[itemId] = {};
+                productData[itemId]['name'] = item['name'];
+                productData[itemId]['quantity'] = 0;
+                productData[itemId]['profit'] = 0;
+            }
+
+            productData[itemId]['quantity'] += parseInt(item['quantity']);
+            productData[itemId]['profit'] += profit;
+        }
+    }
+
+    for (var key in productData) {
+        var currentItem = productData[key];
+
+        quantityList.push([currentItem['name'], currentItem['quantity']]);
+        productList.push([currentItem['name'], currentItem['profit']]);
+    }
+
+    function callback() {
+        createPieChart(quantityList.slice(0, 10), document.getElementById('quantity-chart'));
+        createPieChart(productList.slice(0, 10), document.getElementById('profit-chart'));
+    }
+
+    google.charts.setOnLoadCallback(callback);
+}
+
 function salesSummary(response) {
     var transactions = response['transactions'];
 
@@ -2188,11 +2235,6 @@ function salesSummary(response) {
     var masterQuantity = 0;
     var visaQuantity = 0;
 
-    function incrementItem(item, quantity, value){
-        item += value;
-        quantity += 1;
-    }
-
     for (var i = 0; i < transactions.length; i++) {
         var transaction = transactions[i];
         var subtotal = parseFloat(transaction['subtotal'])*100;
@@ -2207,23 +2249,50 @@ function salesSummary(response) {
         }
 
         if(paymentType == "Cash") {
-            incrementItem(totalCash, cashQuantity, subtotal);
+            totalCash += subtotal;
+            cashQuantity += 1;
         } else {
-            incrementItem(totalCredit, creditQuantity, subtotal);
+            totalCredit += subtotal;
+            creditQuantity += 1;
         }
 
         if(paymentType == "American Express") {
-            incrementItem(totalAmerican, americanQuantity, subtotal);
+            totalAmerican += subtotal;
+            americanQuantity += 1;
         } else if(paymentType == "Discover") {
-            incrementItem(totalDiscover, discoverQuantity, subtotal);
+            totalDiscover += subtotal;
+            discoverQuantity += 1;
         } else if(paymentType == "MasterCard") {
-            incrementItem(totalMaster, masterQuantity, subtotal);
+            totalMaster += subtotal;
+            masterQuantity += 1;
         } else if(paymentType == "Visa") {
-            incrementItem(totalVisa, visaQuantity, subtotal);
+            totalVisa += subtotal;
+            visaQuantity += 1;
         }
     }
 
+    var data = {
+        'total_tax': helper.currencyFormat(totalTax),
+        'total_discount': helper.currencyFormat(totalDiscounts),
+        'total_cash': helper.currencyFormat(totalCash),
+        'total_credit': helper.currencyFormat(totalCredit),
+        'total': helper.currencyFormat(total),
 
+        'total_american': helper.currencyFormat(totalAmerican),
+        'total_discover': helper.currencyFormat(totalDiscover),
+        'total_master': helper.currencyFormat(totalMaster),
+        'total_visa': helper.currencyFormat(totalVisa),
+
+        'cash_quantity': cashQuantity,
+        'credit_quantity': creditQuantity,
+        'american_quantity': americanQuantity,
+        'discover_quantity': discoverQuantity,
+        'master_quantity': masterQuantity,
+        'visa_quantity': visaQuantity
+    };
+
+    var $salesSummaryWrapper = $('#sale-report-wrapper');
+    $salesSummaryWrapper.append(salesSummaryTemplate(data));
 }
 
 function createDates(type){
@@ -2264,28 +2333,37 @@ function getTransactionReport(startTime, endTime, type) {
         type: "GET",
         success: function (response) {
             globals.transactions = response['transactions'];
-            //console.log(response);
             response['link_columns'] = globals.link_columns;
 
             var $overviewWrapper = $('#overview-wrapper');
             var $summaryWrapper = $('#sale-report-wrapper');
+            var $dateHeaderWrapper = $('#date-header-wrapper');
+            var $productWrapper = $('#product-wrapper');
+
             $overviewWrapper.empty();
             $summaryWrapper.empty();
-            //$overviewWrapper.append(overviewTemplate(response));
+            $dateHeaderWrapper.empty();
+            $productWrapper.empty();
+
+            $dateHeaderWrapper.append(dateHeaderTemplate(response));
 
             if (response['inventory'] != 0 && globals.transactions.length && (globals.link_columns.cost && globals.link_columns.price)) {
                 $overviewWrapper.append(overviewTemplate(response));
+                $productWrapper.append(productTemplate({}));
+                salesSummary(response);
+                productReport(response);
                 if (globals.date_range == '*') {
                     createOverviewGraph(globals.transactions, false, false, type);
                 } else {
                     createOverviewGraph(globals.transactions, startTime, endTime, type);
-                    salesSummary(response);
                 }
             } else {
                 response['type'] = 'overview';
                 $overviewWrapper.append(emptyTemplate(response));
                 response['type'] = 'summary';
                 $summaryWrapper.append(emptyTemplate(response));
+                response['type'] = 'product';
+                $productWrapper.append(emptyTemplate(response));
             }
         },
         error: function (response) {
@@ -2647,6 +2725,33 @@ function createOverviewChart(seperation, array) {
     chart.draw(data, options);
 }
 
+function createPieChart(array, wrapper) {
+    var data = google.visualization.arrayToDataTable(array);
+
+    var number_formatter = new google.visualization.NumberFormat({
+        fractionDigits: '2'
+    });
+
+    number_formatter.format(data, 1);
+
+    var options = {
+        backgroundColor: 'transparent',
+        height: 200,
+        width: 400,
+        chartArea: {
+            left: '3%',
+            right: '25%',
+            width: '100%',
+            height: '100%'
+        },
+        legend: {textStyle: {color: '83c6e3', fontSize: 10}}
+    };
+
+    var chart = new google.visualization.PieChart(wrapper);
+
+    chart.draw(data, options);
+}
+
 /***/ }),
 /* 37 */
 /***/ (function(module, exports) {
@@ -2694,12 +2799,22 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.price : stack1),{"name":"unless","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.inventory : depth0),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.program(12, data, 0),"data":data})) != null ? stack1 : "")
     + "        </div>\r\n    </div>\r\n";
+},"16":function(container,depth0,helpers,partials,data) {
+    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
+
+  return "    <div id=\"empty-product-wrapper\">\r\n        <span id=\"empty-product-icon\"><i class=\"fas fa-chart-pie\"></i></span>\r\n        <div id=\"empty-container\">\r\n"
+    + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.transactions : depth0),{"name":"unless","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.price : stack1),{"name":"unless","hash":{},"fn":container.program(4, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.inventory : depth0),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.program(12, data, 0),"data":data})) != null ? stack1 : "")
+    + "        </div>\r\n    </div>\r\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
   return ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","summary",{"name":"ifCond","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
-    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","overview",{"name":"ifCond","hash":{},"fn":container.program(14, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","overview",{"name":"ifCond","hash":{},"fn":container.program(14, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\r\n"
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","product",{"name":"ifCond","hash":{},"fn":container.program(16, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
 },"useData":true});
 
 /***/ }),
@@ -2769,13 +2884,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 var Handlebars = __webpack_require__(4);
 function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
 module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
-
-  return "<div id=\"overview-header\">\r\n    <span id=\"time-range\">From "
-    + alias4(((helper = (helper = helpers.start_time || (depth0 != null ? depth0.start_time : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"start_time","hash":{},"data":data}) : helper)))
-    + " - "
-    + alias4(((helper = (helper = helpers.end_time || (depth0 != null ? depth0.end_time : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"end_time","hash":{},"data":data}) : helper)))
-    + " <span id=\"calendar-edit\"><i class=\"far fa-edit\"></i></span></span>\r\n    <button class=\"graph-button\" id=\"today-button\" data-type=\"today\">Today</button>\r\n    <button class=\"graph-button\" id=\"yesterday-button\" data-type=\"yesterday\">Yesterday</button>\r\n</div>\r\n<div id=\"overview-container\">\r\n    <div id=\"overview-title\">Payment Overview</div>\r\n    <div id=\"overview-graph-wrapper\">\r\n        <div id=\"overview-graph-container\">\r\n            <div id=\"y-axis-title\">Total</div>\r\n            <div id=\"overview-chart\"></div>\r\n        </div>\r\n        <div id=\"x-axis-title\">Date</div>\r\n    </div>\r\n</div>\r\n<div id=\"overview-total-wrapper\">\r\n\r\n</div>";
+    return "<div id=\"overview-container\">\r\n    <div id=\"overview-title\">Payment Overview</div>\r\n    <div id=\"overview-graph-wrapper\">\r\n        <div id=\"overview-graph-container\">\r\n            <div id=\"y-axis-title\">Total</div>\r\n            <div id=\"overview-chart\"></div>\r\n        </div>\r\n        <div id=\"x-axis-title\">Date</div>\r\n    </div>\r\n</div>\r\n<div id=\"overview-total-wrapper\">\r\n\r\n</div>";
 },"useData":true});
 
 /***/ }),
@@ -2798,6 +2907,134 @@ module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,"
     + "</span>\r\n<span>Total: "
     + alias4(((helper = (helper = helpers.total || (depth0 != null ? depth0.total : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"total","hash":{},"data":data}) : helper)))
     + "</span>";
+},"useData":true});
+
+/***/ }),
+/* 42 */,
+/* 43 */,
+/* 44 */,
+/* 45 */,
+/* 46 */,
+/* 47 */,
+/* 48 */,
+/* 49 */,
+/* 50 */,
+/* 51 */,
+/* 52 */,
+/* 53 */,
+/* 54 */,
+/* 55 */,
+/* 56 */,
+/* 57 */,
+/* 58 */,
+/* 59 */,
+/* 60 */,
+/* 61 */,
+/* 62 */,
+/* 63 */,
+/* 64 */,
+/* 65 */,
+/* 66 */,
+/* 67 */,
+/* 68 */,
+/* 69 */,
+/* 70 */,
+/* 71 */,
+/* 72 */,
+/* 73 */,
+/* 74 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Handlebars = __webpack_require__(4);
+function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
+module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
+    return "                            <li class=\"sales-item\">\r\n                                <span class=\"list-label\">American Express</span>\r\n                                <span class=\"list-result\">"
+    + container.escapeExpression(container.lambda((depth0 != null ? depth0.total_american : depth0), depth0))
+    + "</span>\r\n                            </li>\r\n";
+},"3":function(container,depth0,helpers,partials,data) {
+    return "                            <li class=\"sales-item\">\r\n                                <span class=\"list-label\">Discover</span>\r\n                                <span class=\"list-result\">"
+    + container.escapeExpression(container.lambda((depth0 != null ? depth0.total_discover : depth0), depth0))
+    + "</span>\r\n                            </li>\r\n";
+},"5":function(container,depth0,helpers,partials,data) {
+    return "                            <li class=\"sales-item\">\r\n                                <span class=\"list-label\">MasterCard</span>\r\n                                <span class=\"list-result\">"
+    + container.escapeExpression(container.lambda((depth0 != null ? depth0.total_master : depth0), depth0))
+    + "</span>\r\n                            </li>\r\n";
+},"7":function(container,depth0,helpers,partials,data) {
+    return "                            <li class=\"sales-item\">\r\n                                <span class=\"list-label\">Visa</span>\r\n                                <span class=\"list-result\">"
+    + container.escapeExpression(container.lambda((depth0 != null ? depth0.total_visa : depth0), depth0))
+    + "</span>\r\n                            </li>\r\n";
+},"9":function(container,depth0,helpers,partials,data) {
+    return "                        <li class=\"sales-item\">\r\n                            <span class=\"list-label\">American Express</span>\r\n                            <span class=\"list-result\">"
+    + container.escapeExpression(container.lambda((depth0 != null ? depth0.american_quantity : depth0), depth0))
+    + "</span>\r\n                        </li>\r\n";
+},"11":function(container,depth0,helpers,partials,data) {
+    return "                        <li class=\"sales-item\">\r\n                            <span class=\"list-label\">Discover</span>\r\n                            <span class=\"list-result\">"
+    + container.escapeExpression(container.lambda((depth0 != null ? depth0.discover_quantity : depth0), depth0))
+    + "</span>\r\n                        </li>\r\n";
+},"13":function(container,depth0,helpers,partials,data) {
+    return "                        <li class=\"sales-item\">\r\n                            <span class=\"list-label\">MasterCard</span>\r\n                            <span class=\"list-result\">"
+    + container.escapeExpression(container.lambda((depth0 != null ? depth0.master_quantity : depth0), depth0))
+    + "</span>\r\n                        </li>\r\n";
+},"15":function(container,depth0,helpers,partials,data) {
+    return "                        <li class=\"sales-item\">\r\n                            <span class=\"list-label\">Visa</span>\r\n                            <span class=\"list-result\">"
+    + container.escapeExpression(container.lambda((depth0 != null ? depth0.visa_quantity : depth0), depth0))
+    + "</span>\r\n                        </li>\r\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var stack1, alias1=container.lambda, alias2=container.escapeExpression, alias3=depth0 != null ? depth0 : (container.nullContext || {});
+
+  return "\r\n<div id=\"sales-summary-container\">\r\n    <div id=\"sales-summary-title\">Sales Summary Overview</div>\r\n    <div id=\"sales-result-wrapper\">\r\n        <div id=\"sales-total-wrapper\">\r\n            <h3 class=\"sales-title\">Net Sales</h3>\r\n\r\n            <div id=\"sales-total-container\">\r\n                <ul class=\"summary-list\">\r\n                    <li class=\"sales-item\">\r\n                        <span class=\"list-label\">Cash</span>\r\n                        <span class=\"list-result\">"
+    + alias2(alias1((depth0 != null ? depth0.total_cash : depth0), depth0))
+    + "</span>\r\n                    </li>\r\n                    <li class=\"sales-item credit-item\">\r\n                        <span class=\"list-label\">Credit</span>\r\n                        <span class=\"list-result\">"
+    + alias2(alias1((depth0 != null ? depth0.total_credit : depth0), depth0))
+    + "</span>\r\n                    </li>\r\n                    <div class=\"inner-item-wrapper\">\r\n"
+    + ((stack1 = __default(__webpack_require__(0)).call(alias3,(depth0 != null ? depth0.american_quantity : depth0),">",0,{"name":"ifCond","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias3,(depth0 != null ? depth0.discover_quantity : depth0),">",0,{"name":"ifCond","hash":{},"fn":container.program(3, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias3,(depth0 != null ? depth0.master_quantity : depth0),">",0,{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias3,(depth0 != null ? depth0.visa_quantity : depth0),">",0,{"name":"ifCond","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "                    </div>\r\n                    <li class=\"sales-item\">\r\n                        <span class=\"list-label\">Tax</span>\r\n                        <span class=\"list-result\">"
+    + alias2(alias1((depth0 != null ? depth0.total_tax : depth0), depth0))
+    + "</span>\r\n                    </li>\r\n                    <li class=\"sales-item\">\r\n                        <span class=\"list-label\">Discounts</span>\r\n                        <span class=\"list-result\">"
+    + alias2(alias1((depth0 != null ? depth0.total_discount : depth0), depth0))
+    + "</span>\r\n                    </li>\r\n                    <li class=\"sales-item\">\r\n                        <span class=\"list-label\">Total</span>\r\n                        <span class=\"list-result\">"
+    + alias2(alias1((depth0 != null ? depth0.total : depth0), depth0))
+    + "</span>\r\n                    </li>\r\n                </ul>\r\n            </div>\r\n        </div>\r\n\r\n        <div id=\"sales-quantity-wrapper\">\r\n            <h3 class=\"sales-title\">Total Transactions: "
+    + alias2(alias1((depth0 != null ? depth0.total_transactions : depth0), depth0))
+    + "</h3>\r\n\r\n            <ul class=\"summary-list\">\r\n                <li class=\"sales-item\">\r\n                    <span class=\"list-label\">Cash Transactions</span>\r\n                    <span class=\"list-result\">"
+    + alias2(alias1((depth0 != null ? depth0.cash_quantity : depth0), depth0))
+    + "</span>\r\n                </li>\r\n\r\n                <li class=\"sales-item credit-item\">\r\n                    <span class=\"list-label\">Credit Transactions</span>\r\n                    <span class=\"list-result\">"
+    + alias2(alias1((depth0 != null ? depth0.credit_quantity : depth0), depth0))
+    + "</span>\r\n                </li>\r\n\r\n                <div class=\"inner-item-wrapper\">\r\n"
+    + ((stack1 = __default(__webpack_require__(0)).call(alias3,(depth0 != null ? depth0.american_quantity : depth0),">",0,{"name":"ifCond","hash":{},"fn":container.program(9, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias3,(depth0 != null ? depth0.discover_quantity : depth0),">",0,{"name":"ifCond","hash":{},"fn":container.program(11, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias3,(depth0 != null ? depth0.master_quantity : depth0),">",0,{"name":"ifCond","hash":{},"fn":container.program(13, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias3,(depth0 != null ? depth0.visa_quantity : depth0),">",0,{"name":"ifCond","hash":{},"fn":container.program(15, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "                </div>\r\n            </ul>\r\n        </div>\r\n    </div>\r\n</div>";
+},"useData":true});
+
+/***/ }),
+/* 75 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Handlebars = __webpack_require__(4);
+function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
+module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+
+  return "<div id=\"date-header\">\r\n    <span id=\"time-range\">From "
+    + alias4(((helper = (helper = helpers.start_time || (depth0 != null ? depth0.start_time : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"start_time","hash":{},"data":data}) : helper)))
+    + " - "
+    + alias4(((helper = (helper = helpers.end_time || (depth0 != null ? depth0.end_time : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"end_time","hash":{},"data":data}) : helper)))
+    + " <span id=\"calendar-edit\"><i class=\"far fa-edit\"></i></span></span>\r\n    <button class=\"graph-button\" id=\"today-button\" data-type=\"today\">Today</button>\r\n    <button class=\"graph-button\" id=\"yesterday-button\" data-type=\"yesterday\">Yesterday</button>\r\n</div>";
+},"useData":true});
+
+/***/ }),
+/* 76 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Handlebars = __webpack_require__(4);
+function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
+module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    return "<div id=\"circle-chart-wrapper\">\r\n    <div class=\"pie-container\">\r\n        <h3 class=\"chart-title\">Top 10 Products Sold</h3>\r\n        <div id=\"quantity-chart\"></div>\r\n    </div>\r\n    <div class=\"pie-container\">\r\n        <h3 class=\"chart-title\">Top 10 Profitable Products</h3>\r\n        <div id=\"profit-chart\"></div>\r\n    </div>\r\n</div>";
 },"useData":true});
 
 /***/ })

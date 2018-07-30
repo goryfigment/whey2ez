@@ -62,10 +62,9 @@ def create_transaction(request):
     if not len(transaction_items):
         return HttpResponseBadRequest('Must have at least one item per transaction.', 'application/json')
 
-    # If cost column is linked then add cost to items
-    if cost_column:
-        for key, item in transaction_items.iteritems():
-            item['cost'] = user_inventory[key][cost_column]
+    for key, item in transaction_items.iteritems():
+        item['id'] = key
+        item['cost'] = user_inventory[key][cost_column]
 
     item_list = []
 

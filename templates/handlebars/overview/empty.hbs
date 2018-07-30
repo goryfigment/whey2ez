@@ -49,3 +49,29 @@
         </div>
     </div>
 {{/ifCond}}
+
+{{#ifCond type '==' 'product'}}
+    <div id="empty-product-wrapper">
+        <span id="empty-product-icon"><i class="fas fa-chart-pie"></i></span>
+        <div id="empty-container">
+            {{#unless transactions}}
+                <div>You have no Transactions!</div>
+            {{/unless}}
+            {{#unless link_columns.price}}
+                {{#unless link_columns.cost}}
+                    <div class="get-started-text">Before you can view overview report:</div>
+                {{/unless}}
+            {{/unless}}
+            {{#if inventory}}
+                {{#unless link_columns.price}}
+                    <a id="price-link">Link your 'Price' Column!</a>
+                {{/unless}}
+                {{#unless link_columns.cost}}
+                    <a id="cost-link">Link your 'Cost' Column!</a>
+                {{/unless}}
+            {{else}}
+                <a href="/inventory/">Create an Inventory</a>
+            {{/if}}
+        </div>
+    </div>
+{{/ifCond}}
