@@ -23,8 +23,16 @@ def server_error(request):
     return render(request, '500.html', data)
 
 
-def site(request):
-    return HttpResponseRedirect('/login/')
+def home(request):
+    data = {
+        'base_url': get_base_url()
+    }
+
+    # If user is login redirect to overview
+    if request.user.is_authenticated():
+        return HttpResponseRedirect('/inventory/')
+
+    return render(request, 'home.html', data)
 
 
 def register(request):

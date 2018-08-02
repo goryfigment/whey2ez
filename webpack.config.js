@@ -12,6 +12,7 @@ module.exports = {
     entry: {
         //404: './templates/js/error.js',
         //500: './templates/js/error.js',
+        home: './templates/js/home.js',
         register: './templates/js/register.js',
         login: './templates/js/login.js',
         overview: './templates/js/overview.js',
@@ -44,6 +45,7 @@ module.exports = {
         //HTML
         //new HtmlWebpackPlugin({filename: '404.html', chunks: ['vendors','error'], minify: {collapseWhitespace: true}, hash: true, template: './templates/404.html'}),
         //new HtmlWebpackPlugin({filename: '500.html', chunks: ['vendors','error'], minify: {collapseWhitespace: true}, hash: true, template: './templates/500.html'}),
+        new HtmlWebpackPlugin({filename: 'home.html', chunks: ['vendors','home'], minify: {collapseWhitespace: true}, hash: true, template: './templates/home.html'}),
         new HtmlWebpackPlugin({filename: 'register.html', chunks: ['vendors','register'], minify: {collapseWhitespace: true}, hash: true, template: './templates/register.html'}),
         new HtmlWebpackPlugin({filename: 'login.html', chunks: ['vendors','login'], minify: {collapseWhitespace: true}, hash: true, template: './templates/login.html'}),
         new HtmlWebpackPlugin({filename: 'overview.html', chunks: ['vendors','overview'], minify: {collapseWhitespace: true}, hash: true, template: './templates/overview.html'}),

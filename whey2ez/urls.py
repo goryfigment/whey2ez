@@ -3,7 +3,7 @@ from django.contrib import admin
 from whey2ez.controllers import site, account_handler, inventory, employee, operation, transaction
 
 urlpatterns = [
-    url(r'^$', site.site, name='site'),
+    url(r'^$', site.home, name='home'),
     url(r'^admin/', admin.site.urls),
     url(r'^register/$', site.register, name='register_page'),
     url(r'^login/$', site.login, name='login_page'),
