@@ -2,11 +2,19 @@ require('./../css/general.css');
 require('./../css/register.css');
 var $ = require('jquery');
 
+function init() {
+    $('#username').focus();
+    $('#home-header').show();
+    $('.inner-wrapper').show();
+}
+
 function checkEmail(email) {
     return /\S+@\S+\.\S+/.test(email);
 }
 
 $(document).ready(function() {
+    init();
+
     $(document).on('click', '#register', function () {
         var $errors = $('.error');
         $errors.hide();

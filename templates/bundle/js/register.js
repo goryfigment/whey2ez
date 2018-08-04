@@ -7,11 +7,19 @@ __webpack_require__(10);
 __webpack_require__(35);
 var $ = __webpack_require__(5);
 
+function init() {
+    $('#username').focus();
+    $('#home-header').show();
+    $('.inner-wrapper').show();
+}
+
 function checkEmail(email) {
     return /\S+@\S+\.\S+/.test(email);
 }
 
 $(document).ready(function() {
+    init();
+
     $(document).on('click', '#register', function () {
         var $errors = $('.error');
         $errors.hide();

@@ -7,7 +7,28 @@ __webpack_require__(10);
 __webpack_require__(37);
 var $ = __webpack_require__(5);
 
+function init() {
+    $('#username').focus();
+    $('#home-header').show();
+    $('.inner-wrapper').show();
+}
+
 $(document).ready(function() {
+
+    init();
+
+    $(document).on('keyup', '#username', function (e) {
+        if (e.keyCode == 13) {
+            $('#password').select();
+        }
+    });
+
+    $(document).on('keyup', '#password', function (e) {
+        if (e.keyCode == 13) {
+            $('#login').click();
+        }
+    });
+
     $(document).on('click', '#login', function () {
         var $submit = $(this);
         var $loginContainer = $submit.closest('#login-container');

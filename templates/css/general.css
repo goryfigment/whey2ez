@@ -44,7 +44,7 @@ h1, h2, h3, h4, h5 {
 label {
     display: block;
     margin-bottom: 5px;
-    color: #88aed5;
+    color: #adadad;
     font-size: 15px;
 }
 
@@ -52,7 +52,7 @@ input {
     outline: none;
     border: none;
     border-radius: 1px;
-    height: 20px;
+    height: 26px;
     line-height: 20px;
     padding: 0 5px;
     background-color: #353535;
@@ -159,8 +159,7 @@ button.delete:hover {
 
 .inner-wrapper {
     border-radius: 3px;
-    /*background: #242424;*/
-    background: #1c1c1c;
+    background: #151515;
     box-shadow: -1px 3px 14px 0 #1c1c1c;
 }
 
