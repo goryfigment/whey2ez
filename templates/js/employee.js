@@ -10,6 +10,7 @@ var employeeOperationTemplate = require('./../handlebars/employee/employee_opera
 //libraries
 var $ = require('jquery');
 var helper = require('./../js/helpers.js');
+require('./../js/general.js');
 
 function init() {
     $('#employee-link').addClass('active');
@@ -51,13 +52,12 @@ $(document).ready(function() {
 
     //EMPLOYEE TYPE//
     $(document).on('click', '#create-employee-type-link, #create-employee-button', function (e) {
-        popupHandler(e, {type: "employee_type", columns: globals.columns});
+        popupHandler(e, {type: "employee_type"});
     });
 
     $(document).on('click', '#create-user-type-submit', function () {
         var $operationOverlay = $('#operation-overlay');
 
-        var visibleColumns = [];
         var postData = {
             permissions: {}
         };
@@ -65,14 +65,9 @@ $(document).ready(function() {
         $operationOverlay.find('.checkbox-input').each(function() {
             var $checkboxInput = $(this);
 
-            if ($checkboxInput.attr('data-type') == 'columns' && $checkboxInput.prop('checked')) {
-                visibleColumns.push($checkboxInput.attr('data-name'));
-            } else {
-                postData['permissions'][$checkboxInput.attr('data-name')] = $checkboxInput.prop('checked');
-            }
+            postData['permissions'][$checkboxInput.attr('data-name')] = $checkboxInput.prop('checked');
         });
 
-        postData['visible_columns'] = visibleColumns;
         postData['name'] = $operationOverlay.find('#employee-type-input').val();
 
         $.ajax({
@@ -115,7 +110,6 @@ $(document).ready(function() {
             dataType: 'json',
             type: "GET",
             success: function (response) {
-                console.log(response);
                 response['type'] = "employee_type";
                 response['columns'] = globals.columns;
                 response['edit'] = true;
@@ -145,22 +139,15 @@ $(document).ready(function() {
     $(document).on('click', '#edit-user-type-submit', function () {
         var $operationOverlay = $('#operation-overlay');
 
-        var visibleColumns = [];
         var postData = {
             permissions: {}
         };
 
         $operationOverlay.find('.checkbox-input').each(function() {
             var $checkboxInput = $(this);
-
-            if ($checkboxInput.attr('data-type') == 'columns' && $checkboxInput.prop('checked')) {
-                visibleColumns.push($checkboxInput.attr('data-name'));
-            } else {
-                postData['permissions'][$checkboxInput.attr('data-name')] = $checkboxInput.prop('checked');
-            }
+            postData['permissions'][$checkboxInput.attr('data-name')] = $checkboxInput.prop('checked');
         });
 
-        postData['visible_columns'] = visibleColumns;
         postData['name'] = $operationOverlay.find('#employee-type-input').val();
         postData['user_type'] = $(this).data('id');
 
@@ -231,7 +218,7 @@ $(document).ready(function() {
 
     //CREATE USER//
     $(document).on('click', '#user-create', function (e) {
-        popupHandler(e, {type: "create_employee", user_types: globals.user_types, user_type_id: parseInt($(this).attr('data-id'))});
+        popupHandler(e, {type: "create_employee", stores: globals.stores, user_types: globals.user_types, user_type_id: parseInt($(this).attr('data-id'))});
     });
 
     $(document).on('change', '#assign-store-input', function () {

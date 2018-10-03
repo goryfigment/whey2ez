@@ -161,19 +161,6 @@
                 <span class="check-box-label">Reset Cost</span>
             </label>
 
-            <div class="operation-subtitle">Visible Columns</div>
-            {{#each columns}}
-                <input type="checkbox" id="{{this}}-input" data-name="{{this}}" data-type="columns" class="checkbox-input" {{#if ../edit}}{{#contains this ../permission.visible_columns}}checked{{/contains}}{{else}}checked{{/if}} style="display: none" />
-                <label for="{{this}}-input" class="check-box-wrapper">
-                    <span class="check-box">
-                        <svg width="12px" height="10px">
-                            <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
-                        </svg>
-                    </span>
-                    <span class="check-box-label">{{this}}</span>
-                </label>
-            {{/each}}
-
             <div class="operation-header">Transaction Permissions</div>
 
             <input type="checkbox" id="create-transaction-input" data-name="create_transaction" class="checkbox-input" {{#if edit}}{{#if permission.create_transaction}}checked{{/if}}{{else}}checked{{/if}} style="display: none" />
@@ -297,13 +284,11 @@
 
             <label for="assign-store-input">Store Assignment</label>
             <div class="input-description-wrapper">
-                <div class="input-description active" data-type="all">This user will be connected every store and main inventory.</div>
-                <div class="input-description" data-type="main">This user will only be connected to just the main inventory.</div>
+                <div class="input-description active" data-type="all">This user will be connected every store inventory.</div>
                 <div class="input-description" data-type="store">This user will only be connected to one store.</div>
             </div>
             <select class="select-input" id="assign-store-input">
                 <option value="all">All</option>
-                <option value="main">Main</option>
                 {{#each stores}}
                     <option value="{{this.id}}">{{this.name}}</option>
                 {{/each}}

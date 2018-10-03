@@ -1,31 +1,29 @@
 import re, time
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.forms.models import model_to_dict
-from whey2ez.models import Transaction
+from whey2ez.models import Transaction, Store
 from whey2ez.modules.base import transaction_name_regex, transaction_total
 from whey2ez.decorators import login_required, user_permission, data_required
-from whey2ez.modules.base import get_boss, get_establishment
+from whey2ez.modules.base import get_boss
 from whey2ez.modules.receipt_printer import receipt_printer
 
 
 @login_required
-@data_required(['search_value', 'id', 'type'], 'GET')
+@data_required(['search_value', 'id'], 'GET')
 def inventory_search(request):
-    current_user = request.user
-    current_boss = get_boss(current_user)
-    establishment = get_establishment(request.GET['id'], request.GET['type'], current_boss)
+    store = Store.objects.get(id=request.GET['id'])
     search_value = re.sub(r'[^\w]', '', request.GET['search_value'])
     search_results = []
 
     # Get inventory
-    user_inventory = establishment.inventory
-    link_columns = establishment.link_columns
+    user_inventory = store.inventory
+    link_columns = store.link_columns
 
     name_key = link_columns['name']
     price_key = link_columns['price']
 
     # Get filters
-    filters = current_boss.settings.transaction_filter['filter']
+    filters = store.transaction_filter
 
     if 'ALL' in filters:
         filters = user_inventory.values()[0].keys()
@@ -47,16 +45,15 @@ def inventory_search(request):
 
 @login_required
 @user_permission('create_transaction')
-@data_required(['store_type', 'store_id', 'items', 'payment_type', 'tax', 'subtotal', 'memo'], 'BODY')
+@data_required(['store_id', 'items', 'payment_type', 'tax', 'subtotal', 'memo'], 'BODY')
 def create_transaction(request):
     current_user = request.user
     current_boss = get_boss(current_user)
-    store_type = request.BODY['store_type']
     store_id = request.BODY['store_id']
-    establishment = get_establishment(store_id, store_type, current_boss)
-    user_inventory = establishment.inventory
-    quantity_column = establishment.link_columns['quantity']
-    cost_column = establishment.link_columns['cost']
+    store = Store.objects.get(id=store_id)
+    user_inventory = store.inventory
+    quantity_column = store.link_columns['quantity']
+    cost_column = store.link_columns['cost']
     transaction_items = request.BODY['items']
 
     if not len(transaction_items):
@@ -73,38 +70,24 @@ def create_transaction(request):
         inventory_item = user_inventory[key]
         inventory_qty = int(inventory_item[quantity_column])
         transaction_qty = int(item['quantity'])
-
         inventory_qty -= transaction_qty
+
         if inventory_qty < 0:
                 inventory_qty = 0
 
         user_inventory[key][quantity_column] = inventory_qty
-
         item_list.append(item)
-
-        establishment.save()
-        # Subtract from store inventory also if connected to a store
-        # if store_id:
-        #     store_qty = int(store_id.custom['inventory'][key][quantity_column])
-        #     store_qty -= transaction_qty
-        #     if store_qty < 0:
-        #         store_qty = 0
-        #
-        #     store_id.custom['inventory'][key][quantity_column] = store_qty
-        #     store_id.save()
-
-    if store_type == 'main':
-        store_id = None
+        store.save()
 
     transaction = Transaction.objects.create(
         boss=current_boss,
         seller=current_user,
-        store=store_id,
+        store=store,
         payment_type=request.BODY['payment_type'],
         subtotal=request.BODY['subtotal'],
         tax=request.BODY['tax'],
         memo=request.BODY['memo'],
-        items={"list": item_list}
+        items=item_list
     )
 
     return JsonResponse({'transaction': model_to_dict(transaction), 'success': True}, safe=False)
@@ -131,8 +114,7 @@ def get_transaction(request):
     total_data = transaction_total(transactions)
 
     return JsonResponse({
-        'inventory': len(current_boss.business.inventory),
-        'transactions': total_data['transactions'],
+        'store': {'transactions': transactions},
         'total': total_data['total'],
         'start_time': start_time,
         'end_time': end_time
@@ -141,44 +123,27 @@ def get_transaction(request):
 
 @login_required
 @user_permission('edit_transaction_settings')
-@data_required(['settings', 'store_tax'], 'BODY')
+@data_required(['settings', 'stores'], 'BODY')
 def save_settings(request):
     current_user = request.user
     current_boss = get_boss(current_user)
-    user_business = current_boss.business
     user_settings = current_boss.settings
 
     settings = request.BODY["settings"]
-    store_tax = request.BODY["store_tax"]
-    user_business.tax = str(float(settings['tax'])/100)
+    stores = request.BODY["stores"]
 
-    if 'ALL' in user_settings.transaction_filter['filter']:
-        user_settings.transaction_filter['filter'] = []
+    for key, store in stores.iteritems():
+        current_store = Store.objects.get(id=key)
+        current_store.tax = store['tax']
+        current_store.transaction_filter = store['filter']
+        current_store.save()
 
-    user_settings.transaction_filter['filter'] = settings['filter']
     user_settings.date_range = settings['date_range']
     user_settings.start_time = settings['start_time']
 
     user_settings.save()
-    user_business.save()
 
-    # stores = Store.objects.filter(user=current_user.id)
-    # user_settings.save()
-    #
-    # for store in stores:
-    #     current_store_tax = store_tax[str(store.id)]
-    #     if current_store_tax != '':
-    #         store.tax = str(float(current_store_tax)/100)
-    #     else:
-    #         store.tax = ''
-    #
-    #     store.save()
-    #
-    # store_list = list(stores.values('id', 'name', 'number', 'tax'))
-    # for current_store in store_list:
-    #     current_store['tax'] = str(float(current_store['tax'])*100)
-
-    return JsonResponse({'business_tax': user_business.tax, 'transaction_settings': model_to_dict(user_settings)}, safe=False)
+    return JsonResponse({'stores': stores, 'settings': model_to_dict(user_settings)}, safe=False)
 
 
 @login_required

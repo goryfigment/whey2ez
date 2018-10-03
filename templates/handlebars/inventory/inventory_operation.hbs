@@ -32,13 +32,24 @@
                     <input class="operation-text-input" id="add-column-input" />
                     <button class="operation-submit add" id="add-column-submit">Add Column</button>
                 </div>
+                {{#unless picture_column}}
+                <div class="or-separator">or</div>
+                <div class="operation-title">Add Picture Column</div>
+                <div class="operation-description">Create a column to contain pictures.</div>
+                <div class="operation-picture-column-wrapper">
+                    <label for="add-column-input">Picture Column Name:</label>
+                    <div class="error"></div>
+                    <input class="operation-text-input" id="add-picture-column-input" />
+                    <button class="operation-submit add" id="add-picture-column-submit">Add Picture Column</button>
+                </div>
+                {{/unless}}
             </div>
         </div>
     {{/ifCond}}
 
     {{#ifCond type '==' 'edit'}}
         <div id="operation-tab-wrapper">
-            <span class="operation-tab {{#unless inventory_length}}active{{/unless}}{{#unless columns}}disabled{{/unless}}" id="edit-column-tab" data-wrapper="#edit-column-wrapper">Edit Column</span>
+            <span class="operation-tab {{#unless inventory_length}}active{{/unless}} {{#unless columns}}disabled{{/unless}}" id="edit-column-tab" data-wrapper="#edit-column-wrapper">Edit Column</span>
             <span class="operation-tab {{#if inventory_length}}active{{else}}disabled{{/if}}" id="edit-item-tab" data-wrapper="#edit-item-wrapper">Edit Item</span>
         </div>
 
@@ -377,7 +388,7 @@
                         </div>
                     </div>
                     <div class="table-scroll-wrapper">
-                        <table id="operation-table" class="table-container delete">
+                        <table id="operation-table" class="table-container delete damaged">
                             <thead>
                                 <tr>
                                     <th class="action">Action</th>
@@ -446,7 +457,7 @@
                         </div>
                     </div>
                     <div class="table-scroll-wrapper">
-                        <table id="operation-table" class="table-container edit">
+                        <table id="operation-table" class="table-container edit reset-cost">
                             <thead>
                                 <tr>
                                     <th class="action">Action</th>
@@ -515,7 +526,7 @@
                         </div>
                     </div>
                     <div class="table-scroll-wrapper">
-                        <table id="operation-table" class="table-container edit">
+                        <table id="operation-table" class="table-container edit reset-price">
                             <thead>
                                 <tr>
                                     <th class="action">Action</th>

@@ -42,7 +42,6 @@ def align_left(left_text, right_text, font):
 def receipt_printer(settings, transaction):
     headers = settings.header['lines']
     footers = settings.footer['lines']
-
     epson = escpos.Network(settings.ip_address)
 
     # Image

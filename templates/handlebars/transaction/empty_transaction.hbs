@@ -11,30 +11,5 @@
         {{#unless transactions}}
             <div>You have no Transactions!</div>
         {{/unless}}
-        {{#unless link_columns.quantity}}
-            {{#unless link_columns.price}}
-                {{#unless link_columns.cost}}
-                    {{#unless link_columns.name}}
-                        <div class="get-started-text">Before you can make a transaction:</div>
-                    {{/unless}}
-                {{/unless}}
-            {{/unless}}
-        {{/unless}}
-        {{#if inventory}}
-            {{#unless link_columns.quantity}}
-                <a id="quantity-link">Link your 'Quantity' Column!</a>
-            {{/unless}}
-            {{#unless link_columns.price}}
-                <a id="price-link">Link your 'Price' Column!</a>
-            {{/unless}}
-            {{#unless link_columns.cost}}
-                <a id="cost-link">Link your 'Cost' Column!</a>
-            {{/unless}}
-            {{#unless link_columns.name}}
-                <a id="name-link">Link your 'Name' Column!</a>
-            {{/unless}}
-        {{else}}
-            <a href="/inventory/">Create an Inventory</a>
-        {{/if}}
     </div>
 </div>

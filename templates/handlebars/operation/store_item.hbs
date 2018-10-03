@@ -1,0 +1,15 @@
+{{#each stores}}
+    <div class="establishment store-item{{#ifCond this.id '==' ../active_store}} active{{/ifCond}}" data-id="{{this.id}}">
+        <div class="store-name">
+            <span class="bulletin-wrapper"><span class="arrow-tail"></span><span><i class="fas fa-caret-right"></i></span></span>
+            {{this.name}}
+            <span class="store-icon-wrapper">
+                {{#unless (or this.link_columns.name this.link_columns.price this.link_columns.cost this.link_columns.quantity)}}
+                    <span class="link-columns-button"><i class="fas fa-exclamation-triangle"></i></span>
+                {{else}}
+                    <span class="create-transaction-button"><i class="fas fa-cart-plus"></i></span>
+                {{/unless}}
+            </span>
+        </div>
+    </div>
+{{/each}}

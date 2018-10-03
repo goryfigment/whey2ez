@@ -116,11 +116,12 @@ body ::-webkit-scrollbar {
 
 body ::-webkit-scrollbar-track {
     border-radius: 1px;
-    background: #585858;
+    background: #1d1d1d;
 }
 
 body ::-webkit-scrollbar-thumb {
-    background: #151515;
+    background: #6a7fe2;
+    border-radius: 4px;
 }
 
 body ::-webkit-scrollbar-corner {
@@ -355,7 +356,7 @@ button.delete:hover {
 
 #operation-popup-wrapper {
     background: #161616;
-    height: 95%;
+    height: 85%;
     width: 80%;
     border-radius: 2px;
 }
@@ -390,6 +391,7 @@ button.delete:hover {
 }
 
 .operation-title {
+    margin-top: 7px;
     text-align: center;
     font-size: 21px;
     cursor: default;
@@ -409,6 +411,33 @@ button.delete:hover {
     text-align: center;
 }
 /* OVERLAY */
+
+
+/* SETTINGS */
+#operation-settings-scroll-wrapper {
+    height: calc(100% - 40px);
+    overflow-y: auto;
+}
+
+.link-column-wrapper {
+    padding: 5px 25px;
+}
+
+.link-column-wrapper label {
+    font-size: 19px;
+    font-weight: bold;
+}
+
+.link-column-wrapper p {
+    margin: 0;
+    font-size: 12px;
+}
+
+#link-columns-submit {
+    margin: 0 auto;
+    display: block;
+}
+/* SETTINGS */
 
 
 /*Main CSS*/

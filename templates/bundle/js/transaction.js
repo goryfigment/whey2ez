@@ -160,6 +160,15 @@ function appendContextPath(contextPath, id) {
 
 /***/ }),
 /* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// Create a simple path alias to allow browserify to resolve
+// the runtime on a supported path.
+module.exports = __webpack_require__(9)['default'];
+
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports) {
 
 module.exports = function(row, start_day, month_length, block) {
@@ -182,15 +191,6 @@ module.exports = function(row, start_day, month_length, block) {
     }
     return accum;
 };
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// Create a simple path alias to allow browserify to resolve
-// the runtime on a supported path.
-module.exports = __webpack_require__(11)['default'];
-
 
 /***/ }),
 /* 4 */
@@ -10532,11 +10532,11 @@ var _exception = __webpack_require__(4);
 
 var _exception2 = _interopRequireDefault(_exception);
 
-var _helpers = __webpack_require__(12);
+var _helpers = __webpack_require__(10);
 
-var _decorators = __webpack_require__(20);
+var _decorators = __webpack_require__(18);
 
-var _logger = __webpack_require__(22);
+var _logger = __webpack_require__(20);
 
 var _logger2 = _interopRequireDefault(_logger);
 
@@ -10668,142 +10668,6 @@ module.exports = function(leftVal, operator, curRightVal, round, both) {
 
 /***/ }),
 /* 9 */
-/***/ (function(module, exports) {
-
-function numberCommaFormat(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-
-function replaceAll(str, find, replace) {
-    return str.replace(new RegExp(find.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1"), 'g'), replace);
-}
-
-function scrollToElement($container, $element, speed){
-    var elementTop = $element.offset().top;
-    var elementHeight = $element.height();
-    var containerTop = $container.offset().top;
-    var containerHeight = $container.height();
-
-    if ((((elementTop - containerTop) + elementHeight) > 0) && ((elementTop - containerTop) < containerHeight)) {
-
-    } else {
-        $container.animate({
-            scrollTop: $element.offset().top - $container.offset().top + $container.scrollTop()
-        }, speed);
-    }
-}
-
-
-function upAndDownPopups(keyCode, $popup, $options, scroll) {
-    var $selected = $popup.find('.selected');
-    var $firstOption = $options.filter(':visible').eq(0);
-    var $lastOption = $options.filter(':visible').eq(-1);
-
-    if (keyCode == 40) { //down arrow
-        var $nextOption = $selected.nextAll($options).filter(':visible').first();
-        if($selected.length) {
-            $selected.removeClass('selected');
-            if($nextOption.length){
-                $nextOption.addClass('selected');
-                if(scroll) {
-                    scrollToElement($popup, $nextOption, 50);
-                }
-            } else{
-                $firstOption.addClass('selected');
-                if(scroll) {
-                    scrollToElement($popup, $firstOption, 50);
-                }
-            }
-        } else {
-            $firstOption.addClass('selected');
-            if(scroll) {
-                scrollToElement($popup, $firstOption, 50);
-            }
-        }
-    } else if (keyCode == 38) { //up arrow
-        var $prevOption = $selected.prevAll($options).filter(':visible').first();
-        if($selected.length) {
-            $selected.removeClass('selected');
-            if($prevOption.length){
-                $prevOption.addClass('selected');
-                if(scroll) {
-                    scrollToElement($popup, $prevOption, 50);
-                }
-            }else{
-                $lastOption.addClass('selected');
-                if(scroll) {
-                    scrollToElement($popup, $lastOption, 50);
-                }
-            }
-        } else {
-            $lastOption.addClass('selected');
-            if(scroll) {
-                scrollToElement($popup, $lastOption, 50);
-            }
-        }
-    } else if(keyCode == 13) { //enter button
-        $selected.trigger('click');
-    }
-}
-
-function currencyFormat(cents) {
-    cents = Math.round(cents);
-
-    if (cents == 0) {
-        return cents.toFixed(2);
-    } else if(cents < 100){
-        if (cents > 0 || cents > -100) {
-            return (cents/100).toFixed(2);
-        } else {
-            cents = cents.toString();
-            return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
-        }
-    }else {
-        cents = cents.toString();
-        return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
-    }
-}
-
-function currencyMath(leftVal, operator, curRightVal, round, both) {
-    leftVal = parseFloat(leftVal);
-    curRightVal = parseFloat(curRightVal) * 100;
-
-    if (both == 'true') {
-        leftVal = leftVal * 100;
-    }
-
-    var cents = {
-        "+": curRightVal + leftVal,
-        "-": curRightVal - leftVal,
-        "*": curRightVal * leftVal,
-        "/": curRightVal / leftVal,
-        "%": curRightVal % leftVal
-    }[operator];
-
-    if (round == 'true') {
-        cents = Math.round(cents);
-    }
-
-    if (cents == 0) {
-        return cents.toFixed(2);
-    } else {
-        cents = cents.toString();
-        return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
-    }
-}
-
-module.exports = {
-    numberCommaFormat: numberCommaFormat,
-    replaceAll: replaceAll,
-    scrollToElement: scrollToElement,
-    upAndDownPopups: upAndDownPopups,
-    currencyFormat: currencyFormat,
-    currencyMath: currencyMath
-};
-
-/***/ }),
-/* 10 */,
-/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10825,7 +10689,7 @@ var base = _interopRequireWildcard(_handlebarsBase);
 // Each of these augment the Handlebars object. No need to setup here.
 // (This is done to easily share code between commonjs and browse envs)
 
-var _handlebarsSafeString = __webpack_require__(23);
+var _handlebarsSafeString = __webpack_require__(21);
 
 var _handlebarsSafeString2 = _interopRequireDefault(_handlebarsSafeString);
 
@@ -10837,11 +10701,11 @@ var _handlebarsUtils = __webpack_require__(1);
 
 var Utils = _interopRequireWildcard(_handlebarsUtils);
 
-var _handlebarsRuntime = __webpack_require__(24);
+var _handlebarsRuntime = __webpack_require__(22);
 
 var runtime = _interopRequireWildcard(_handlebarsRuntime);
 
-var _handlebarsNoConflict = __webpack_require__(25);
+var _handlebarsNoConflict = __webpack_require__(23);
 
 var _handlebarsNoConflict2 = _interopRequireDefault(_handlebarsNoConflict);
 
@@ -10876,7 +10740,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 12 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10888,31 +10752,31 @@ exports.registerDefaultHelpers = registerDefaultHelpers;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _helpersBlockHelperMissing = __webpack_require__(13);
+var _helpersBlockHelperMissing = __webpack_require__(11);
 
 var _helpersBlockHelperMissing2 = _interopRequireDefault(_helpersBlockHelperMissing);
 
-var _helpersEach = __webpack_require__(14);
+var _helpersEach = __webpack_require__(12);
 
 var _helpersEach2 = _interopRequireDefault(_helpersEach);
 
-var _helpersHelperMissing = __webpack_require__(15);
+var _helpersHelperMissing = __webpack_require__(13);
 
 var _helpersHelperMissing2 = _interopRequireDefault(_helpersHelperMissing);
 
-var _helpersIf = __webpack_require__(16);
+var _helpersIf = __webpack_require__(14);
 
 var _helpersIf2 = _interopRequireDefault(_helpersIf);
 
-var _helpersLog = __webpack_require__(17);
+var _helpersLog = __webpack_require__(15);
 
 var _helpersLog2 = _interopRequireDefault(_helpersLog);
 
-var _helpersLookup = __webpack_require__(18);
+var _helpersLookup = __webpack_require__(16);
 
 var _helpersLookup2 = _interopRequireDefault(_helpersLookup);
 
-var _helpersWith = __webpack_require__(19);
+var _helpersWith = __webpack_require__(17);
 
 var _helpersWith2 = _interopRequireDefault(_helpersWith);
 
@@ -10929,7 +10793,7 @@ function registerDefaultHelpers(instance) {
 
 
 /***/ }),
-/* 13 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10975,7 +10839,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 14 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11076,7 +10940,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 15 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11108,7 +10972,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 16 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11144,7 +11008,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 17 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11177,7 +11041,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 18 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11196,7 +11060,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 19 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11236,7 +11100,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 20 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11248,7 +11112,7 @@ exports.registerDefaultDecorators = registerDefaultDecorators;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _decoratorsInline = __webpack_require__(21);
+var _decoratorsInline = __webpack_require__(19);
 
 var _decoratorsInline2 = _interopRequireDefault(_decoratorsInline);
 
@@ -11259,7 +11123,7 @@ function registerDefaultDecorators(instance) {
 
 
 /***/ }),
-/* 21 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11295,7 +11159,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 22 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11349,7 +11213,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 23 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11371,7 +11235,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 24 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11685,7 +11549,7 @@ function executeDecorators(fn, prog, container, depths, data, blockParams) {
 
 
 /***/ }),
-/* 25 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11710,10 +11574,10 @@ exports['default'] = function (Handlebars) {
 module.exports = exports['default'];
 //# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL2xpYi9oYW5kbGViYXJzL25vLWNvbmZsaWN0LmpzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7O3FCQUNlLFVBQVMsVUFBVSxFQUFFOztBQUVsQyxNQUFJLElBQUksR0FBRyxPQUFPLE1BQU0sS0FBSyxXQUFXLEdBQUcsTUFBTSxHQUFHLE1BQU07TUFDdEQsV0FBVyxHQUFHLElBQUksQ0FBQyxVQUFVLENBQUM7O0FBRWxDLFlBQVUsQ0FBQyxVQUFVLEdBQUcsWUFBVztBQUNqQyxRQUFJLElBQUksQ0FBQyxVQUFVLEtBQUssVUFBVSxFQUFFO0FBQ2xDLFVBQUksQ0FBQyxVQUFVLEdBQUcsV0FBVyxDQUFDO0tBQy9CO0FBQ0QsV0FBTyxVQUFVLENBQUM7R0FDbkIsQ0FBQztDQUNIIiwiZmlsZSI6Im5vLWNvbmZsaWN0LmpzIiwic291cmNlc0NvbnRlbnQiOlsiLyogZ2xvYmFsIHdpbmRvdyAqL1xuZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24oSGFuZGxlYmFycykge1xuICAvKiBpc3RhbmJ1bCBpZ25vcmUgbmV4dCAqL1xuICBsZXQgcm9vdCA9IHR5cGVvZiBnbG9iYWwgIT09ICd1bmRlZmluZWQnID8gZ2xvYmFsIDogd2luZG93LFxuICAgICAgJEhhbmRsZWJhcnMgPSByb290LkhhbmRsZWJhcnM7XG4gIC8qIGlzdGFuYnVsIGlnbm9yZSBuZXh0ICovXG4gIEhhbmRsZWJhcnMubm9Db25mbGljdCA9IGZ1bmN0aW9uKCkge1xuICAgIGlmIChyb290LkhhbmRsZWJhcnMgPT09IEhhbmRsZWJhcnMpIHtcbiAgICAgIHJvb3QuSGFuZGxlYmFycyA9ICRIYW5kbGViYXJzO1xuICAgIH1cbiAgICByZXR1cm4gSGFuZGxlYmFycztcbiAgfTtcbn1cbiJdfQ==
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(26)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(24)))
 
 /***/ }),
-/* 26 */
+/* 24 */
 /***/ (function(module, exports) {
 
 var g;
@@ -11740,17 +11604,322 @@ module.exports = g;
 
 
 /***/ }),
-/* 27 */
+/* 25 */
+/***/ (function(module, exports) {
+
+function numberCommaFormat(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+function replaceAll(str, find, replace) {
+    return str.replace(new RegExp(find.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1"), 'g'), replace);
+}
+
+function scrollToElement($container, $element, speed){
+    var elementTop = $element.offset().top;
+    var elementHeight = $element.height();
+    var containerTop = $container.offset().top;
+    var containerHeight = $container.height();
+
+    if ((((elementTop - containerTop) + elementHeight) > 0) && ((elementTop - containerTop) < containerHeight)) {
+
+    } else {
+        $container.animate({
+            scrollTop: $element.offset().top - $container.offset().top + $container.scrollTop()
+        }, speed);
+    }
+}
+
+
+function upAndDownPopups(keyCode, $popup, $options, scroll) {
+    var $selected = $popup.find('.selected');
+    var $firstOption = $options.filter(':visible').eq(0);
+    var $lastOption = $options.filter(':visible').eq(-1);
+
+    if (keyCode == 40) { //down arrow
+        var $nextOption = $selected.nextAll($options).filter(':visible').first();
+        if($selected.length) {
+            $selected.removeClass('selected');
+            if($nextOption.length){
+                $nextOption.addClass('selected');
+                if(scroll) {
+                    scrollToElement($popup, $nextOption, 50);
+                }
+            } else{
+                $firstOption.addClass('selected');
+                if(scroll) {
+                    scrollToElement($popup, $firstOption, 50);
+                }
+            }
+        } else {
+            $firstOption.addClass('selected');
+            if(scroll) {
+                scrollToElement($popup, $firstOption, 50);
+            }
+        }
+    } else if (keyCode == 38) { //up arrow
+        var $prevOption = $selected.prevAll($options).filter(':visible').first();
+        if($selected.length) {
+            $selected.removeClass('selected');
+            if($prevOption.length){
+                $prevOption.addClass('selected');
+                if(scroll) {
+                    scrollToElement($popup, $prevOption, 50);
+                }
+            }else{
+                $lastOption.addClass('selected');
+                if(scroll) {
+                    scrollToElement($popup, $lastOption, 50);
+                }
+            }
+        } else {
+            $lastOption.addClass('selected');
+            if(scroll) {
+                scrollToElement($popup, $lastOption, 50);
+            }
+        }
+    } else if(keyCode == 13) { //enter button
+        $selected.trigger('click');
+    }
+}
+
+function currencyFormat(cents) {
+    cents = Math.round(cents);
+
+    if (cents == 0) {
+        return cents.toFixed(2);
+    } else if(cents < 100){
+        if (cents > 0 || cents > -100) {
+            return (cents/100).toFixed(2);
+        } else {
+            cents = cents.toString();
+            return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
+        }
+    }else {
+        cents = cents.toString();
+        return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
+    }
+}
+
+function currencyMath(leftVal, operator, curRightVal, round, both) {
+    leftVal = parseFloat(leftVal);
+    curRightVal = parseFloat(curRightVal) * 100;
+
+    if (both == 'true') {
+        leftVal = leftVal * 100;
+    }
+
+    var cents = {
+        "+": curRightVal + leftVal,
+        "-": curRightVal - leftVal,
+        "*": curRightVal * leftVal,
+        "/": curRightVal / leftVal,
+        "%": curRightVal % leftVal
+    }[operator];
+
+    if (round == 'true') {
+        cents = Math.round(cents);
+    }
+
+    if (cents == 0) {
+        return cents.toFixed(2);
+    } else {
+        cents = cents.toString();
+        return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
+    }
+}
+
+module.exports = {
+    numberCommaFormat: numberCommaFormat,
+    replaceAll: replaceAll,
+    scrollToElement: scrollToElement,
+    upAndDownPopups: upAndDownPopups,
+    currencyFormat: currencyFormat,
+    currencyMath: currencyMath
+};
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Handlebars = __webpack_require__(2);
+function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
+module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=container.lambda, alias3=container.escapeExpression;
+
+  return "    <div class=\"establishment store-item"
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.id : depth0),"==",(depths[1] != null ? depths[1].active_store : depths[1]),{"name":"ifCond","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\" data-id=\""
+    + alias3(alias2((depth0 != null ? depth0.id : depth0), depth0))
+    + "\">\r\n        <div class=\"store-name\">\r\n            <span class=\"bulletin-wrapper\"><span class=\"arrow-tail\"></span><span><i class=\"fas fa-caret-right\"></i></span></span>\r\n            "
+    + alias3(alias2((depth0 != null ? depth0.name : depth0), depth0))
+    + "\r\n            <span class=\"store-icon-wrapper\">\r\n"
+    + ((stack1 = helpers.unless.call(alias1,__default(__webpack_require__(30)).call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.price : stack1),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.cost : stack1),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.quantity : stack1),{"name":"or","hash":{},"data":data}),{"name":"unless","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.program(6, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + "            </span>\r\n        </div>\r\n    </div>\r\n";
+},"2":function(container,depth0,helpers,partials,data) {
+    return " active";
+},"4":function(container,depth0,helpers,partials,data) {
+    return "                    <span class=\"link-columns-button\"><i class=\"fas fa-exclamation-triangle\"></i></span>\r\n";
+},"6":function(container,depth0,helpers,partials,data) {
+    return "                    <span class=\"create-transaction-button\"><i class=\"fas fa-cart-plus\"></i></span>\r\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1;
+
+  return ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.stores : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"useData":true,"useDepths":true});
+
+/***/ }),
+/* 27 */,
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+//handlebars
+var linkColumnsTemplate = __webpack_require__(29);
+var storeItemTemplate = __webpack_require__(26);
+//libraries
+var $ = __webpack_require__(5);
+
+function popupHandler(e, popupData, template) {
+    e.stopPropagation();
+    var $overlay = $('#operation-overlay');
+    $overlay.empty();
+    $overlay.addClass('active');
+    $overlay.append(template(popupData));
+}
+
+$(document).ready(function() {
+    $(document).on('click', '.link-columns-button', function (e) {
+        popupHandler(e, globals.stores[$(this).closest('.store-item').attr('data-id')], linkColumnsTemplate);
+    });
+
+    $(document).on('click', '#link-columns-submit', function () {
+        var $wrapper = $('#operation-settings-scroll-wrapper');
+
+        var postData = {
+            'store_id': $(this).attr('data-id'),
+            'link_columns': {
+                'name': $wrapper.find('#name-column-input').val(),
+                'price': $wrapper.find('#price-column-input').val(),
+                'quantity': $wrapper.find('#quantity-column-input').val(),
+                'cost': $wrapper.find('#cost-column-input').val()
+            }
+        };
+
+        $.ajax({
+            headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
+            url: globals.base_url + '/account/save_settings/',
+            data: JSON.stringify(postData),
+            dataType: 'json',
+            type: "POST",
+            success: function (response) {
+                //JSON.stringify(response);
+                var $storeContainer = $('.store-container');
+                $storeContainer.empty();
+                $storeContainer.append(storeItemTemplate({'stores': globals.stores}));
+
+                $('#operation-overlay').removeClass('active');
+                globals.stores[response['id']] = response;
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    $('#import-wrapper').find('.error').text('Permission Denied').show();
+                } else {
+                    $('#import-wrapper').find('.error').text(response.responseText).show();
+                }
+            }
+        });
+    });
+
+
+});
+
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Handlebars = __webpack_require__(2);
+function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
+module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return container.escapeExpression(container.lambda(((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1), depth0));
+},"3":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
+
+  return "                    <option value=\""
+    + alias2(alias1(depth0, depth0))
+    + "\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,"==",((stack1 = (depths[1] != null ? depths[1].link_columns : depths[1])) != null ? stack1.price : stack1),{"name":"ifCond","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">"
+    + alias2(alias1(depth0, depth0))
+    + "</option>\r\n";
+},"4":function(container,depth0,helpers,partials,data) {
+    return "selected";
+},"6":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
+
+  return "                    <option value=\""
+    + alias2(alias1(depth0, depth0))
+    + "\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,"==",((stack1 = (depths[1] != null ? depths[1].link_columns : depths[1])) != null ? stack1.quantity : stack1),{"name":"ifCond","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">"
+    + alias2(alias1(depth0, depth0))
+    + "</option>\r\n";
+},"8":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
+
+  return "                    <option value=\""
+    + alias2(alias1(depth0, depth0))
+    + "\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,"==",((stack1 = (depths[1] != null ? depths[1].link_columns : depths[1])) != null ? stack1.cost : stack1),{"name":"ifCond","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">"
+    + alias2(alias1(depth0, depth0))
+    + "</option>\r\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=container.lambda, alias2=container.escapeExpression, alias3=depth0 != null ? depth0 : (container.nullContext || {});
+
+  return "<div id=\"operation-popup-wrapper\">\r\n    <div id=\"operation-settings-scroll-wrapper\">\r\n        <h2 class=\"settings-title\">"
+    + alias2(alias1((depth0 != null ? depth0.name : depth0), depth0))
+    + "</h2>\r\n        <div class=\"link-column-wrapper\">\r\n            <label class=\"settings-subtitle\">Name</label>\r\n            <p>The name of the item, you wished to be viewed in reports, transactions, etc.</p>\r\n            <input id=\"name-column-input\" value=\""
+    + ((stack1 = helpers["if"].call(alias3,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1),{"name":"if","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\" />\r\n        </div>\r\n        <div class=\"link-column-wrapper\">\r\n            <label class=\"settings-subtitle\">Price</label>\r\n            <p class=\"\">The selling price of an item.</p>\r\n            <select id=\"price-column-input\" data-type=\""
+    + alias2(alias1((depth0 != null ? depth0.type : depth0), depth0))
+    + "\">\r\n"
+    + ((stack1 = helpers.each.call(alias3,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(3, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "            </select>\r\n        </div>\r\n        <div class=\"link-column-wrapper\">\r\n            <label class=\"settings-subtitle\">Quantity</label>\r\n            <p class=\"\">The amount of an item.</p>\r\n            <select id=\"quantity-column-input\" data-type=\""
+    + alias2(alias1((depth0 != null ? depth0.type : depth0), depth0))
+    + "\">\r\n"
+    + ((stack1 = helpers.each.call(alias3,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(6, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "            </select>\r\n        </div>\r\n        <div class=\"link-column-wrapper\">\r\n            <label class=\"settings-subtitle\">Cost</label>\r\n            <p class=\"\">The cost of the item, used to calculate profit.</p>\r\n            <select id=\"cost-column-input\" data-type=\""
+    + alias2(alias1((depth0 != null ? depth0.type : depth0), depth0))
+    + "\">\r\n"
+    + ((stack1 = helpers.each.call(alias3,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(8, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "            </select>\r\n        </div>\r\n    </div>\r\n    <button id=\"link-columns-submit\" class=\"add\" data-id=\""
+    + alias2(alias1((depth0 != null ? depth0.id : depth0), depth0))
+    + "\">Link Columns</button>\r\n</div>";
+},"useData":true,"useDepths":true});
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports) {
+
+module.exports = function() {
+    return Array.prototype.slice.call(arguments, 0, -1).some(Boolean);
+};
+
+/***/ }),
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //css
-__webpack_require__(28);
+__webpack_require__(32);
 
 //jquery
 var $ = __webpack_require__(5);
 
 //handlebars
-var calendarTemplate = __webpack_require__(29);
+var calendarTemplate = __webpack_require__(33);
 
 // these are human-readable month name labels, in order
 var calMonthsLabels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -12328,16 +12497,16 @@ $(document).ready(function() {
 });
 
 /***/ }),
-/* 28 */
+/* 32 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 29 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Handlebars = __webpack_require__(3);
+var Handlebars = __webpack_require__(2);
 function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
 module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
     var stack1;
@@ -12375,17 +12544,17 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + "</span> <span class=\"year\">"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.year : stack1), depth0))
     + "</span></div>\r\n    </div>\r\n    <table class=\"month-calendar\">\r\n        <thead class=\"day-of-week\">\r\n            <tr>\r\n                <th scope=\"col\">S</th>\r\n                <th scope=\"col\">M</th>\r\n                <th scope=\"col\">T</th>\r\n                <th scope=\"col\">W</th>\r\n                <th scope=\"col\">Th</th>\r\n                <th scope=\"col\">F</th>\r\n                <th scope=\"col\">S</th>\r\n            </tr>\r\n        </thead>\r\n\r\n        <tbody>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,1,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,1,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,2,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,2,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,3,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,3,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,4,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,4,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,5,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,5,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,6,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,6,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n        </tbody>\r\n    </table>\r\n</div>\r\n\r\n<div class=\"month-wrapper\" id=\"right-calendar\">\r\n    <div class=\"month-header\">\r\n        <div><span class=\"month\" data-month=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_number : stack1), depth0))
     + "\">"
@@ -12395,22 +12564,22 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + "</span></div>\r\n        <div class=\"side-arrow right-arrow\" data-month=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.subtract : stack1), depth0))
     + "\"><i class=\"fa fa-chevron-right\"></i></div>\r\n    </div>\r\n    <table class=\"month-calendar\">\r\n        <thead class=\"day-of-week\">\r\n            <tr>\r\n                <th scope=\"col\">S</th>\r\n                <th scope=\"col\">M</th>\r\n                <th scope=\"col\">T</th>\r\n                <th scope=\"col\">W</th>\r\n                <th scope=\"col\">Th</th>\r\n                <th scope=\"col\">F</th>\r\n                <th scope=\"col\">S</th>\r\n            </tr>\r\n        </thead>\r\n\r\n        <tbody>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,1,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,1,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,2,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,2,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,3,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,3,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,4,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,4,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,5,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,5,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,6,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,6,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n        </tbody>\r\n    </table>\r\n</div>";
 },"useData":true,"useDepths":true});
 
 /***/ }),
-/* 30 */
+/* 34 */
 /***/ (function(module, exports) {
 
 module.exports = function(val) {
@@ -12418,13 +12587,19 @@ module.exports = function(val) {
 };
 
 /***/ }),
-/* 31 */,
-/* 32 */,
-/* 33 */,
-/* 34 */,
 /* 35 */,
 /* 36 */,
-/* 37 */,
+/* 37 */
+/***/ (function(module, exports) {
+
+module.exports = function(elem, list, options) {
+    if(list.indexOf(elem) > -1) {
+        return options.fn(this);
+    }
+    return options.inverse(this);
+};
+
+/***/ }),
 /* 38 */,
 /* 39 */,
 /* 40 */,
@@ -12452,25 +12627,39 @@ module.exports = function(val) {
 /* 62 */,
 /* 63 */,
 /* 64 */,
-/* 65 */
+/* 65 */,
+/* 66 */,
+/* 67 */,
+/* 68 */,
+/* 69 */,
+/* 70 */,
+/* 71 */,
+/* 72 */,
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(10);
-__webpack_require__(66);
+__webpack_require__(27);
+__webpack_require__(74);
 __webpack_require__(8);
 
 //handlebars
-var transactionTemplate = __webpack_require__(67);
-var emptyTransactionTemplate = __webpack_require__(68);
-var transactionOperationTemplate = __webpack_require__(69);
-var receiptSettingsTemplate = __webpack_require__(70);
+var transactionTemplate = __webpack_require__(75);
+var emptyTransactionTemplate = __webpack_require__(76);
+var transactionOperationTemplate = __webpack_require__(77);
+var receiptSettingsTemplate = __webpack_require__(78);
+var transactionSettingsTemplate = __webpack_require__(80);
+var storeItemTemplate = __webpack_require__(26);
 
 //libraries
 var $ = __webpack_require__(5);
-var helper = __webpack_require__(9);
-__webpack_require__(27);
+var helper = __webpack_require__(25);
+__webpack_require__(28);
+__webpack_require__(31);
 
 function init() {
+    $('.store-container').append(storeItemTemplate({'stores': globals.stores}));
+    $('#settings-wrapper').append(transactionSettingsTemplate({'stores': globals.stores}));
+
     //Start Date
     var d1 = new Date();
     d1.setHours(globals.start_point, 0, 0, 0);
@@ -12490,8 +12679,7 @@ function init() {
         getTransactionReport(d1.valueOf()/1000, d2.valueOf()/1000 - 1);
     }
 
-    $('#receipt-wrapper').append(receiptSettingsTemplate(globals.receipt_settings));
-
+    $('#receipt-wrapper').append(receiptSettingsTemplate(globals.settings));
     $('#date-start-input [value="' + globals.start_point + '"]').prop('selected', true);
     $('#date-range-input [value="' + globals.date_range + '"]').prop('selected', true);
 }
@@ -12529,16 +12717,27 @@ function getTransactionReport(start_time, end_time) {
             globals.end_time = response['end_time'];
 
             var $transactionWrapper = $('#transaction-wrapper');
-            response['link_columns'] = globals.link_columns;
+            var transactions = response['store']['transactions'];
             $transactionWrapper.empty();
 
-            globals.transactions = response['transactions'];
+            globals.transactions = transactions;
 
-            if(response['inventory'].length == 0 || response['transactions'].length == 0 || !response['link_columns']['price'] || !response['link_columns']['cost'] || !response['link_columns']['quantity'] || !response['link_columns']['name']) {
+            if(transactions.length == 0) {
                 $transactionWrapper.append(emptyTransactionTemplate(response));
             } else {
                 $transactionWrapper.append(transactionTemplate(response));
             }
+
+            for (var i = 0; i < transactions.length; i++) {
+                var currentTransaction = transactions[i];
+                globals.stores[currentTransaction['store_id'].toString()]['transactions'].push(currentTransaction);
+            }
+
+            //if(response['inventory'].length == 0 || response['transactions'].length == 0 || !response['link_columns']['price'] || !response['link_columns']['cost'] || !response['link_columns']['quantity'] || !response['link_columns']['name']) {
+            //    $transactionWrapper.append(emptyTransactionTemplate(response));
+            //} else {
+            //    $transactionWrapper.append(transactionTemplate(response));
+            //}
         }
     });
 }
@@ -12637,20 +12836,13 @@ $(document).ready(function() {
     //LINK COLUMNS//
 
     //CREATE TRANSACTION PAGE//
-    $(document).on('click', '.create-transaction-button', function () {
+    $(document).on('click', '.create-transaction-button', function (e) {
+        e.stopPropagation();
         var $createTransactionButton = $(this);
-
-        var $businessItem = $createTransactionButton.closest('.business-item');
-        if($businessItem.length){
-            var type = 'main';
-            var id = $businessItem.attr('data-id');
-        } else {
-            type = 'store';
-            id = $createTransactionButton.closest('.store-item').attr('data-id');
-        }
+        var id = $createTransactionButton.closest('.store-item').attr('data-id');
 
         var createTransactionLink = document.getElementById('create-transaction-link');
-        createTransactionLink.setAttribute("href", '/create_transaction?id=' + id + '&type=' + type);
+        createTransactionLink.setAttribute("href", '/create_transaction?id=' + id );
         createTransactionLink.click();
     });
     //CREATE TRANSACTION PAGE//
@@ -12684,34 +12876,34 @@ $(document).ready(function() {
     // SAVE SETTINGS //
     $(document).on('click', '#transaction-settings-submit', function () {
         //Get filters, Get default tax, Get every store tax
-        var filter = [];
-        var storeTax = {};
-
+        var stores = {};
         var dateRange = $('#date-range-input').val();
         var startTime = $('#date-start-input').val();
 
-        $('.filter-input:checked').each(function() {
-            filter.push($(this).attr('data-name'));
-        });
+        //$('.filter-input:checked').each(function() {
+        //    filter.push($(this).attr('data-name'));
+        //});
 
-        $('.store-tax-input').each(function() {
-            var $storeTaxInput = $(this);
-            var storeId = $storeTaxInput.attr('data-store_id');
-            var storeTaxValue = $storeTaxInput.val();
-            storeTax[storeId] = $storeTaxInput.val();
-        });
+        $('.store-filter-wrapper').each(function() {
+            var $storeWrapper = $(this);
+            var storeId = $storeWrapper.attr('data-id');
+            var storeFilter = [];
 
-        var $businessTaxInput = $('.business-tax');
-        var businessTax = $businessTaxInput.val();
+            $storeWrapper.find('.filter-input:checked').each(function() {
+                storeFilter.push($(this).attr('data-name'));
+            });
+
+            stores[storeId] = {};
+            stores[storeId]['tax'] = $storeWrapper.find('.store-tax').val();
+            stores[storeId]['filter'] = storeFilter;
+        });
 
         var postData = {
             'settings': {
                 'date_range': dateRange,
-                'filter': filter,
-                'tax': businessTax,
                 'start_time': startTime
             },
-            'store_tax': storeTax
+            'stores': stores
         };
 
         $.ajax({
@@ -12902,20 +13094,41 @@ $(document).ready(function() {
         $receiptLine.addClass('font-'+$(this).val());
         $this.data('val', $(this).val());
     });
-    //RECEIPT PREVIEW //
+    //RECEIPT PREVIEW//
+
+    //STORE ITEM//
+    $(document).on('click', '.establishment:not(.active)', function () {
+        var $establishment = $(this);
+        $establishment.closest('.inner-side-wrapper').find('.active').removeClass('active');
+        $establishment.addClass('active');
+
+        if ($establishment.hasClass('store-item')) {
+            var storeId = $establishment.attr('data-id');
+            var currentStore = globals.stores[storeId];
+            var $transactionWrapper = $('#transaction-wrapper');
+            $transactionWrapper.empty();
+
+            if(currentStore['transactions'].length == 0) {
+                $transactionWrapper.append(emptyTransactionTemplate({'store': currentStore, 'start_time': globals.start_time, 'end_time': globals.end_time}));
+            } else {
+                $transactionWrapper.append(transactionTemplate({'store': currentStore, 'store_length': Object.keys(globals.stores).length, 'start_time': globals.start_time, 'end_time': globals.end_time}));
+            }
+        }
+    });
+    //STORE ITEM//
 });
 
 /***/ }),
-/* 66 */
+/* 74 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 67 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Handlebars = __webpack_require__(3);
+var Handlebars = __webpack_require__(2);
 function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
 module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
     return "        All <span id=\"calendar-edit\"><i class=\"far fa-edit\"></i></span>\r\n";
@@ -12928,46 +13141,58 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + alias2(alias1((depth0 != null ? depth0.end_time : depth0), depth0))
     + "<span id=\"calendar-edit\"><i class=\"far fa-edit\"></i></span>\r\n";
 },"5":function(container,depth0,helpers,partials,data) {
-    var stack1, alias1=container.lambda, alias2=container.escapeExpression, alias3=depth0 != null ? depth0 : (container.nullContext || {});
+    return "<th>Store</th>";
+},"7":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=container.lambda, alias3=container.escapeExpression;
 
-  return "                <tr>\r\n                    <td class=\"number-column\">\r\n                        "
-    + alias2(alias1((depth0 != null ? depth0.timestamp : depth0), depth0))
+  return "                <tr>\r\n                    "
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.store_length : depth0),">",1,{"name":"ifCond","hash":{},"fn":container.program(8, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\r\n                    <td class=\"number-column\">\r\n                        "
+    + alias3(alias2((depth0 != null ? depth0.timestamp : depth0), depth0))
     + "\r\n                    </td>\r\n                    <td class=\"name-column\">\r\n"
-    + ((stack1 = helpers.each.call(alias3,((stack1 = (depth0 != null ? depth0.items : depth0)) != null ? stack1.list : stack1),{"name":"each","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.items : depth0),{"name":"each","hash":{},"fn":container.program(10, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                    </td>\r\n                    <td class=\"number-column\">\r\n"
-    + ((stack1 = helpers.each.call(alias3,((stack1 = (depth0 != null ? depth0.items : depth0)) != null ? stack1.list : stack1),{"name":"each","hash":{},"fn":container.program(8, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.items : depth0),{"name":"each","hash":{},"fn":container.program(12, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                    </td>\r\n                    <td class=\"number-column\">\r\n"
-    + ((stack1 = helpers.each.call(alias3,((stack1 = (depth0 != null ? depth0.items : depth0)) != null ? stack1.list : stack1),{"name":"each","hash":{},"fn":container.program(10, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.items : depth0),{"name":"each","hash":{},"fn":container.program(14, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                    </td>\r\n                    <td class=\"number-column\">"
-    + alias2(alias1((depth0 != null ? depth0.subtotal : depth0), depth0))
+    + alias3(alias2((depth0 != null ? depth0.subtotal : depth0), depth0))
     + "</td>\r\n                    <td class=\"number-column\">"
-    + alias2(alias1((depth0 != null ? depth0.tax : depth0), depth0))
+    + alias3(alias2((depth0 != null ? depth0.tax : depth0), depth0))
     + "</td>\r\n                    <td class=\"number-column\"><span class=\"minus-sign\"><i class=\"fas fa-minus\"></i></span>"
-    + alias2(alias1((depth0 != null ? depth0.discount : depth0), depth0))
+    + alias3(alias2((depth0 != null ? depth0.discount : depth0), depth0))
     + "</td>\r\n                    <td>"
-    + alias2(alias1((depth0 != null ? depth0.payment_type : depth0), depth0))
+    + alias3(alias2((depth0 != null ? depth0.payment_type : depth0), depth0))
     + "</td>\r\n                    <td class=\"number-column\">"
-    + alias2(alias1((depth0 != null ? depth0.total : depth0), depth0))
+    + alias3(alias2((depth0 != null ? depth0.total : depth0), depth0))
     + "</td>\r\n                </tr>\r\n";
-},"6":function(container,depth0,helpers,partials,data) {
+},"8":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1;
+
+  return "<td class=\"name-column\">"
+    + container.escapeExpression(container.lambda(((stack1 = (depths[1] != null ? depths[1].store : depths[1])) != null ? stack1.name : stack1), depth0))
+    + "</td>";
+},"10":function(container,depth0,helpers,partials,data) {
     return "                            <div class=\"product_name\">"
     + container.escapeExpression(container.lambda((depth0 != null ? depth0.name : depth0), depth0))
     + "</div>\r\n";
-},"8":function(container,depth0,helpers,partials,data) {
+},"12":function(container,depth0,helpers,partials,data) {
     return "                            <div>"
     + container.escapeExpression(container.lambda((depth0 != null ? depth0.quantity : depth0), depth0))
     + "</div>\r\n";
-},"10":function(container,depth0,helpers,partials,data) {
+},"14":function(container,depth0,helpers,partials,data) {
     return "                            <div>"
     + container.escapeExpression(container.lambda((depth0 != null ? depth0.price : depth0), depth0))
     + "</div>\r\n";
-},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=container.lambda, alias3=container.escapeExpression;
 
   return "<div id=\"time-range\">\r\n"
-    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.start_time : depth0),"==","*",{"name":"ifCond","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
-    + "</div>\r\n\r\n<div id=\"table-scroll-wrapper\">\r\n    <table class=\"table-container\">\r\n        <thead>\r\n            <tr>\r\n                <th>Date</th>\r\n                <th>Product</th>\r\n                <th>Qty</th>\r\n                <th>Price</th>\r\n                <th>Subtotal</th>\r\n                <th>Tax</th>\r\n                <th>Discount</th>\r\n                <th>Type</th>\r\n                <th>Total</th>\r\n            </tr>\r\n        </thead>\r\n\r\n        <tbody>\r\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.transactions : depth0),{"name":"each","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.start_time : depth0),"==","*",{"name":"ifCond","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.program(3, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + "</div>\r\n\r\n<div id=\"table-scroll-wrapper\">\r\n    <table class=\"table-container\">\r\n        <thead>\r\n            <tr>\r\n                "
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.store_length : depth0),">",1,{"name":"ifCond","hash":{},"fn":container.program(5, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\r\n                <th>Date</th>\r\n                <th>Product</th>\r\n                <th>Qty</th>\r\n                <th>Price</th>\r\n                <th>Subtotal</th>\r\n                <th>Tax</th>\r\n                <th>Discount</th>\r\n                <th>Type</th>\r\n                <th>Total</th>\r\n            </tr>\r\n        </thead>\r\n\r\n        <tbody>\r\n"
+    + ((stack1 = helpers.each.call(alias1,((stack1 = (depth0 != null ? depth0.store : depth0)) != null ? stack1.transactions : stack1),{"name":"each","hash":{},"fn":container.program(7, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "        </tbody>\r\n    </table>\r\n</div>\r\n\r\n<div id=\"total-wrapper\">\r\n    <span>Cash: "
     + alias3(alias2(((stack1 = (depth0 != null ? depth0.total : depth0)) != null ? stack1.cash : stack1), depth0))
     + "</span>\r\n    <span>Credit: "
@@ -12975,13 +13200,13 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + "</span>\r\n    <span>Total: "
     + alias3(alias2(((stack1 = (depth0 != null ? depth0.total : depth0)) != null ? stack1.total : stack1), depth0))
     + "</span>\r\n</div>";
-},"useData":true});
+},"useData":true,"useDepths":true});
 
 /***/ }),
-/* 68 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Handlebars = __webpack_require__(3);
+var Handlebars = __webpack_require__(2);
 function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
 module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
     return "        All <span id=\"calendar-edit\"><i class=\"far fa-edit\"></i></span>\r\n";
@@ -12995,37 +13220,6 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + "<span id=\"calendar-edit\"><i class=\"far fa-edit\"></i></span>\r\n";
 },"5":function(container,depth0,helpers,partials,data) {
     return "            <div>You have no Transactions!</div>\r\n";
-},"7":function(container,depth0,helpers,partials,data) {
-    var stack1;
-
-  return ((stack1 = helpers.unless.call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.price : stack1),{"name":"unless","hash":{},"fn":container.program(8, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"8":function(container,depth0,helpers,partials,data) {
-    var stack1;
-
-  return ((stack1 = helpers.unless.call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.cost : stack1),{"name":"unless","hash":{},"fn":container.program(9, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"9":function(container,depth0,helpers,partials,data) {
-    var stack1;
-
-  return ((stack1 = helpers.unless.call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1),{"name":"unless","hash":{},"fn":container.program(10, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"10":function(container,depth0,helpers,partials,data) {
-    return "                        <div class=\"get-started-text\">Before you can make a transaction:</div>\r\n";
-},"12":function(container,depth0,helpers,partials,data) {
-    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
-
-  return ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.quantity : stack1),{"name":"unless","hash":{},"fn":container.program(13, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.price : stack1),{"name":"unless","hash":{},"fn":container.program(15, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.cost : stack1),{"name":"unless","hash":{},"fn":container.program(17, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1),{"name":"unless","hash":{},"fn":container.program(19, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"13":function(container,depth0,helpers,partials,data) {
-    return "                <a id=\"quantity-link\">Link your 'Quantity' Column!</a>\r\n";
-},"15":function(container,depth0,helpers,partials,data) {
-    return "                <a id=\"price-link\">Link your 'Price' Column!</a>\r\n";
-},"17":function(container,depth0,helpers,partials,data) {
-    return "                <a id=\"cost-link\">Link your 'Cost' Column!</a>\r\n";
-},"19":function(container,depth0,helpers,partials,data) {
-    return "                <a id=\"name-link\">Link your 'Name' Column!</a>\r\n";
-},"21":function(container,depth0,helpers,partials,data) {
-    return "            <a href=\"/inventory/\">Create an Inventory</a>\r\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
@@ -13033,16 +13227,14 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.start_time : depth0),"==","*",{"name":"ifCond","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
     + "</div>\r\n<div id=\"empty-transaction-wrapper\">\r\n    <span id=\"empty-transaction-icon\"><i class=\"fas fa-shopping-cart\"></i></span>\r\n    <div id=\"empty-container\">\r\n"
     + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.transactions : depth0),{"name":"unless","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + ((stack1 = helpers.unless.call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.quantity : stack1),{"name":"unless","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.inventory : depth0),{"name":"if","hash":{},"fn":container.program(12, data, 0),"inverse":container.program(21, data, 0),"data":data})) != null ? stack1 : "")
     + "    </div>\r\n</div>";
 },"useData":true});
 
 /***/ }),
-/* 69 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Handlebars = __webpack_require__(3);
+var Handlebars = __webpack_require__(2);
 function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
 module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
     var stack1;
@@ -13099,10 +13291,10 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true});
 
 /***/ }),
-/* 70 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Handlebars = __webpack_require__(3);
+var Handlebars = __webpack_require__(2);
 function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
 module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
     var stack1;
@@ -13117,7 +13309,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=container.escapeExpression;
 
   return "                    <div class=\"header-item receipt-input-wrapper\" data-number=\""
-    + alias2(__default(__webpack_require__(30)).call(alias1,(data && data.index),{"name":"inc","hash":{},"data":data}))
+    + alias2(__default(__webpack_require__(34)).call(alias1,(data && data.index),{"name":"inc","hash":{},"data":data}))
     + "\" data-type=\"header\">\r\n                        <div class=\"delete-line-item\">x</div>\r\n                        <div class=\"receipt-input-container\">\r\n                            <label for=\"font-size-input\">Font Size</label>\r\n                            <select class=\"font-size-input\">\r\n                                <option value=\"1\" "
     + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.size : depth0),"==","1",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + ">12</option>\r\n                                <option value=\"2\" "
@@ -13141,7 +13333,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + ">Center</option>\r\n                                <option value=\"right\" "
     + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.align : depth0),"==","right",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + ">Right</option>\r\n                            </select>\r\n                        </div>\r\n                        <div class=\"receipt-input-container\">\r\n                            <label class=\"receipt-text-label\" for=\"receipt-text-input\">Text (Line "
-    + alias2(__default(__webpack_require__(30)).call(alias1,(data && data.index),{"name":"inc","hash":{},"data":data}))
+    + alias2(__default(__webpack_require__(34)).call(alias1,(data && data.index),{"name":"inc","hash":{},"data":data}))
     + ")</label>\r\n                            <input class=\"receipt-text-input\" value=\""
     + alias2(container.lambda((depth0 != null ? depth0.text : depth0), depth0))
     + "\" />\r\n                        </div>\r\n                    </div>\r\n";
@@ -13153,7 +13345,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=container.escapeExpression;
 
   return "                    <div class=\"footer-item receipt-input-wrapper\" data-number=\""
-    + alias2(__default(__webpack_require__(30)).call(alias1,(data && data.index),{"name":"inc","hash":{},"data":data}))
+    + alias2(__default(__webpack_require__(34)).call(alias1,(data && data.index),{"name":"inc","hash":{},"data":data}))
     + "\" data-type=\"footer\">\r\n                        <div class=\"delete-line-item\">x</div>\r\n                        <div class=\"receipt-input-container\">\r\n                            <label for=\"font-size-input\">Font Size</label>\r\n                            <select class=\"font-size-input\">\r\n                                <option value=\"1\" "
     + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.size : depth0),"==","1",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + ">12</option>\r\n                                <option value=\"2\" "
@@ -13177,7 +13369,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + ">Center</option>\r\n                                <option value=\"right\" "
     + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.align : depth0),"==","right",{"name":"ifCond","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + ">Right</option>\r\n                            </select>\r\n                        </div>\r\n                        <div class=\"receipt-input-container\">\r\n                            <label class=\"receipt-text-label\" for=\"receipt-text-input\">Text (Line "
-    + alias2(__default(__webpack_require__(30)).call(alias1,(data && data.index),{"name":"inc","hash":{},"data":data}))
+    + alias2(__default(__webpack_require__(34)).call(alias1,(data && data.index),{"name":"inc","hash":{},"data":data}))
     + ")</label>\r\n                            <input class=\"receipt-text-input\" value=\""
     + alias2(container.lambda((depth0 != null ? depth0.text : depth0), depth0))
     + "\" />\r\n                        </div>\r\n                    </div>\r\n";
@@ -13191,7 +13383,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + " align-"
     + alias2(alias1((depth0 != null ? depth0.align : depth0), depth0))
     + "\" data-receipt_id=\""
-    + alias2(__default(__webpack_require__(30)).call(depth0 != null ? depth0 : (container.nullContext || {}),(data && data.index),{"name":"inc","hash":{},"data":data}))
+    + alias2(__default(__webpack_require__(34)).call(depth0 != null ? depth0 : (container.nullContext || {}),(data && data.index),{"name":"inc","hash":{},"data":data}))
     + "\">"
     + alias2(alias1((depth0 != null ? depth0.text : depth0), depth0))
     + "</div>\r\n";
@@ -13201,7 +13393,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=container.escapeExpression;
 
   return "\r\n        <div id=\"receipt-item-wrapper\" class=\"font-1\">\r\n            <div class=\"receipt-item\">\r\n                <span class=\"transaction-item\">"
-    + alias2(__default(__webpack_require__(71)).call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1),(depth0 != null ? depth0.example_item : depth0),{"name":"nameRegex","hash":{},"data":data}))
+    + alias2(__default(__webpack_require__(79)).call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1),(depth0 != null ? depth0.example_item : depth0),{"name":"nameRegex","hash":{},"data":data}))
     + "</span>\r\n                <span>"
     + alias2(__default(__webpack_require__(7)).call(alias1,400,"-",__default(__webpack_require__(7)).call(alias1,2,"*",helpers.lookup.call(alias1,(depth0 != null ? depth0.example_item : depth0),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.price : stack1),{"name":"lookup","hash":{},"data":data}),{"name":"currencyMath","hash":{},"data":data}),{"name":"currencyMath","hash":{},"data":data}))
     + "</span>\r\n            </div>\r\n\r\n            <div class=\"receipt-item-details\">\r\n                <span class=\"transaction-quantity\">(2 @ "
@@ -13232,7 +13424,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true});
 
 /***/ }),
-/* 71 */
+/* 79 */
 /***/ (function(module, exports) {
 
 module.exports = function(name_regex, item) {
@@ -13246,5 +13438,52 @@ module.exports = function(name_regex, item) {
     return name_regex;
 };
 
+/***/ }),
+/* 80 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Handlebars = __webpack_require__(2);
+function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
+module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
+
+  return "            <div class=\"store-filter-wrapper\" data-id=\""
+    + alias2(alias1((depth0 != null ? depth0.id : depth0), depth0))
+    + "\">\r\n                <div class=\"store-title\">Store: "
+    + alias2(alias1((depth0 != null ? depth0.name : depth0), depth0))
+    + "</div>\r\n                <div id=\"settings-filter-wrapper\">\r\n"
+    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "                </div>\r\n\r\n                <div class=\"settings-title\">Tax</div>\r\n                <div id=\"tax-wrapper\">\r\n                        <label class=\"tax-title\"> Store: "
+    + alias2(alias1((depth0 != null ? depth0.name : depth0), depth0))
+    + "</label>\r\n                        <input class=\"store-tax\" data-id=\""
+    + alias2(alias1((depth0 != null ? depth0.id : depth0), depth0))
+    + "\" value=\""
+    + alias2(alias1((depth0 != null ? depth0.tax : depth0), depth0))
+    + "\" /> %\r\n                    </div>\r\n                </div>\r\n            </div>\r\n";
+},"2":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=container.lambda, alias2=container.escapeExpression, alias3=depth0 != null ? depth0 : (container.nullContext || {});
+
+  return "                        <input type=\"checkbox\" id=\""
+    + alias2(alias1(depth0, depth0))
+    + "-input\" data-name=\""
+    + alias2(alias1(depth0, depth0))
+    + "\" data-type=\"columns\" class=\"checkbox-input filter-input\" "
+    + ((stack1 = __default(__webpack_require__(37)).call(alias3,"ALL",(depths[1] != null ? depths[1].transaction_filter : depths[1]),{"name":"contains","hash":{},"fn":container.program(3, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(37)).call(alias3,depth0,(depths[1] != null ? depths[1].transaction_filter : depths[1]),{"name":"contains","hash":{},"fn":container.program(3, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + " style=\"display: none\" />\r\n                        <label for=\""
+    + alias2(alias1(depth0, depth0))
+    + "-input\" class=\"check-box-wrapper\">\r\n                            <span class=\"check-box\">\r\n                                <svg width=\"12px\" height=\"10px\">\r\n                                    <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                                </svg>\r\n                            </span>\r\n                            <span class=\"check-box-label\">"
+    + alias2(alias1(depth0, depth0))
+    + "</span>\r\n                        </label>\r\n";
+},"3":function(container,depth0,helpers,partials,data) {
+    return "checked";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1;
+
+  return "<div id=\"settings-scroll-wrapper\">\r\n    <div id=\"start-date-wrapper\">\r\n        <div class=\"settings-title\">Start/End Point</div>\r\n        <div class=\"settings-description\">The time that starts and ends to develop accurate reports on that day.</div>\r\n        <div id=\"settings-date-range-wrapper\">\r\n            <select id=\"date-start-input\">\r\n                <option value=\"0\">12:00AM</option>\r\n                <option value=\"1\">1:00AM</option>\r\n                <option value=\"2\">2:00AM</option>\r\n                <option value=\"3\">3:00AM</option>\r\n                <option value=\"4\">4:00AM</option>\r\n                <option value=\"5\">5:00AM</option>\r\n                <option value=\"6\">6:00AM</option>\r\n                <option value=\"7\">7:00AM</option>\r\n                <option value=\"8\">8:00AM</option>\r\n                <option value=\"9\">9:00AM</option>\r\n                <option value=\"10\">10:00AM</option>\r\n                <option value=\"11\">11:00AM</option>\r\n                <option value=\"12\">12:00PM</option>\r\n                <option value=\"13\">1:00PM</option>\r\n                <option value=\"14\">2:00PM</option>\r\n                <option value=\"15\">3:00PM</option>\r\n                <option value=\"16\">4:00PM</option>\r\n                <option value=\"17\">5:00PM</option>\r\n                <option value=\"18\">6:00PM</option>\r\n                <option value=\"19\">7:00PM</option>\r\n                <option value=\"20\">8:00PM</option>\r\n                <option value=\"21\">9:00PM</option>\r\n                <option value=\"22\">10:00PM</option>\r\n                <option value=\"23\">11:00PM</option>\r\n            </select>\r\n        </div>\r\n    </div>\r\n\r\n    <div>\r\n        <div class=\"settings-title\">Date Range</div>\r\n        <div class=\"settings-description\">Default date range when opening the transaction & overview page.</div>\r\n        <div id=\"settings-date-range-wrapper\">\r\n            <select id=\"date-range-input\">\r\n                <option value=\"*\">All</option>\r\n                <option value=\"1\">1 Day</option>\r\n                <option value=\"7\">7 Days</option>\r\n            </select>\r\n        </div>\r\n    </div>\r\n\r\n    <div id=\"transaction-filter-wrapper\">\r\n        <div class=\"settings-title\">Transaction Filter</div>\r\n        <div class=\"settings-description\">Allow transactions to be searchable by the following columns: </div>\r\n"
+    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.stores : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "    </div>\r\n<div id=\"save-wrapper\">\r\n    <div id=\"settings-result\"></div>\r\n    <button id=\"transaction-settings-submit\" class=\"add\">Save Settings</button>\r\n</div>";
+},"useData":true,"useDepths":true});
+
 /***/ })
-],[65]);
+],[73]);

@@ -160,6 +160,15 @@ function appendContextPath(contextPath, id) {
 
 /***/ }),
 /* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// Create a simple path alias to allow browserify to resolve
+// the runtime on a supported path.
+module.exports = __webpack_require__(9)['default'];
+
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports) {
 
 module.exports = function(row, start_day, month_length, block) {
@@ -182,15 +191,6 @@ module.exports = function(row, start_day, month_length, block) {
     }
     return accum;
 };
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// Create a simple path alias to allow browserify to resolve
-// the runtime on a supported path.
-module.exports = __webpack_require__(11)['default'];
-
 
 /***/ }),
 /* 4 */
@@ -10532,11 +10532,11 @@ var _exception = __webpack_require__(4);
 
 var _exception2 = _interopRequireDefault(_exception);
 
-var _helpers = __webpack_require__(12);
+var _helpers = __webpack_require__(10);
 
-var _decorators = __webpack_require__(20);
+var _decorators = __webpack_require__(18);
 
-var _logger = __webpack_require__(22);
+var _logger = __webpack_require__(20);
 
 var _logger2 = _interopRequireDefault(_logger);
 
@@ -10637,142 +10637,6 @@ exports.logger = _logger2['default'];
 
 /***/ }),
 /* 9 */
-/***/ (function(module, exports) {
-
-function numberCommaFormat(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-
-function replaceAll(str, find, replace) {
-    return str.replace(new RegExp(find.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1"), 'g'), replace);
-}
-
-function scrollToElement($container, $element, speed){
-    var elementTop = $element.offset().top;
-    var elementHeight = $element.height();
-    var containerTop = $container.offset().top;
-    var containerHeight = $container.height();
-
-    if ((((elementTop - containerTop) + elementHeight) > 0) && ((elementTop - containerTop) < containerHeight)) {
-
-    } else {
-        $container.animate({
-            scrollTop: $element.offset().top - $container.offset().top + $container.scrollTop()
-        }, speed);
-    }
-}
-
-
-function upAndDownPopups(keyCode, $popup, $options, scroll) {
-    var $selected = $popup.find('.selected');
-    var $firstOption = $options.filter(':visible').eq(0);
-    var $lastOption = $options.filter(':visible').eq(-1);
-
-    if (keyCode == 40) { //down arrow
-        var $nextOption = $selected.nextAll($options).filter(':visible').first();
-        if($selected.length) {
-            $selected.removeClass('selected');
-            if($nextOption.length){
-                $nextOption.addClass('selected');
-                if(scroll) {
-                    scrollToElement($popup, $nextOption, 50);
-                }
-            } else{
-                $firstOption.addClass('selected');
-                if(scroll) {
-                    scrollToElement($popup, $firstOption, 50);
-                }
-            }
-        } else {
-            $firstOption.addClass('selected');
-            if(scroll) {
-                scrollToElement($popup, $firstOption, 50);
-            }
-        }
-    } else if (keyCode == 38) { //up arrow
-        var $prevOption = $selected.prevAll($options).filter(':visible').first();
-        if($selected.length) {
-            $selected.removeClass('selected');
-            if($prevOption.length){
-                $prevOption.addClass('selected');
-                if(scroll) {
-                    scrollToElement($popup, $prevOption, 50);
-                }
-            }else{
-                $lastOption.addClass('selected');
-                if(scroll) {
-                    scrollToElement($popup, $lastOption, 50);
-                }
-            }
-        } else {
-            $lastOption.addClass('selected');
-            if(scroll) {
-                scrollToElement($popup, $lastOption, 50);
-            }
-        }
-    } else if(keyCode == 13) { //enter button
-        $selected.trigger('click');
-    }
-}
-
-function currencyFormat(cents) {
-    cents = Math.round(cents);
-
-    if (cents == 0) {
-        return cents.toFixed(2);
-    } else if(cents < 100){
-        if (cents > 0 || cents > -100) {
-            return (cents/100).toFixed(2);
-        } else {
-            cents = cents.toString();
-            return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
-        }
-    }else {
-        cents = cents.toString();
-        return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
-    }
-}
-
-function currencyMath(leftVal, operator, curRightVal, round, both) {
-    leftVal = parseFloat(leftVal);
-    curRightVal = parseFloat(curRightVal) * 100;
-
-    if (both == 'true') {
-        leftVal = leftVal * 100;
-    }
-
-    var cents = {
-        "+": curRightVal + leftVal,
-        "-": curRightVal - leftVal,
-        "*": curRightVal * leftVal,
-        "/": curRightVal / leftVal,
-        "%": curRightVal % leftVal
-    }[operator];
-
-    if (round == 'true') {
-        cents = Math.round(cents);
-    }
-
-    if (cents == 0) {
-        return cents.toFixed(2);
-    } else {
-        cents = cents.toString();
-        return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
-    }
-}
-
-module.exports = {
-    numberCommaFormat: numberCommaFormat,
-    replaceAll: replaceAll,
-    scrollToElement: scrollToElement,
-    upAndDownPopups: upAndDownPopups,
-    currencyFormat: currencyFormat,
-    currencyMath: currencyMath
-};
-
-/***/ }),
-/* 10 */,
-/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10794,7 +10658,7 @@ var base = _interopRequireWildcard(_handlebarsBase);
 // Each of these augment the Handlebars object. No need to setup here.
 // (This is done to easily share code between commonjs and browse envs)
 
-var _handlebarsSafeString = __webpack_require__(23);
+var _handlebarsSafeString = __webpack_require__(21);
 
 var _handlebarsSafeString2 = _interopRequireDefault(_handlebarsSafeString);
 
@@ -10806,11 +10670,11 @@ var _handlebarsUtils = __webpack_require__(1);
 
 var Utils = _interopRequireWildcard(_handlebarsUtils);
 
-var _handlebarsRuntime = __webpack_require__(24);
+var _handlebarsRuntime = __webpack_require__(22);
 
 var runtime = _interopRequireWildcard(_handlebarsRuntime);
 
-var _handlebarsNoConflict = __webpack_require__(25);
+var _handlebarsNoConflict = __webpack_require__(23);
 
 var _handlebarsNoConflict2 = _interopRequireDefault(_handlebarsNoConflict);
 
@@ -10845,7 +10709,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 12 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10857,31 +10721,31 @@ exports.registerDefaultHelpers = registerDefaultHelpers;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _helpersBlockHelperMissing = __webpack_require__(13);
+var _helpersBlockHelperMissing = __webpack_require__(11);
 
 var _helpersBlockHelperMissing2 = _interopRequireDefault(_helpersBlockHelperMissing);
 
-var _helpersEach = __webpack_require__(14);
+var _helpersEach = __webpack_require__(12);
 
 var _helpersEach2 = _interopRequireDefault(_helpersEach);
 
-var _helpersHelperMissing = __webpack_require__(15);
+var _helpersHelperMissing = __webpack_require__(13);
 
 var _helpersHelperMissing2 = _interopRequireDefault(_helpersHelperMissing);
 
-var _helpersIf = __webpack_require__(16);
+var _helpersIf = __webpack_require__(14);
 
 var _helpersIf2 = _interopRequireDefault(_helpersIf);
 
-var _helpersLog = __webpack_require__(17);
+var _helpersLog = __webpack_require__(15);
 
 var _helpersLog2 = _interopRequireDefault(_helpersLog);
 
-var _helpersLookup = __webpack_require__(18);
+var _helpersLookup = __webpack_require__(16);
 
 var _helpersLookup2 = _interopRequireDefault(_helpersLookup);
 
-var _helpersWith = __webpack_require__(19);
+var _helpersWith = __webpack_require__(17);
 
 var _helpersWith2 = _interopRequireDefault(_helpersWith);
 
@@ -10898,7 +10762,7 @@ function registerDefaultHelpers(instance) {
 
 
 /***/ }),
-/* 13 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10944,7 +10808,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 14 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11045,7 +10909,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 15 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11077,7 +10941,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 16 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11113,7 +10977,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 17 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11146,7 +11010,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 18 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11165,7 +11029,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 19 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11205,7 +11069,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 20 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11217,7 +11081,7 @@ exports.registerDefaultDecorators = registerDefaultDecorators;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _decoratorsInline = __webpack_require__(21);
+var _decoratorsInline = __webpack_require__(19);
 
 var _decoratorsInline2 = _interopRequireDefault(_decoratorsInline);
 
@@ -11228,7 +11092,7 @@ function registerDefaultDecorators(instance) {
 
 
 /***/ }),
-/* 21 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11264,7 +11128,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 22 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11318,7 +11182,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 23 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11340,7 +11204,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 24 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11654,7 +11518,7 @@ function executeDecorators(fn, prog, container, depths, data, blockParams) {
 
 
 /***/ }),
-/* 25 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11679,10 +11543,10 @@ exports['default'] = function (Handlebars) {
 module.exports = exports['default'];
 //# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL2xpYi9oYW5kbGViYXJzL25vLWNvbmZsaWN0LmpzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7O3FCQUNlLFVBQVMsVUFBVSxFQUFFOztBQUVsQyxNQUFJLElBQUksR0FBRyxPQUFPLE1BQU0sS0FBSyxXQUFXLEdBQUcsTUFBTSxHQUFHLE1BQU07TUFDdEQsV0FBVyxHQUFHLElBQUksQ0FBQyxVQUFVLENBQUM7O0FBRWxDLFlBQVUsQ0FBQyxVQUFVLEdBQUcsWUFBVztBQUNqQyxRQUFJLElBQUksQ0FBQyxVQUFVLEtBQUssVUFBVSxFQUFFO0FBQ2xDLFVBQUksQ0FBQyxVQUFVLEdBQUcsV0FBVyxDQUFDO0tBQy9CO0FBQ0QsV0FBTyxVQUFVLENBQUM7R0FDbkIsQ0FBQztDQUNIIiwiZmlsZSI6Im5vLWNvbmZsaWN0LmpzIiwic291cmNlc0NvbnRlbnQiOlsiLyogZ2xvYmFsIHdpbmRvdyAqL1xuZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24oSGFuZGxlYmFycykge1xuICAvKiBpc3RhbmJ1bCBpZ25vcmUgbmV4dCAqL1xuICBsZXQgcm9vdCA9IHR5cGVvZiBnbG9iYWwgIT09ICd1bmRlZmluZWQnID8gZ2xvYmFsIDogd2luZG93LFxuICAgICAgJEhhbmRsZWJhcnMgPSByb290LkhhbmRsZWJhcnM7XG4gIC8qIGlzdGFuYnVsIGlnbm9yZSBuZXh0ICovXG4gIEhhbmRsZWJhcnMubm9Db25mbGljdCA9IGZ1bmN0aW9uKCkge1xuICAgIGlmIChyb290LkhhbmRsZWJhcnMgPT09IEhhbmRsZWJhcnMpIHtcbiAgICAgIHJvb3QuSGFuZGxlYmFycyA9ICRIYW5kbGViYXJzO1xuICAgIH1cbiAgICByZXR1cm4gSGFuZGxlYmFycztcbiAgfTtcbn1cbiJdfQ==
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(26)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(24)))
 
 /***/ }),
-/* 26 */
+/* 24 */
 /***/ (function(module, exports) {
 
 var g;
@@ -11709,17 +11573,322 @@ module.exports = g;
 
 
 /***/ }),
-/* 27 */
+/* 25 */
+/***/ (function(module, exports) {
+
+function numberCommaFormat(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+function replaceAll(str, find, replace) {
+    return str.replace(new RegExp(find.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1"), 'g'), replace);
+}
+
+function scrollToElement($container, $element, speed){
+    var elementTop = $element.offset().top;
+    var elementHeight = $element.height();
+    var containerTop = $container.offset().top;
+    var containerHeight = $container.height();
+
+    if ((((elementTop - containerTop) + elementHeight) > 0) && ((elementTop - containerTop) < containerHeight)) {
+
+    } else {
+        $container.animate({
+            scrollTop: $element.offset().top - $container.offset().top + $container.scrollTop()
+        }, speed);
+    }
+}
+
+
+function upAndDownPopups(keyCode, $popup, $options, scroll) {
+    var $selected = $popup.find('.selected');
+    var $firstOption = $options.filter(':visible').eq(0);
+    var $lastOption = $options.filter(':visible').eq(-1);
+
+    if (keyCode == 40) { //down arrow
+        var $nextOption = $selected.nextAll($options).filter(':visible').first();
+        if($selected.length) {
+            $selected.removeClass('selected');
+            if($nextOption.length){
+                $nextOption.addClass('selected');
+                if(scroll) {
+                    scrollToElement($popup, $nextOption, 50);
+                }
+            } else{
+                $firstOption.addClass('selected');
+                if(scroll) {
+                    scrollToElement($popup, $firstOption, 50);
+                }
+            }
+        } else {
+            $firstOption.addClass('selected');
+            if(scroll) {
+                scrollToElement($popup, $firstOption, 50);
+            }
+        }
+    } else if (keyCode == 38) { //up arrow
+        var $prevOption = $selected.prevAll($options).filter(':visible').first();
+        if($selected.length) {
+            $selected.removeClass('selected');
+            if($prevOption.length){
+                $prevOption.addClass('selected');
+                if(scroll) {
+                    scrollToElement($popup, $prevOption, 50);
+                }
+            }else{
+                $lastOption.addClass('selected');
+                if(scroll) {
+                    scrollToElement($popup, $lastOption, 50);
+                }
+            }
+        } else {
+            $lastOption.addClass('selected');
+            if(scroll) {
+                scrollToElement($popup, $lastOption, 50);
+            }
+        }
+    } else if(keyCode == 13) { //enter button
+        $selected.trigger('click');
+    }
+}
+
+function currencyFormat(cents) {
+    cents = Math.round(cents);
+
+    if (cents == 0) {
+        return cents.toFixed(2);
+    } else if(cents < 100){
+        if (cents > 0 || cents > -100) {
+            return (cents/100).toFixed(2);
+        } else {
+            cents = cents.toString();
+            return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
+        }
+    }else {
+        cents = cents.toString();
+        return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
+    }
+}
+
+function currencyMath(leftVal, operator, curRightVal, round, both) {
+    leftVal = parseFloat(leftVal);
+    curRightVal = parseFloat(curRightVal) * 100;
+
+    if (both == 'true') {
+        leftVal = leftVal * 100;
+    }
+
+    var cents = {
+        "+": curRightVal + leftVal,
+        "-": curRightVal - leftVal,
+        "*": curRightVal * leftVal,
+        "/": curRightVal / leftVal,
+        "%": curRightVal % leftVal
+    }[operator];
+
+    if (round == 'true') {
+        cents = Math.round(cents);
+    }
+
+    if (cents == 0) {
+        return cents.toFixed(2);
+    } else {
+        cents = cents.toString();
+        return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
+    }
+}
+
+module.exports = {
+    numberCommaFormat: numberCommaFormat,
+    replaceAll: replaceAll,
+    scrollToElement: scrollToElement,
+    upAndDownPopups: upAndDownPopups,
+    currencyFormat: currencyFormat,
+    currencyMath: currencyMath
+};
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Handlebars = __webpack_require__(2);
+function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
+module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=container.lambda, alias3=container.escapeExpression;
+
+  return "    <div class=\"establishment store-item"
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.id : depth0),"==",(depths[1] != null ? depths[1].active_store : depths[1]),{"name":"ifCond","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\" data-id=\""
+    + alias3(alias2((depth0 != null ? depth0.id : depth0), depth0))
+    + "\">\r\n        <div class=\"store-name\">\r\n            <span class=\"bulletin-wrapper\"><span class=\"arrow-tail\"></span><span><i class=\"fas fa-caret-right\"></i></span></span>\r\n            "
+    + alias3(alias2((depth0 != null ? depth0.name : depth0), depth0))
+    + "\r\n            <span class=\"store-icon-wrapper\">\r\n"
+    + ((stack1 = helpers.unless.call(alias1,__default(__webpack_require__(30)).call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.price : stack1),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.cost : stack1),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.quantity : stack1),{"name":"or","hash":{},"data":data}),{"name":"unless","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.program(6, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + "            </span>\r\n        </div>\r\n    </div>\r\n";
+},"2":function(container,depth0,helpers,partials,data) {
+    return " active";
+},"4":function(container,depth0,helpers,partials,data) {
+    return "                    <span class=\"link-columns-button\"><i class=\"fas fa-exclamation-triangle\"></i></span>\r\n";
+},"6":function(container,depth0,helpers,partials,data) {
+    return "                    <span class=\"create-transaction-button\"><i class=\"fas fa-cart-plus\"></i></span>\r\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1;
+
+  return ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.stores : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"useData":true,"useDepths":true});
+
+/***/ }),
+/* 27 */,
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+//handlebars
+var linkColumnsTemplate = __webpack_require__(29);
+var storeItemTemplate = __webpack_require__(26);
+//libraries
+var $ = __webpack_require__(5);
+
+function popupHandler(e, popupData, template) {
+    e.stopPropagation();
+    var $overlay = $('#operation-overlay');
+    $overlay.empty();
+    $overlay.addClass('active');
+    $overlay.append(template(popupData));
+}
+
+$(document).ready(function() {
+    $(document).on('click', '.link-columns-button', function (e) {
+        popupHandler(e, globals.stores[$(this).closest('.store-item').attr('data-id')], linkColumnsTemplate);
+    });
+
+    $(document).on('click', '#link-columns-submit', function () {
+        var $wrapper = $('#operation-settings-scroll-wrapper');
+
+        var postData = {
+            'store_id': $(this).attr('data-id'),
+            'link_columns': {
+                'name': $wrapper.find('#name-column-input').val(),
+                'price': $wrapper.find('#price-column-input').val(),
+                'quantity': $wrapper.find('#quantity-column-input').val(),
+                'cost': $wrapper.find('#cost-column-input').val()
+            }
+        };
+
+        $.ajax({
+            headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
+            url: globals.base_url + '/account/save_settings/',
+            data: JSON.stringify(postData),
+            dataType: 'json',
+            type: "POST",
+            success: function (response) {
+                //JSON.stringify(response);
+                var $storeContainer = $('.store-container');
+                $storeContainer.empty();
+                $storeContainer.append(storeItemTemplate({'stores': globals.stores}));
+
+                $('#operation-overlay').removeClass('active');
+                globals.stores[response['id']] = response;
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    $('#import-wrapper').find('.error').text('Permission Denied').show();
+                } else {
+                    $('#import-wrapper').find('.error').text(response.responseText).show();
+                }
+            }
+        });
+    });
+
+
+});
+
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Handlebars = __webpack_require__(2);
+function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
+module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return container.escapeExpression(container.lambda(((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1), depth0));
+},"3":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
+
+  return "                    <option value=\""
+    + alias2(alias1(depth0, depth0))
+    + "\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,"==",((stack1 = (depths[1] != null ? depths[1].link_columns : depths[1])) != null ? stack1.price : stack1),{"name":"ifCond","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">"
+    + alias2(alias1(depth0, depth0))
+    + "</option>\r\n";
+},"4":function(container,depth0,helpers,partials,data) {
+    return "selected";
+},"6":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
+
+  return "                    <option value=\""
+    + alias2(alias1(depth0, depth0))
+    + "\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,"==",((stack1 = (depths[1] != null ? depths[1].link_columns : depths[1])) != null ? stack1.quantity : stack1),{"name":"ifCond","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">"
+    + alias2(alias1(depth0, depth0))
+    + "</option>\r\n";
+},"8":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
+
+  return "                    <option value=\""
+    + alias2(alias1(depth0, depth0))
+    + "\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,"==",((stack1 = (depths[1] != null ? depths[1].link_columns : depths[1])) != null ? stack1.cost : stack1),{"name":"ifCond","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">"
+    + alias2(alias1(depth0, depth0))
+    + "</option>\r\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=container.lambda, alias2=container.escapeExpression, alias3=depth0 != null ? depth0 : (container.nullContext || {});
+
+  return "<div id=\"operation-popup-wrapper\">\r\n    <div id=\"operation-settings-scroll-wrapper\">\r\n        <h2 class=\"settings-title\">"
+    + alias2(alias1((depth0 != null ? depth0.name : depth0), depth0))
+    + "</h2>\r\n        <div class=\"link-column-wrapper\">\r\n            <label class=\"settings-subtitle\">Name</label>\r\n            <p>The name of the item, you wished to be viewed in reports, transactions, etc.</p>\r\n            <input id=\"name-column-input\" value=\""
+    + ((stack1 = helpers["if"].call(alias3,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1),{"name":"if","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\" />\r\n        </div>\r\n        <div class=\"link-column-wrapper\">\r\n            <label class=\"settings-subtitle\">Price</label>\r\n            <p class=\"\">The selling price of an item.</p>\r\n            <select id=\"price-column-input\" data-type=\""
+    + alias2(alias1((depth0 != null ? depth0.type : depth0), depth0))
+    + "\">\r\n"
+    + ((stack1 = helpers.each.call(alias3,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(3, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "            </select>\r\n        </div>\r\n        <div class=\"link-column-wrapper\">\r\n            <label class=\"settings-subtitle\">Quantity</label>\r\n            <p class=\"\">The amount of an item.</p>\r\n            <select id=\"quantity-column-input\" data-type=\""
+    + alias2(alias1((depth0 != null ? depth0.type : depth0), depth0))
+    + "\">\r\n"
+    + ((stack1 = helpers.each.call(alias3,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(6, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "            </select>\r\n        </div>\r\n        <div class=\"link-column-wrapper\">\r\n            <label class=\"settings-subtitle\">Cost</label>\r\n            <p class=\"\">The cost of the item, used to calculate profit.</p>\r\n            <select id=\"cost-column-input\" data-type=\""
+    + alias2(alias1((depth0 != null ? depth0.type : depth0), depth0))
+    + "\">\r\n"
+    + ((stack1 = helpers.each.call(alias3,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(8, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "            </select>\r\n        </div>\r\n    </div>\r\n    <button id=\"link-columns-submit\" class=\"add\" data-id=\""
+    + alias2(alias1((depth0 != null ? depth0.id : depth0), depth0))
+    + "\">Link Columns</button>\r\n</div>";
+},"useData":true,"useDepths":true});
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports) {
+
+module.exports = function() {
+    return Array.prototype.slice.call(arguments, 0, -1).some(Boolean);
+};
+
+/***/ }),
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //css
-__webpack_require__(28);
+__webpack_require__(32);
 
 //jquery
 var $ = __webpack_require__(5);
 
 //handlebars
-var calendarTemplate = __webpack_require__(29);
+var calendarTemplate = __webpack_require__(33);
 
 // these are human-readable month name labels, in order
 var calMonthsLabels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -12297,16 +12466,16 @@ $(document).ready(function() {
 });
 
 /***/ }),
-/* 28 */
+/* 32 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 29 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Handlebars = __webpack_require__(3);
+var Handlebars = __webpack_require__(2);
 function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
 module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
     var stack1;
@@ -12344,17 +12513,17 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + "</span> <span class=\"year\">"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.year : stack1), depth0))
     + "</span></div>\r\n    </div>\r\n    <table class=\"month-calendar\">\r\n        <thead class=\"day-of-week\">\r\n            <tr>\r\n                <th scope=\"col\">S</th>\r\n                <th scope=\"col\">M</th>\r\n                <th scope=\"col\">T</th>\r\n                <th scope=\"col\">W</th>\r\n                <th scope=\"col\">Th</th>\r\n                <th scope=\"col\">F</th>\r\n                <th scope=\"col\">S</th>\r\n            </tr>\r\n        </thead>\r\n\r\n        <tbody>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,1,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,1,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,2,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,2,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,3,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,3,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,4,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,4,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,5,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,5,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,6,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,6,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n        </tbody>\r\n    </table>\r\n</div>\r\n\r\n<div class=\"month-wrapper\" id=\"right-calendar\">\r\n    <div class=\"month-header\">\r\n        <div><span class=\"month\" data-month=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_number : stack1), depth0))
     + "\">"
@@ -12364,50 +12533,52 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + "</span></div>\r\n        <div class=\"side-arrow right-arrow\" data-month=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.subtract : stack1), depth0))
     + "\"><i class=\"fa fa-chevron-right\"></i></div>\r\n    </div>\r\n    <table class=\"month-calendar\">\r\n        <thead class=\"day-of-week\">\r\n            <tr>\r\n                <th scope=\"col\">S</th>\r\n                <th scope=\"col\">M</th>\r\n                <th scope=\"col\">T</th>\r\n                <th scope=\"col\">W</th>\r\n                <th scope=\"col\">Th</th>\r\n                <th scope=\"col\">F</th>\r\n                <th scope=\"col\">S</th>\r\n            </tr>\r\n        </thead>\r\n\r\n        <tbody>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,1,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,1,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,2,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,2,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,3,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,3,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,4,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,4,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,5,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,5,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,6,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,6,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n        </tbody>\r\n    </table>\r\n</div>";
 },"useData":true,"useDepths":true});
 
 /***/ }),
-/* 30 */,
-/* 31 */,
-/* 32 */,
-/* 33 */,
 /* 34 */,
 /* 35 */,
 /* 36 */,
 /* 37 */,
-/* 38 */
+/* 38 */,
+/* 39 */,
+/* 40 */,
+/* 41 */,
+/* 42 */,
+/* 43 */,
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(10);
-__webpack_require__(39);
+__webpack_require__(27);
+__webpack_require__(45);
 __webpack_require__(8);
 
 //handlebars
-var emptyTemplate = __webpack_require__(40);
-var overviewOperationTemplate = __webpack_require__(41);
-var overviewTemplate = __webpack_require__(42);
-var salesSummaryTemplate = __webpack_require__(43);
-var productTemplate = __webpack_require__(44);
-var dateHeaderTemplate = __webpack_require__(45);
-
-var overviewTotalTemplate = __webpack_require__(46);
+var emptyTemplate = __webpack_require__(46);
+var overviewOperationTemplate = __webpack_require__(47);
+var overviewTemplate = __webpack_require__(48);
+var salesSummaryTemplate = __webpack_require__(49);
+var productTemplate = __webpack_require__(50);
+var dateHeaderTemplate = __webpack_require__(51);
+var overviewTotalTemplate = __webpack_require__(52);
 
 //libraries
 var $ = __webpack_require__(5);
-var helper = __webpack_require__(9);
-__webpack_require__(27);
+var helper = __webpack_require__(25);
+__webpack_require__(28);
+__webpack_require__(31);
 
 function init() {
     google.charts.load('current', {packages: ['corechart', 'line']});
@@ -12431,7 +12602,7 @@ function init() {
 }
 
 function productReport(response) {
-    var transactions = response['transactions'];
+    var transactions = response['store']['transactions'];
 
     var productData = {};
 
@@ -12439,7 +12610,7 @@ function productReport(response) {
     var productList = [['Item', 'Profit']];
 
     for (var i = 0; i < transactions.length; i++) {
-        var items = transactions[i]['items']['list'];
+        var items = transactions[i]['items'];
 
         for (var g = 0; g < items.length; g++) {
             var item = items[g];
@@ -12475,7 +12646,7 @@ function productReport(response) {
 }
 
 function salesSummary(response) {
-    var transactions = response['transactions'];
+    var transactions = response['store']['transactions'];
 
     var totalTax = 0;
     var totalDiscounts = 0;
@@ -12504,7 +12675,8 @@ function salesSummary(response) {
         total += subtotal;
 
         var items = transaction['items'];
-        for (var d = 0; d <= items.length; d++) {
+
+        for (var d = 0; d < items.length; d++) {
             var item = items[d];
             totalDiscounts += parseFloat(item['discount'])*100;
         }
@@ -12537,7 +12709,7 @@ function salesSummary(response) {
         'total_discount': helper.currencyFormat(totalDiscounts),
         'total_cash': helper.currencyFormat(totalCash),
         'total_credit': helper.currencyFormat(totalCredit),
-        'total': helper.currencyFormat(total),
+        'total': helper.currencyFormat(total + totalTax),
 
         'total_american': helper.currencyFormat(totalAmerican),
         'total_discover': helper.currencyFormat(totalDiscover),
@@ -12593,8 +12765,25 @@ function getTransactionReport(startTime, endTime, type) {
         dataType: 'json',
         type: "GET",
         success: function (response) {
-            globals.transactions = response['transactions'];
-            response['link_columns'] = globals.link_columns;
+            //console.log(JSON.stringify(response));
+            //console.log(JSON.stringify(globals.stores));
+
+            var stores = globals.stores;
+            var errors = 0;
+
+            for (var key in globals.stores) {
+                var store = stores[key];
+                var linkColumns = store['link_columns'];
+
+                if(!(linkColumns['cost'] && linkColumns['price'])) {
+                    store['unlinked_columns'] = true;
+                    errors += 1;
+                } else {
+                    store['unlinked_columns'] = false;
+                }
+            }
+
+            globals.transactions = response['store']['transactions'];
 
             var $overviewWrapper = $('#overview-wrapper');
             var $summaryWrapper = $('#sale-report-wrapper');
@@ -12608,7 +12797,7 @@ function getTransactionReport(startTime, endTime, type) {
 
             $dateHeaderWrapper.append(dateHeaderTemplate(response));
 
-            if (response['inventory'] != 0 && globals.transactions.length && (globals.link_columns.cost && globals.link_columns.price)) {
+            if (errors == 0) {
                 $overviewWrapper.append(overviewTemplate(response));
                 $productWrapper.append(productTemplate({}));
                 salesSummary(response);
@@ -12694,7 +12883,7 @@ function createOverviewGraph(transactions, startTime, endTime, type) {
                 var currentDiscount = 0;
                 // Loop through the items to calculate discount
                 var items = transaction['items'];
-                for (var d = 0; d <= items.length; d++) {
+                for (var d = 0; d < items.length; d++) {
                     var item = items[d];
                     currentDiscount += parseFloat(item['discount'])*100;
                 }
@@ -12702,7 +12891,7 @@ function createOverviewGraph(transactions, startTime, endTime, type) {
                 var currentSubtotal = parseFloat(transaction['subtotal'])*100;
                 var currentTax = parseFloat(transaction['tax'])*100;
                 //var currentTax = helper.currencyMath(currentSubtotal, '*', transaction['tax'], true, false);
-                var currentTotal = currentSubtotal - currentDiscount + parseFloat(transaction['tax']);
+                var currentTotal = currentSubtotal - currentDiscount + currentTax;
 
                 hourTotal += currentTotal;
 
@@ -12712,8 +12901,6 @@ function createOverviewGraph(transactions, startTime, endTime, type) {
                 } else {
                     templateCredit += currentTotal;
                 }
-                templateDiscount += currentDiscount;
-                templateTax += currentTax;
                 templateTotal += currentTotal;
             }
         }
@@ -12730,8 +12917,6 @@ function createOverviewGraph(transactions, startTime, endTime, type) {
     $overviewTotalWrapper.append(overviewTotalTemplate({
         'cash': helper.currencyFormat(templateCash),
         'credit': helper.currencyFormat(templateCredit),
-        'discount': helper.currencyFormat(templateDiscount),
-        'tax': helper.currencyFormat(templateTax),
         'total': helper.currencyFormat(templateTotal)
     }));
 
@@ -12770,81 +12955,82 @@ $(document).ready(function() {
     $(document).on('click', 'body', function () {
         $('#operation-overlay').removeClass('active');
     });
+
     //OPERATION POPUP//
 
     //LINK COLUMNS//
-    $(document).on('click', '#quantity-link', function (e) {
-        if(!globals.link_columns['quantity']) {
-            popupHandler(e, {type: "quantity", columns: globals.columns, link_columns: globals.link_columns});
-        }
-    });
-
-    $(document).on('click', '#price-link', function (e) {
-        if(!globals.link_columns['price']) {
-            popupHandler(e, {type: "price", columns: globals.columns, link_columns: globals.link_columns});
-        }
-    });
-
-    $(document).on('click', '#cost-link', function (e) {
-        if(!globals.link_columns['cost']) {
-            popupHandler(e, {type: "cost", columns: globals.columns, link_columns: globals.link_columns});
-        }
-    });
-
-    $(document).on('click', '#name-link', function (e) {
-        if(!globals.link_columns['name']) {
-            popupHandler(e, {type: "name"});
-        }
-    });
-
-    $(document).on('click', '#link-column-submit', function () {
-        var $operationOverlay = $('#operation-overlay');
-        var $linkColumnInput = $operationOverlay.find('#link-column-input');
-
-        var postData = {
-            link_type: $linkColumnInput.attr('data-type'),
-            column: $linkColumnInput.val()
-        };
-
-        $.ajax({
-            headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
-            url: globals.base_url + '/operation/link_columns/',
-            data: postData,
-            dataType: 'json',
-            type: "POST",
-            success: function (response) {
-                //console.log(JSON.stringify(response));
-
-                // Remove popup
-                $('#operation-overlay').removeClass('active');
-
-                // CACHE THE DATA
-                globals.link_columns = response;
-
-                // Hide Links that was linked
-                if (globals.link_columns.price){
-                    $('#price-link').hide();
-                }
-
-                if (globals.link_columns.cost){
-                    $('#cost-link').hide();
-                }
-
-                if(globals.link_columns.cost && globals.link_columns.price) {
-                    if (globals.date_range == '*') {
-                        createOverviewGraph(globals.transactions);
-                    } else {
-                        createOverviewGraph(globals.transactions, globals.start_date, globals.end_date);
-                    }
-                }
-
-                $('#' + type + '-button').addClass('active');
-            },
-            error: function (response) {
-                console.log(JSON.stringify(response.responseJSON['error_msg']));
-            }
-        });
-    });
+    //$(document).on('click', '#quantity-link', function (e) {
+    //    if(!globals.link_columns['quantity']) {
+    //        popupHandler(e, {type: "quantity", columns: globals.columns, link_columns: globals.link_columns});
+    //    }
+    //});
+    //
+    //$(document).on('click', '#price-link', function (e) {
+    //    if(!globals.link_columns['price']) {
+    //        popupHandler(e, {type: "price", columns: globals.columns, link_columns: globals.link_columns});
+    //    }
+    //});
+    //
+    //$(document).on('click', '#cost-link', function (e) {
+    //    if(!globals.link_columns['cost']) {
+    //        popupHandler(e, {type: "cost", columns: globals.columns, link_columns: globals.link_columns});
+    //    }
+    //});
+    //
+    //$(document).on('click', '#name-link', function (e) {
+    //    if(!globals.link_columns['name']) {
+    //        popupHandler(e, {type: "name"});
+    //    }
+    //});
+    //
+    //$(document).on('click', '#link-column-submit', function () {
+    //    var $operationOverlay = $('#operation-overlay');
+    //    var $linkColumnInput = $operationOverlay.find('#link-column-input');
+    //
+    //    var postData = {
+    //        link_type: $linkColumnInput.attr('data-type'),
+    //        column: $linkColumnInput.val()
+    //    };
+    //
+    //    $.ajax({
+    //        headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
+    //        url: globals.base_url + '/operation/link_columns/',
+    //        data: postData,
+    //        dataType: 'json',
+    //        type: "POST",
+    //        success: function (response) {
+    //            //console.log(JSON.stringify(response));
+    //
+    //            // Remove popup
+    //            $('#operation-overlay').removeClass('active');
+    //
+    //            // CACHE THE DATA
+    //            globals.link_columns = response;
+    //
+    //            // Hide Links that was linked
+    //            if (globals.link_columns.price){
+    //                $('#price-link').hide();
+    //            }
+    //
+    //            if (globals.link_columns.cost){
+    //                $('#cost-link').hide();
+    //            }
+    //
+    //            if(globals.link_columns.cost && globals.link_columns.price) {
+    //                if (globals.date_range == '*') {
+    //                    createOverviewGraph(globals.transactions);
+    //                } else {
+    //                    createOverviewGraph(globals.transactions, globals.start_date, globals.end_date);
+    //                }
+    //            }
+    //
+    //            $('#' + type + '-button').addClass('active');
+    //        },
+    //        error: function (response) {
+    //            console.log(JSON.stringify(response.responseJSON['error_msg']));
+    //        }
+    //    });
+    //});
     //LINK COLUMNS//
 
     //OVERVIEW//
@@ -13014,16 +13200,16 @@ function createPieChart(array, wrapper) {
 }
 
 /***/ }),
-/* 39 */
+/* 45 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 40 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Handlebars = __webpack_require__(3);
+var Handlebars = __webpack_require__(2);
 function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
 module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
@@ -13079,10 +13265,10 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true});
 
 /***/ }),
-/* 41 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Handlebars = __webpack_require__(3);
+var Handlebars = __webpack_require__(2);
 function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
 module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
     var stack1;
@@ -13139,20 +13325,20 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true});
 
 /***/ }),
-/* 42 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Handlebars = __webpack_require__(3);
+var Handlebars = __webpack_require__(2);
 function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
 module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     return "<div id=\"overview-container\">\r\n    <div id=\"overview-title\">Payment Overview</div>\r\n    <div id=\"overview-graph-wrapper\">\r\n        <div id=\"overview-graph-container\">\r\n            <div id=\"y-axis-title\">Total</div>\r\n            <div id=\"overview-chart\"></div>\r\n        </div>\r\n        <div id=\"x-axis-title\">Date</div>\r\n    </div>\r\n</div>\r\n<div id=\"overview-total-wrapper\">\r\n\r\n</div>";
 },"useData":true});
 
 /***/ }),
-/* 43 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Handlebars = __webpack_require__(3);
+var Handlebars = __webpack_require__(2);
 function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
 module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
     return "                            <li class=\"sales-item\">\r\n                                <span class=\"list-label\">American Express</span>\r\n                                <span class=\"list-result\">"
@@ -13219,20 +13405,20 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true});
 
 /***/ }),
-/* 44 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Handlebars = __webpack_require__(3);
+var Handlebars = __webpack_require__(2);
 function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
 module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     return "<div id=\"circle-chart-wrapper\">\r\n    <div class=\"pie-container\">\r\n        <h3 class=\"chart-title\">Top 10 Products Sold</h3>\r\n        <div id=\"quantity-chart\"></div>\r\n    </div>\r\n    <div class=\"pie-container\">\r\n        <h3 class=\"chart-title\">Top 10 Profitable Products</h3>\r\n        <div id=\"profit-chart\"></div>\r\n    </div>\r\n</div>";
 },"useData":true});
 
 /***/ }),
-/* 45 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Handlebars = __webpack_require__(3);
+var Handlebars = __webpack_require__(2);
 function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
 module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
@@ -13245,10 +13431,10 @@ module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,"
 },"useData":true});
 
 /***/ }),
-/* 46 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Handlebars = __webpack_require__(3);
+var Handlebars = __webpack_require__(2);
 function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
 module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
@@ -13257,14 +13443,10 @@ module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,"
     + alias4(((helper = (helper = helpers.cash || (depth0 != null ? depth0.cash : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"cash","hash":{},"data":data}) : helper)))
     + "</span>\r\n<span>Credit: "
     + alias4(((helper = (helper = helpers.credit || (depth0 != null ? depth0.credit : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"credit","hash":{},"data":data}) : helper)))
-    + "</span>\r\n<span>Tax: "
-    + alias4(((helper = (helper = helpers.tax || (depth0 != null ? depth0.tax : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"tax","hash":{},"data":data}) : helper)))
-    + "</span>\r\n<span>Discount: "
-    + alias4(((helper = (helper = helpers.discount || (depth0 != null ? depth0.discount : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"discount","hash":{},"data":data}) : helper)))
     + "</span>\r\n<span>Total: "
     + alias4(((helper = (helper = helpers.total || (depth0 != null ? depth0.total : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"total","hash":{},"data":data}) : helper)))
     + "</span>";
 },"useData":true});
 
 /***/ })
-],[38]);
+],[44]);

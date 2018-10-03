@@ -9,12 +9,12 @@ var overviewTemplate = require('./../handlebars/overview/overview.hbs');
 var salesSummaryTemplate = require('./../handlebars/overview/sales_summary.hbs');
 var productTemplate = require('./../handlebars/overview/product_report.hbs');
 var dateHeaderTemplate = require('./../handlebars/overview/date_header.hbs');
-
 var overviewTotalTemplate = require('./../handlebars/overview/overview_total.hbs');
 
 //libraries
 var $ = require('jquery');
 var helper = require('./../js/helpers.js');
+require('./../js/general.js');
 require('./../library/calendar/calendar.js');
 
 function init() {
@@ -39,7 +39,7 @@ function init() {
 }
 
 function productReport(response) {
-    var transactions = response['transactions'];
+    var transactions = response['store']['transactions'];
 
     var productData = {};
 
@@ -47,7 +47,7 @@ function productReport(response) {
     var productList = [['Item', 'Profit']];
 
     for (var i = 0; i < transactions.length; i++) {
-        var items = transactions[i]['items']['list'];
+        var items = transactions[i]['items'];
 
         for (var g = 0; g < items.length; g++) {
             var item = items[g];
@@ -83,7 +83,7 @@ function productReport(response) {
 }
 
 function salesSummary(response) {
-    var transactions = response['transactions'];
+    var transactions = response['store']['transactions'];
 
     var totalTax = 0;
     var totalDiscounts = 0;
@@ -112,7 +112,8 @@ function salesSummary(response) {
         total += subtotal;
 
         var items = transaction['items'];
-        for (var d = 0; d <= items.length; d++) {
+
+        for (var d = 0; d < items.length; d++) {
             var item = items[d];
             totalDiscounts += parseFloat(item['discount'])*100;
         }
@@ -145,7 +146,7 @@ function salesSummary(response) {
         'total_discount': helper.currencyFormat(totalDiscounts),
         'total_cash': helper.currencyFormat(totalCash),
         'total_credit': helper.currencyFormat(totalCredit),
-        'total': helper.currencyFormat(total),
+        'total': helper.currencyFormat(total + totalTax),
 
         'total_american': helper.currencyFormat(totalAmerican),
         'total_discover': helper.currencyFormat(totalDiscover),
@@ -201,8 +202,25 @@ function getTransactionReport(startTime, endTime, type) {
         dataType: 'json',
         type: "GET",
         success: function (response) {
-            globals.transactions = response['transactions'];
-            response['link_columns'] = globals.link_columns;
+            //console.log(JSON.stringify(response));
+            //console.log(JSON.stringify(globals.stores));
+
+            var stores = globals.stores;
+            var errors = 0;
+
+            for (var key in globals.stores) {
+                var store = stores[key];
+                var linkColumns = store['link_columns'];
+
+                if(!(linkColumns['cost'] && linkColumns['price'])) {
+                    store['unlinked_columns'] = true;
+                    errors += 1;
+                } else {
+                    store['unlinked_columns'] = false;
+                }
+            }
+
+            globals.transactions = response['store']['transactions'];
 
             var $overviewWrapper = $('#overview-wrapper');
             var $summaryWrapper = $('#sale-report-wrapper');
@@ -216,7 +234,7 @@ function getTransactionReport(startTime, endTime, type) {
 
             $dateHeaderWrapper.append(dateHeaderTemplate(response));
 
-            if (response['inventory'] != 0 && globals.transactions.length && (globals.link_columns.cost && globals.link_columns.price)) {
+            if (errors == 0) {
                 $overviewWrapper.append(overviewTemplate(response));
                 $productWrapper.append(productTemplate({}));
                 salesSummary(response);
@@ -302,7 +320,7 @@ function createOverviewGraph(transactions, startTime, endTime, type) {
                 var currentDiscount = 0;
                 // Loop through the items to calculate discount
                 var items = transaction['items'];
-                for (var d = 0; d <= items.length; d++) {
+                for (var d = 0; d < items.length; d++) {
                     var item = items[d];
                     currentDiscount += parseFloat(item['discount'])*100;
                 }
@@ -310,7 +328,7 @@ function createOverviewGraph(transactions, startTime, endTime, type) {
                 var currentSubtotal = parseFloat(transaction['subtotal'])*100;
                 var currentTax = parseFloat(transaction['tax'])*100;
                 //var currentTax = helper.currencyMath(currentSubtotal, '*', transaction['tax'], true, false);
-                var currentTotal = currentSubtotal - currentDiscount + parseFloat(transaction['tax']);
+                var currentTotal = currentSubtotal - currentDiscount + currentTax;
 
                 hourTotal += currentTotal;
 
@@ -320,8 +338,6 @@ function createOverviewGraph(transactions, startTime, endTime, type) {
                 } else {
                     templateCredit += currentTotal;
                 }
-                templateDiscount += currentDiscount;
-                templateTax += currentTax;
                 templateTotal += currentTotal;
             }
         }
@@ -338,8 +354,6 @@ function createOverviewGraph(transactions, startTime, endTime, type) {
     $overviewTotalWrapper.append(overviewTotalTemplate({
         'cash': helper.currencyFormat(templateCash),
         'credit': helper.currencyFormat(templateCredit),
-        'discount': helper.currencyFormat(templateDiscount),
-        'tax': helper.currencyFormat(templateTax),
         'total': helper.currencyFormat(templateTotal)
     }));
 
@@ -378,81 +392,82 @@ $(document).ready(function() {
     $(document).on('click', 'body', function () {
         $('#operation-overlay').removeClass('active');
     });
+
     //OPERATION POPUP//
 
     //LINK COLUMNS//
-    $(document).on('click', '#quantity-link', function (e) {
-        if(!globals.link_columns['quantity']) {
-            popupHandler(e, {type: "quantity", columns: globals.columns, link_columns: globals.link_columns});
-        }
-    });
-
-    $(document).on('click', '#price-link', function (e) {
-        if(!globals.link_columns['price']) {
-            popupHandler(e, {type: "price", columns: globals.columns, link_columns: globals.link_columns});
-        }
-    });
-
-    $(document).on('click', '#cost-link', function (e) {
-        if(!globals.link_columns['cost']) {
-            popupHandler(e, {type: "cost", columns: globals.columns, link_columns: globals.link_columns});
-        }
-    });
-
-    $(document).on('click', '#name-link', function (e) {
-        if(!globals.link_columns['name']) {
-            popupHandler(e, {type: "name"});
-        }
-    });
-
-    $(document).on('click', '#link-column-submit', function () {
-        var $operationOverlay = $('#operation-overlay');
-        var $linkColumnInput = $operationOverlay.find('#link-column-input');
-
-        var postData = {
-            link_type: $linkColumnInput.attr('data-type'),
-            column: $linkColumnInput.val()
-        };
-
-        $.ajax({
-            headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
-            url: globals.base_url + '/operation/link_columns/',
-            data: postData,
-            dataType: 'json',
-            type: "POST",
-            success: function (response) {
-                //console.log(JSON.stringify(response));
-
-                // Remove popup
-                $('#operation-overlay').removeClass('active');
-
-                // CACHE THE DATA
-                globals.link_columns = response;
-
-                // Hide Links that was linked
-                if (globals.link_columns.price){
-                    $('#price-link').hide();
-                }
-
-                if (globals.link_columns.cost){
-                    $('#cost-link').hide();
-                }
-
-                if(globals.link_columns.cost && globals.link_columns.price) {
-                    if (globals.date_range == '*') {
-                        createOverviewGraph(globals.transactions);
-                    } else {
-                        createOverviewGraph(globals.transactions, globals.start_date, globals.end_date);
-                    }
-                }
-
-                $('#' + type + '-button').addClass('active');
-            },
-            error: function (response) {
-                console.log(JSON.stringify(response.responseJSON['error_msg']));
-            }
-        });
-    });
+    //$(document).on('click', '#quantity-link', function (e) {
+    //    if(!globals.link_columns['quantity']) {
+    //        popupHandler(e, {type: "quantity", columns: globals.columns, link_columns: globals.link_columns});
+    //    }
+    //});
+    //
+    //$(document).on('click', '#price-link', function (e) {
+    //    if(!globals.link_columns['price']) {
+    //        popupHandler(e, {type: "price", columns: globals.columns, link_columns: globals.link_columns});
+    //    }
+    //});
+    //
+    //$(document).on('click', '#cost-link', function (e) {
+    //    if(!globals.link_columns['cost']) {
+    //        popupHandler(e, {type: "cost", columns: globals.columns, link_columns: globals.link_columns});
+    //    }
+    //});
+    //
+    //$(document).on('click', '#name-link', function (e) {
+    //    if(!globals.link_columns['name']) {
+    //        popupHandler(e, {type: "name"});
+    //    }
+    //});
+    //
+    //$(document).on('click', '#link-column-submit', function () {
+    //    var $operationOverlay = $('#operation-overlay');
+    //    var $linkColumnInput = $operationOverlay.find('#link-column-input');
+    //
+    //    var postData = {
+    //        link_type: $linkColumnInput.attr('data-type'),
+    //        column: $linkColumnInput.val()
+    //    };
+    //
+    //    $.ajax({
+    //        headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
+    //        url: globals.base_url + '/operation/link_columns/',
+    //        data: postData,
+    //        dataType: 'json',
+    //        type: "POST",
+    //        success: function (response) {
+    //            //console.log(JSON.stringify(response));
+    //
+    //            // Remove popup
+    //            $('#operation-overlay').removeClass('active');
+    //
+    //            // CACHE THE DATA
+    //            globals.link_columns = response;
+    //
+    //            // Hide Links that was linked
+    //            if (globals.link_columns.price){
+    //                $('#price-link').hide();
+    //            }
+    //
+    //            if (globals.link_columns.cost){
+    //                $('#cost-link').hide();
+    //            }
+    //
+    //            if(globals.link_columns.cost && globals.link_columns.price) {
+    //                if (globals.date_range == '*') {
+    //                    createOverviewGraph(globals.transactions);
+    //                } else {
+    //                    createOverviewGraph(globals.transactions, globals.start_date, globals.end_date);
+    //                }
+    //            }
+    //
+    //            $('#' + type + '-button').addClass('active');
+    //        },
+    //        error: function (response) {
+    //            console.log(JSON.stringify(response.responseJSON['error_msg']));
+    //        }
+    //    });
+    //});
     //LINK COLUMNS//
 
     //OVERVIEW//

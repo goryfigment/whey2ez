@@ -4,11 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Employee</title>
-
+    <link rel='shortcut icon' type='image/x-icon' href="{% static 'bundle/assets/whey2ez/whey2ez.ico' %}" />
     <script>
         var globals = {};
         globals.base_url = '{{base_url}}';
-        globals.columns = {{columns|safe}};
+        globals.stores = {{stores|safe}};
         globals.user_types = {{user_types|safe}};
         globals.employees = {{employees|safe}};
     </script>
@@ -25,7 +25,7 @@
             <div id="nav-mid-section">
                 <a class="nav-icon" id="overview-link" href="/overview/"><i class="fas fa-tachometer-alt"></i></a>
                 <a class="nav-icon" id="inventory-link" href="/inventory/"><i class="far fa-building"></i></a>
-                <a class="nav-icon" id="store-link" href="/store/"><i class="fas fa-store"></i></a>
+{#                <a class="nav-icon" id="store-link" href="/store/"><i class="fas fa-store"></i></a>#}
                 <a class="nav-icon" id="transaction-link" href="/transaction/"><i class="fas fa-shopping-cart"></i></a>
                 <a class="nav-icon" id="employee-link" href="/employee/"><i class="fas fa-male"></i></a>
             </div>
@@ -56,7 +56,6 @@
             <div id="top-nav-wrapper">
                 <div id="tab-wrapper">
                     <div class="tab active" id="inventory-tab" data-wrapper="#inventory-wrapper">Employees</div>
-                    <div class="tab" id="settings-tab" data-wrapper="#settings-wrapper">Settings</div>
                 </div>
                 <div id="user-wrapper">
                     <div id="user-container">
@@ -70,22 +69,24 @@
                 <div class="body-wrapper active" id="employee-wrapper">
                 {% if employee_list %}
                     <table id="user-table" class="table-container">
-                            <thead>
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Store</th>
+                                <th>Name</th>
+                                <th>Username</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for val in employee_list %}
                                 <tr>
-                                    <th>Title</th>
-                                    <th>Name</th>
-                                    <th>Username</th>
+                                    <td>{{ val.title }}</td>
+                                    <td>{% if val.store %}{{ val.store }}{% else %}ALL{% endif %}</td>
+                                    <td>{{ val.name }}</td>
+                                    <td>{{ val.username }}</td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {% for val in employee_list %}
-                                    <tr>
-                                        <td>{{ val.title }}</td>
-                                        <td>{{ val.name }}</td>
-                                        <td>{{ val.username }}</td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
+                            {% endfor %}
+                        </tbody>
                     </table>
                 {% else %}
                     <div id="empty-user-wrapper">

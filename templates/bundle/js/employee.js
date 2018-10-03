@@ -1,4 +1,4 @@
-webpackJsonp([4],[
+webpackJsonp([3],[
 /* 0 */
 /***/ (function(module, exports) {
 
@@ -159,16 +159,16 @@ function appendContextPath(contextPath, id) {
 
 
 /***/ }),
-/* 2 */,
-/* 3 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // Create a simple path alias to allow browserify to resolve
 // the runtime on a supported path.
-module.exports = __webpack_require__(11)['default'];
+module.exports = __webpack_require__(9)['default'];
 
 
 /***/ }),
+/* 3 */,
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10508,11 +10508,11 @@ var _exception = __webpack_require__(4);
 
 var _exception2 = _interopRequireDefault(_exception);
 
-var _helpers = __webpack_require__(12);
+var _helpers = __webpack_require__(10);
 
-var _decorators = __webpack_require__(20);
+var _decorators = __webpack_require__(18);
 
-var _logger = __webpack_require__(22);
+var _logger = __webpack_require__(20);
 
 var _logger2 = _interopRequireDefault(_logger);
 
@@ -10613,142 +10613,6 @@ exports.logger = _logger2['default'];
 
 /***/ }),
 /* 9 */
-/***/ (function(module, exports) {
-
-function numberCommaFormat(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-
-function replaceAll(str, find, replace) {
-    return str.replace(new RegExp(find.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1"), 'g'), replace);
-}
-
-function scrollToElement($container, $element, speed){
-    var elementTop = $element.offset().top;
-    var elementHeight = $element.height();
-    var containerTop = $container.offset().top;
-    var containerHeight = $container.height();
-
-    if ((((elementTop - containerTop) + elementHeight) > 0) && ((elementTop - containerTop) < containerHeight)) {
-
-    } else {
-        $container.animate({
-            scrollTop: $element.offset().top - $container.offset().top + $container.scrollTop()
-        }, speed);
-    }
-}
-
-
-function upAndDownPopups(keyCode, $popup, $options, scroll) {
-    var $selected = $popup.find('.selected');
-    var $firstOption = $options.filter(':visible').eq(0);
-    var $lastOption = $options.filter(':visible').eq(-1);
-
-    if (keyCode == 40) { //down arrow
-        var $nextOption = $selected.nextAll($options).filter(':visible').first();
-        if($selected.length) {
-            $selected.removeClass('selected');
-            if($nextOption.length){
-                $nextOption.addClass('selected');
-                if(scroll) {
-                    scrollToElement($popup, $nextOption, 50);
-                }
-            } else{
-                $firstOption.addClass('selected');
-                if(scroll) {
-                    scrollToElement($popup, $firstOption, 50);
-                }
-            }
-        } else {
-            $firstOption.addClass('selected');
-            if(scroll) {
-                scrollToElement($popup, $firstOption, 50);
-            }
-        }
-    } else if (keyCode == 38) { //up arrow
-        var $prevOption = $selected.prevAll($options).filter(':visible').first();
-        if($selected.length) {
-            $selected.removeClass('selected');
-            if($prevOption.length){
-                $prevOption.addClass('selected');
-                if(scroll) {
-                    scrollToElement($popup, $prevOption, 50);
-                }
-            }else{
-                $lastOption.addClass('selected');
-                if(scroll) {
-                    scrollToElement($popup, $lastOption, 50);
-                }
-            }
-        } else {
-            $lastOption.addClass('selected');
-            if(scroll) {
-                scrollToElement($popup, $lastOption, 50);
-            }
-        }
-    } else if(keyCode == 13) { //enter button
-        $selected.trigger('click');
-    }
-}
-
-function currencyFormat(cents) {
-    cents = Math.round(cents);
-
-    if (cents == 0) {
-        return cents.toFixed(2);
-    } else if(cents < 100){
-        if (cents > 0 || cents > -100) {
-            return (cents/100).toFixed(2);
-        } else {
-            cents = cents.toString();
-            return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
-        }
-    }else {
-        cents = cents.toString();
-        return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
-    }
-}
-
-function currencyMath(leftVal, operator, curRightVal, round, both) {
-    leftVal = parseFloat(leftVal);
-    curRightVal = parseFloat(curRightVal) * 100;
-
-    if (both == 'true') {
-        leftVal = leftVal * 100;
-    }
-
-    var cents = {
-        "+": curRightVal + leftVal,
-        "-": curRightVal - leftVal,
-        "*": curRightVal * leftVal,
-        "/": curRightVal / leftVal,
-        "%": curRightVal % leftVal
-    }[operator];
-
-    if (round == 'true') {
-        cents = Math.round(cents);
-    }
-
-    if (cents == 0) {
-        return cents.toFixed(2);
-    } else {
-        cents = cents.toString();
-        return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
-    }
-}
-
-module.exports = {
-    numberCommaFormat: numberCommaFormat,
-    replaceAll: replaceAll,
-    scrollToElement: scrollToElement,
-    upAndDownPopups: upAndDownPopups,
-    currencyFormat: currencyFormat,
-    currencyMath: currencyMath
-};
-
-/***/ }),
-/* 10 */,
-/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10770,7 +10634,7 @@ var base = _interopRequireWildcard(_handlebarsBase);
 // Each of these augment the Handlebars object. No need to setup here.
 // (This is done to easily share code between commonjs and browse envs)
 
-var _handlebarsSafeString = __webpack_require__(23);
+var _handlebarsSafeString = __webpack_require__(21);
 
 var _handlebarsSafeString2 = _interopRequireDefault(_handlebarsSafeString);
 
@@ -10782,11 +10646,11 @@ var _handlebarsUtils = __webpack_require__(1);
 
 var Utils = _interopRequireWildcard(_handlebarsUtils);
 
-var _handlebarsRuntime = __webpack_require__(24);
+var _handlebarsRuntime = __webpack_require__(22);
 
 var runtime = _interopRequireWildcard(_handlebarsRuntime);
 
-var _handlebarsNoConflict = __webpack_require__(25);
+var _handlebarsNoConflict = __webpack_require__(23);
 
 var _handlebarsNoConflict2 = _interopRequireDefault(_handlebarsNoConflict);
 
@@ -10821,7 +10685,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 12 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10833,31 +10697,31 @@ exports.registerDefaultHelpers = registerDefaultHelpers;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _helpersBlockHelperMissing = __webpack_require__(13);
+var _helpersBlockHelperMissing = __webpack_require__(11);
 
 var _helpersBlockHelperMissing2 = _interopRequireDefault(_helpersBlockHelperMissing);
 
-var _helpersEach = __webpack_require__(14);
+var _helpersEach = __webpack_require__(12);
 
 var _helpersEach2 = _interopRequireDefault(_helpersEach);
 
-var _helpersHelperMissing = __webpack_require__(15);
+var _helpersHelperMissing = __webpack_require__(13);
 
 var _helpersHelperMissing2 = _interopRequireDefault(_helpersHelperMissing);
 
-var _helpersIf = __webpack_require__(16);
+var _helpersIf = __webpack_require__(14);
 
 var _helpersIf2 = _interopRequireDefault(_helpersIf);
 
-var _helpersLog = __webpack_require__(17);
+var _helpersLog = __webpack_require__(15);
 
 var _helpersLog2 = _interopRequireDefault(_helpersLog);
 
-var _helpersLookup = __webpack_require__(18);
+var _helpersLookup = __webpack_require__(16);
 
 var _helpersLookup2 = _interopRequireDefault(_helpersLookup);
 
-var _helpersWith = __webpack_require__(19);
+var _helpersWith = __webpack_require__(17);
 
 var _helpersWith2 = _interopRequireDefault(_helpersWith);
 
@@ -10874,7 +10738,7 @@ function registerDefaultHelpers(instance) {
 
 
 /***/ }),
-/* 13 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10920,7 +10784,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 14 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11021,7 +10885,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 15 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11053,7 +10917,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 16 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11089,7 +10953,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 17 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11122,7 +10986,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 18 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11141,7 +11005,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 19 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11181,7 +11045,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 20 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11193,7 +11057,7 @@ exports.registerDefaultDecorators = registerDefaultDecorators;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _decoratorsInline = __webpack_require__(21);
+var _decoratorsInline = __webpack_require__(19);
 
 var _decoratorsInline2 = _interopRequireDefault(_decoratorsInline);
 
@@ -11204,7 +11068,7 @@ function registerDefaultDecorators(instance) {
 
 
 /***/ }),
-/* 21 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11240,7 +11104,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 22 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11294,7 +11158,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 23 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11316,7 +11180,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 24 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11630,7 +11494,7 @@ function executeDecorators(fn, prog, container, depths, data, blockParams) {
 
 
 /***/ }),
-/* 25 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11655,10 +11519,10 @@ exports['default'] = function (Handlebars) {
 module.exports = exports['default'];
 //# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL2xpYi9oYW5kbGViYXJzL25vLWNvbmZsaWN0LmpzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7O3FCQUNlLFVBQVMsVUFBVSxFQUFFOztBQUVsQyxNQUFJLElBQUksR0FBRyxPQUFPLE1BQU0sS0FBSyxXQUFXLEdBQUcsTUFBTSxHQUFHLE1BQU07TUFDdEQsV0FBVyxHQUFHLElBQUksQ0FBQyxVQUFVLENBQUM7O0FBRWxDLFlBQVUsQ0FBQyxVQUFVLEdBQUcsWUFBVztBQUNqQyxRQUFJLElBQUksQ0FBQyxVQUFVLEtBQUssVUFBVSxFQUFFO0FBQ2xDLFVBQUksQ0FBQyxVQUFVLEdBQUcsV0FBVyxDQUFDO0tBQy9CO0FBQ0QsV0FBTyxVQUFVLENBQUM7R0FDbkIsQ0FBQztDQUNIIiwiZmlsZSI6Im5vLWNvbmZsaWN0LmpzIiwic291cmNlc0NvbnRlbnQiOlsiLyogZ2xvYmFsIHdpbmRvdyAqL1xuZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24oSGFuZGxlYmFycykge1xuICAvKiBpc3RhbmJ1bCBpZ25vcmUgbmV4dCAqL1xuICBsZXQgcm9vdCA9IHR5cGVvZiBnbG9iYWwgIT09ICd1bmRlZmluZWQnID8gZ2xvYmFsIDogd2luZG93LFxuICAgICAgJEhhbmRsZWJhcnMgPSByb290LkhhbmRsZWJhcnM7XG4gIC8qIGlzdGFuYnVsIGlnbm9yZSBuZXh0ICovXG4gIEhhbmRsZWJhcnMubm9Db25mbGljdCA9IGZ1bmN0aW9uKCkge1xuICAgIGlmIChyb290LkhhbmRsZWJhcnMgPT09IEhhbmRsZWJhcnMpIHtcbiAgICAgIHJvb3QuSGFuZGxlYmFycyA9ICRIYW5kbGViYXJzO1xuICAgIH1cbiAgICByZXR1cm4gSGFuZGxlYmFycztcbiAgfTtcbn1cbiJdfQ==
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(26)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(24)))
 
 /***/ }),
-/* 26 */
+/* 24 */
 /***/ (function(module, exports) {
 
 var g;
@@ -11685,10 +11549,311 @@ module.exports = g;
 
 
 /***/ }),
+/* 25 */
+/***/ (function(module, exports) {
+
+function numberCommaFormat(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+function replaceAll(str, find, replace) {
+    return str.replace(new RegExp(find.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1"), 'g'), replace);
+}
+
+function scrollToElement($container, $element, speed){
+    var elementTop = $element.offset().top;
+    var elementHeight = $element.height();
+    var containerTop = $container.offset().top;
+    var containerHeight = $container.height();
+
+    if ((((elementTop - containerTop) + elementHeight) > 0) && ((elementTop - containerTop) < containerHeight)) {
+
+    } else {
+        $container.animate({
+            scrollTop: $element.offset().top - $container.offset().top + $container.scrollTop()
+        }, speed);
+    }
+}
+
+
+function upAndDownPopups(keyCode, $popup, $options, scroll) {
+    var $selected = $popup.find('.selected');
+    var $firstOption = $options.filter(':visible').eq(0);
+    var $lastOption = $options.filter(':visible').eq(-1);
+
+    if (keyCode == 40) { //down arrow
+        var $nextOption = $selected.nextAll($options).filter(':visible').first();
+        if($selected.length) {
+            $selected.removeClass('selected');
+            if($nextOption.length){
+                $nextOption.addClass('selected');
+                if(scroll) {
+                    scrollToElement($popup, $nextOption, 50);
+                }
+            } else{
+                $firstOption.addClass('selected');
+                if(scroll) {
+                    scrollToElement($popup, $firstOption, 50);
+                }
+            }
+        } else {
+            $firstOption.addClass('selected');
+            if(scroll) {
+                scrollToElement($popup, $firstOption, 50);
+            }
+        }
+    } else if (keyCode == 38) { //up arrow
+        var $prevOption = $selected.prevAll($options).filter(':visible').first();
+        if($selected.length) {
+            $selected.removeClass('selected');
+            if($prevOption.length){
+                $prevOption.addClass('selected');
+                if(scroll) {
+                    scrollToElement($popup, $prevOption, 50);
+                }
+            }else{
+                $lastOption.addClass('selected');
+                if(scroll) {
+                    scrollToElement($popup, $lastOption, 50);
+                }
+            }
+        } else {
+            $lastOption.addClass('selected');
+            if(scroll) {
+                scrollToElement($popup, $lastOption, 50);
+            }
+        }
+    } else if(keyCode == 13) { //enter button
+        $selected.trigger('click');
+    }
+}
+
+function currencyFormat(cents) {
+    cents = Math.round(cents);
+
+    if (cents == 0) {
+        return cents.toFixed(2);
+    } else if(cents < 100){
+        if (cents > 0 || cents > -100) {
+            return (cents/100).toFixed(2);
+        } else {
+            cents = cents.toString();
+            return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
+        }
+    }else {
+        cents = cents.toString();
+        return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
+    }
+}
+
+function currencyMath(leftVal, operator, curRightVal, round, both) {
+    leftVal = parseFloat(leftVal);
+    curRightVal = parseFloat(curRightVal) * 100;
+
+    if (both == 'true') {
+        leftVal = leftVal * 100;
+    }
+
+    var cents = {
+        "+": curRightVal + leftVal,
+        "-": curRightVal - leftVal,
+        "*": curRightVal * leftVal,
+        "/": curRightVal / leftVal,
+        "%": curRightVal % leftVal
+    }[operator];
+
+    if (round == 'true') {
+        cents = Math.round(cents);
+    }
+
+    if (cents == 0) {
+        return cents.toFixed(2);
+    } else {
+        cents = cents.toString();
+        return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
+    }
+}
+
+module.exports = {
+    numberCommaFormat: numberCommaFormat,
+    replaceAll: replaceAll,
+    scrollToElement: scrollToElement,
+    upAndDownPopups: upAndDownPopups,
+    currencyFormat: currencyFormat,
+    currencyMath: currencyMath
+};
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Handlebars = __webpack_require__(2);
+function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
+module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=container.lambda, alias3=container.escapeExpression;
+
+  return "    <div class=\"establishment store-item"
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.id : depth0),"==",(depths[1] != null ? depths[1].active_store : depths[1]),{"name":"ifCond","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\" data-id=\""
+    + alias3(alias2((depth0 != null ? depth0.id : depth0), depth0))
+    + "\">\r\n        <div class=\"store-name\">\r\n            <span class=\"bulletin-wrapper\"><span class=\"arrow-tail\"></span><span><i class=\"fas fa-caret-right\"></i></span></span>\r\n            "
+    + alias3(alias2((depth0 != null ? depth0.name : depth0), depth0))
+    + "\r\n            <span class=\"store-icon-wrapper\">\r\n"
+    + ((stack1 = helpers.unless.call(alias1,__default(__webpack_require__(30)).call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.price : stack1),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.cost : stack1),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.quantity : stack1),{"name":"or","hash":{},"data":data}),{"name":"unless","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.program(6, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + "            </span>\r\n        </div>\r\n    </div>\r\n";
+},"2":function(container,depth0,helpers,partials,data) {
+    return " active";
+},"4":function(container,depth0,helpers,partials,data) {
+    return "                    <span class=\"link-columns-button\"><i class=\"fas fa-exclamation-triangle\"></i></span>\r\n";
+},"6":function(container,depth0,helpers,partials,data) {
+    return "                    <span class=\"create-transaction-button\"><i class=\"fas fa-cart-plus\"></i></span>\r\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1;
+
+  return ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.stores : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"useData":true,"useDepths":true});
+
+/***/ }),
 /* 27 */,
-/* 28 */,
-/* 29 */,
-/* 30 */,
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+//handlebars
+var linkColumnsTemplate = __webpack_require__(29);
+var storeItemTemplate = __webpack_require__(26);
+//libraries
+var $ = __webpack_require__(5);
+
+function popupHandler(e, popupData, template) {
+    e.stopPropagation();
+    var $overlay = $('#operation-overlay');
+    $overlay.empty();
+    $overlay.addClass('active');
+    $overlay.append(template(popupData));
+}
+
+$(document).ready(function() {
+    $(document).on('click', '.link-columns-button', function (e) {
+        popupHandler(e, globals.stores[$(this).closest('.store-item').attr('data-id')], linkColumnsTemplate);
+    });
+
+    $(document).on('click', '#link-columns-submit', function () {
+        var $wrapper = $('#operation-settings-scroll-wrapper');
+
+        var postData = {
+            'store_id': $(this).attr('data-id'),
+            'link_columns': {
+                'name': $wrapper.find('#name-column-input').val(),
+                'price': $wrapper.find('#price-column-input').val(),
+                'quantity': $wrapper.find('#quantity-column-input').val(),
+                'cost': $wrapper.find('#cost-column-input').val()
+            }
+        };
+
+        $.ajax({
+            headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
+            url: globals.base_url + '/account/save_settings/',
+            data: JSON.stringify(postData),
+            dataType: 'json',
+            type: "POST",
+            success: function (response) {
+                //JSON.stringify(response);
+                var $storeContainer = $('.store-container');
+                $storeContainer.empty();
+                $storeContainer.append(storeItemTemplate({'stores': globals.stores}));
+
+                $('#operation-overlay').removeClass('active');
+                globals.stores[response['id']] = response;
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    $('#import-wrapper').find('.error').text('Permission Denied').show();
+                } else {
+                    $('#import-wrapper').find('.error').text(response.responseText).show();
+                }
+            }
+        });
+    });
+
+
+});
+
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Handlebars = __webpack_require__(2);
+function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
+module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return container.escapeExpression(container.lambda(((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1), depth0));
+},"3":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
+
+  return "                    <option value=\""
+    + alias2(alias1(depth0, depth0))
+    + "\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,"==",((stack1 = (depths[1] != null ? depths[1].link_columns : depths[1])) != null ? stack1.price : stack1),{"name":"ifCond","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">"
+    + alias2(alias1(depth0, depth0))
+    + "</option>\r\n";
+},"4":function(container,depth0,helpers,partials,data) {
+    return "selected";
+},"6":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
+
+  return "                    <option value=\""
+    + alias2(alias1(depth0, depth0))
+    + "\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,"==",((stack1 = (depths[1] != null ? depths[1].link_columns : depths[1])) != null ? stack1.quantity : stack1),{"name":"ifCond","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">"
+    + alias2(alias1(depth0, depth0))
+    + "</option>\r\n";
+},"8":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
+
+  return "                    <option value=\""
+    + alias2(alias1(depth0, depth0))
+    + "\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,"==",((stack1 = (depths[1] != null ? depths[1].link_columns : depths[1])) != null ? stack1.cost : stack1),{"name":"ifCond","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">"
+    + alias2(alias1(depth0, depth0))
+    + "</option>\r\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=container.lambda, alias2=container.escapeExpression, alias3=depth0 != null ? depth0 : (container.nullContext || {});
+
+  return "<div id=\"operation-popup-wrapper\">\r\n    <div id=\"operation-settings-scroll-wrapper\">\r\n        <h2 class=\"settings-title\">"
+    + alias2(alias1((depth0 != null ? depth0.name : depth0), depth0))
+    + "</h2>\r\n        <div class=\"link-column-wrapper\">\r\n            <label class=\"settings-subtitle\">Name</label>\r\n            <p>The name of the item, you wished to be viewed in reports, transactions, etc.</p>\r\n            <input id=\"name-column-input\" value=\""
+    + ((stack1 = helpers["if"].call(alias3,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1),{"name":"if","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\" />\r\n        </div>\r\n        <div class=\"link-column-wrapper\">\r\n            <label class=\"settings-subtitle\">Price</label>\r\n            <p class=\"\">The selling price of an item.</p>\r\n            <select id=\"price-column-input\" data-type=\""
+    + alias2(alias1((depth0 != null ? depth0.type : depth0), depth0))
+    + "\">\r\n"
+    + ((stack1 = helpers.each.call(alias3,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(3, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "            </select>\r\n        </div>\r\n        <div class=\"link-column-wrapper\">\r\n            <label class=\"settings-subtitle\">Quantity</label>\r\n            <p class=\"\">The amount of an item.</p>\r\n            <select id=\"quantity-column-input\" data-type=\""
+    + alias2(alias1((depth0 != null ? depth0.type : depth0), depth0))
+    + "\">\r\n"
+    + ((stack1 = helpers.each.call(alias3,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(6, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "            </select>\r\n        </div>\r\n        <div class=\"link-column-wrapper\">\r\n            <label class=\"settings-subtitle\">Cost</label>\r\n            <p class=\"\">The cost of the item, used to calculate profit.</p>\r\n            <select id=\"cost-column-input\" data-type=\""
+    + alias2(alias1((depth0 != null ? depth0.type : depth0), depth0))
+    + "\">\r\n"
+    + ((stack1 = helpers.each.call(alias3,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(8, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "            </select>\r\n        </div>\r\n    </div>\r\n    <button id=\"link-columns-submit\" class=\"add\" data-id=\""
+    + alias2(alias1((depth0 != null ? depth0.id : depth0), depth0))
+    + "\">Link Columns</button>\r\n</div>";
+},"useData":true,"useDepths":true});
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports) {
+
+module.exports = function() {
+    return Array.prototype.slice.call(arguments, 0, -1).some(Boolean);
+};
+
+/***/ }),
 /* 31 */,
 /* 32 */,
 /* 33 */,
@@ -11717,21 +11882,31 @@ module.exports = g;
 /* 56 */,
 /* 57 */,
 /* 58 */,
-/* 59 */
+/* 59 */,
+/* 60 */,
+/* 61 */,
+/* 62 */,
+/* 63 */,
+/* 64 */,
+/* 65 */,
+/* 66 */,
+/* 67 */,
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(10);
-__webpack_require__(60);
+__webpack_require__(27);
+__webpack_require__(69);
 __webpack_require__(8);
 
 //handlebars
 //var inventoryTemplate = require('./../handlebars/inventory/inventory.hbs');
 //var rowTemplate = require('./../handlebars/inventory/row.hbs');
-var employeeOperationTemplate = __webpack_require__(61);
+var employeeOperationTemplate = __webpack_require__(70);
 
 //libraries
 var $ = __webpack_require__(5);
-var helper = __webpack_require__(9);
+var helper = __webpack_require__(25);
+__webpack_require__(28);
 
 function init() {
     $('#employee-link').addClass('active');
@@ -11773,13 +11948,12 @@ $(document).ready(function() {
 
     //EMPLOYEE TYPE//
     $(document).on('click', '#create-employee-type-link, #create-employee-button', function (e) {
-        popupHandler(e, {type: "employee_type", columns: globals.columns});
+        popupHandler(e, {type: "employee_type"});
     });
 
     $(document).on('click', '#create-user-type-submit', function () {
         var $operationOverlay = $('#operation-overlay');
 
-        var visibleColumns = [];
         var postData = {
             permissions: {}
         };
@@ -11787,14 +11961,9 @@ $(document).ready(function() {
         $operationOverlay.find('.checkbox-input').each(function() {
             var $checkboxInput = $(this);
 
-            if ($checkboxInput.attr('data-type') == 'columns' && $checkboxInput.prop('checked')) {
-                visibleColumns.push($checkboxInput.attr('data-name'));
-            } else {
-                postData['permissions'][$checkboxInput.attr('data-name')] = $checkboxInput.prop('checked');
-            }
+            postData['permissions'][$checkboxInput.attr('data-name')] = $checkboxInput.prop('checked');
         });
 
-        postData['visible_columns'] = visibleColumns;
         postData['name'] = $operationOverlay.find('#employee-type-input').val();
 
         $.ajax({
@@ -11837,7 +12006,6 @@ $(document).ready(function() {
             dataType: 'json',
             type: "GET",
             success: function (response) {
-                console.log(response);
                 response['type'] = "employee_type";
                 response['columns'] = globals.columns;
                 response['edit'] = true;
@@ -11867,22 +12035,15 @@ $(document).ready(function() {
     $(document).on('click', '#edit-user-type-submit', function () {
         var $operationOverlay = $('#operation-overlay');
 
-        var visibleColumns = [];
         var postData = {
             permissions: {}
         };
 
         $operationOverlay.find('.checkbox-input').each(function() {
             var $checkboxInput = $(this);
-
-            if ($checkboxInput.attr('data-type') == 'columns' && $checkboxInput.prop('checked')) {
-                visibleColumns.push($checkboxInput.attr('data-name'));
-            } else {
-                postData['permissions'][$checkboxInput.attr('data-name')] = $checkboxInput.prop('checked');
-            }
+            postData['permissions'][$checkboxInput.attr('data-name')] = $checkboxInput.prop('checked');
         });
 
-        postData['visible_columns'] = visibleColumns;
         postData['name'] = $operationOverlay.find('#employee-type-input').val();
         postData['user_type'] = $(this).data('id');
 
@@ -11953,7 +12114,7 @@ $(document).ready(function() {
 
     //CREATE USER//
     $(document).on('click', '#user-create', function (e) {
-        popupHandler(e, {type: "create_employee", user_types: globals.user_types, user_type_id: parseInt($(this).attr('data-id'))});
+        popupHandler(e, {type: "create_employee", stores: globals.stores, user_types: globals.user_types, user_type_id: parseInt($(this).attr('data-id'))});
     });
 
     $(document).on('change', '#assign-store-input', function () {
@@ -12002,70 +12163,68 @@ $(document).ready(function() {
 });
 
 /***/ }),
-/* 60 */
+/* 69 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 61 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Handlebars = __webpack_require__(3);
+var Handlebars = __webpack_require__(2);
 function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
-module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data,blockParams,depths) {
+module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
   return "    <div class=\"operation-popup-container\">\r\n        <div class=\"operation-title\">Employee Type</div>\r\n        <div class=\"operation-description\">Define a user's title and permissions.</div>\r\n\r\n"
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.program(4, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(2, data, 0),"inverse":container.program(4, data, 0),"data":data})) != null ? stack1 : "")
     + "\r\n        <div id=\"permission-wrapper\">\r\n\r\n            <div class=\"operation-header\">Inventory Permissions</div>\r\n\r\n            <div class=\"operation-subtitle\">Columns</div>\r\n\r\n            <input type=\"checkbox\" id=\"add-columns-input\" data-name=\"add_column\" class=\"checkbox-input\" "
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(6, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(6, data, 0),"inverse":container.program(7, data, 0),"data":data})) != null ? stack1 : "")
     + " style=\"display: none\" />\r\n            <label for=\"add-columns-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Add Columns</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"edit-columns-input\" data-name=\"edit_column\" class=\"checkbox-input\" "
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(9, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(9, data, 0),"inverse":container.program(7, data, 0),"data":data})) != null ? stack1 : "")
     + " style=\"display: none\" />\r\n            <label for=\"edit-columns-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Edit Columns</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"delete-columns-input\" data-name=\"delete_column\" class=\"checkbox-input\" "
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(11, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(11, data, 0),"inverse":container.program(7, data, 0),"data":data})) != null ? stack1 : "")
     + " style=\"display: none\" />\r\n            <label for=\"delete-columns-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Delete Columns</span>\r\n            </label>\r\n\r\n            <div class=\"operation-subtitle\">Items</div>\r\n\r\n            <input type=\"checkbox\" id=\"add-items-input\" data-name=\"add_item\" class=\"checkbox-input\" "
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(13, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(13, data, 0),"inverse":container.program(7, data, 0),"data":data})) != null ? stack1 : "")
     + " style=\"display: none\" />\r\n            <label for=\"add-items-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Add Items</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"edit-items-input\" data-name=\"edit_item\" class=\"checkbox-input\" "
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(15, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(15, data, 0),"inverse":container.program(7, data, 0),"data":data})) != null ? stack1 : "")
     + " style=\"display: none\" />\r\n            <label for=\"edit-items-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Edit Items</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"delete-items-input\" data-name=\"delete_item\" class=\"checkbox-input\" "
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(17, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(17, data, 0),"inverse":container.program(7, data, 0),"data":data})) != null ? stack1 : "")
     + " style=\"display: none\" />\r\n            <label for=\"delete-items-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Delete Items</span>\r\n            </label>\r\n\r\n            <div class=\"operation-subtitle\">Other Actions</div>\r\n\r\n            <input type=\"checkbox\" id=\"import-input\" data-name=\"import\" class=\"checkbox-input\" "
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(19, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(19, data, 0),"inverse":container.program(7, data, 0),"data":data})) != null ? stack1 : "")
     + " style=\"display: none\" />\r\n            <label for=\"import-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Import</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"export-input\" data-name=\"export\" class=\"checkbox-input\" "
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(21, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(21, data, 0),"inverse":container.program(7, data, 0),"data":data})) != null ? stack1 : "")
     + " style=\"display: none\" />\r\n            <label for=\"export-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Export</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"drop-table-input\" data-name=\"drop_table\" class=\"checkbox-input\" "
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(23, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(23, data, 0),"inverse":container.program(7, data, 0),"data":data})) != null ? stack1 : "")
     + " style=\"display: none\" />\r\n            <label for=\"drop-table-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Drop Table</span>\r\n            </label>\r\n\r\n            <div class=\"operation-subtitle\">Operations</div>\r\n\r\n            <input type=\"checkbox\" id=\"receive-input\" data-name=\"receive\" class=\"checkbox-input\" "
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(25, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(25, data, 0),"inverse":container.program(7, data, 0),"data":data})) != null ? stack1 : "")
     + " style=\"display: none\" />\r\n            <label for=\"receive-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Receive</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"damage-input\" data-name=\"damage\" class=\"checkbox-input\" "
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(27, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(27, data, 0),"inverse":container.program(7, data, 0),"data":data})) != null ? stack1 : "")
     + " style=\"display: none\" />\r\n            <label for=\"damage-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Damage</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"reset-price-input\" data-name=\"reset_price\" class=\"checkbox-input\" "
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(29, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(29, data, 0),"inverse":container.program(7, data, 0),"data":data})) != null ? stack1 : "")
     + " style=\"display: none\" />\r\n            <label for=\"reset-price-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Reset Price</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"reset-cost-input\" data-name=\"reset_cost\" class=\"checkbox-input\" "
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(31, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
-    + " style=\"display: none\" />\r\n            <label for=\"reset-cost-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Reset Cost</span>\r\n            </label>\r\n\r\n            <div class=\"operation-subtitle\">Visible Columns</div>\r\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(33, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "\r\n            <div class=\"operation-header\">Transaction Permissions</div>\r\n\r\n            <input type=\"checkbox\" id=\"create-transaction-input\" data-name=\"create_transaction\" class=\"checkbox-input\" "
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(36, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(31, data, 0),"inverse":container.program(7, data, 0),"data":data})) != null ? stack1 : "")
+    + " style=\"display: none\" />\r\n            <label for=\"reset-cost-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Reset Cost</span>\r\n            </label>\r\n\r\n            <div class=\"operation-header\">Transaction Permissions</div>\r\n\r\n            <input type=\"checkbox\" id=\"create-transaction-input\" data-name=\"create_transaction\" class=\"checkbox-input\" "
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(33, data, 0),"inverse":container.program(7, data, 0),"data":data})) != null ? stack1 : "")
     + " style=\"display: none\" />\r\n            <label for=\"create-transaction-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Create Transaction</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"edit-transaction-settings-input\" data-name=\"edit_transaction_settings\" class=\"checkbox-input\" "
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(38, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(35, data, 0),"inverse":container.program(7, data, 0),"data":data})) != null ? stack1 : "")
     + " style=\"display: none\" />\r\n            <label for=\"edit-transaction-settings-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Edit Transaction Settings</span>\r\n            </label>\r\n\r\n            <div class=\"operation-header\">Store</div>\r\n\r\n            <input type=\"checkbox\" id=\"create-store-input\" data-name=\"create_store\" class=\"checkbox-input\" "
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(40, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(37, data, 0),"inverse":container.program(7, data, 0),"data":data})) != null ? stack1 : "")
     + " style=\"display: none\" />\r\n            <label for=\"create-store-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Create Store</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"edit-store-input\" data-name=\"edit_store\" class=\"checkbox-input\" "
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(42, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(39, data, 0),"inverse":container.program(7, data, 0),"data":data})) != null ? stack1 : "")
     + " style=\"display: none\" />\r\n            <label for=\"edit-store-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Edit Store</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"delete-store-input\" data-name=\"delete_store\" class=\"checkbox-input\" "
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(44, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(41, data, 0),"inverse":container.program(7, data, 0),"data":data})) != null ? stack1 : "")
     + " style=\"display: none\" />\r\n            <label for=\"delete-store-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Delete Store</span>\r\n            </label>\r\n\r\n            <div class=\"operation-header\">Creating Users</div>\r\n\r\n            <input type=\"checkbox\" id=\"create-user-type-input\" data-name=\"create_user_type\" class=\"checkbox-input\" "
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(46, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(43, data, 0),"inverse":container.program(7, data, 0),"data":data})) != null ? stack1 : "")
     + " style=\"display: none\" />\r\n            <label for=\"create-user-type-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Create Employee Type</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"edit-user-permissions-input\" data-name=\"edit_permissions\" class=\"checkbox-input\" "
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(48, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(45, data, 0),"inverse":container.program(7, data, 0),"data":data})) != null ? stack1 : "")
     + " style=\"display: none\" />\r\n            <label for=\"edit-user-permissions-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Edit Employee Permissions</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"delete-user-permissions-input\" data-name=\"delete_user_type\" class=\"checkbox-input\" "
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(50, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(47, data, 0),"inverse":container.program(7, data, 0),"data":data})) != null ? stack1 : "")
     + " style=\"display: none\" />\r\n            <label for=\"delete-user-permissions-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Delete Employee Type</span>\r\n            </label>\r\n\r\n            <input type=\"checkbox\" id=\"create-new-users-input\" data-name=\"create_user\" class=\"checkbox-input\" "
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(52, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(49, data, 0),"inverse":container.program(7, data, 0),"data":data})) != null ? stack1 : "")
     + " style=\"display: none\" />\r\n            <label for=\"create-new-users-input\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Create New Employees</span>\r\n            </label>\r\n        </div>\r\n\r\n        <div class=\"operation-button-wrapper\">\r\n            <div id=\"settings-result\"></div>\r\n"
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(54, data, 0, blockParams, depths),"inverse":container.program(56, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(51, data, 0),"inverse":container.program(53, data, 0),"data":data})) != null ? stack1 : "")
     + "        </div>\r\n    </div>\r\n";
 },"2":function(container,depth0,helpers,partials,data) {
     return "            <div class=\"permission-input-container\">\r\n                <label for=\"assign-store-input\">Employee Type Name</label>\r\n                <div class=\"error\"></div>\r\n                <input id=\"employee-type-input\" value=\""
@@ -12127,85 +12286,67 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     var stack1;
 
   return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.permission : depth0)) != null ? stack1.reset_cost : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"33":function(container,depth0,helpers,partials,data,blockParams,depths) {
-    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
-
-  return "                <input type=\"checkbox\" id=\""
-    + alias2(alias1(depth0, depth0))
-    + "-input\" data-name=\""
-    + alias2(alias1(depth0, depth0))
-    + "\" data-type=\"columns\" class=\"checkbox-input\" "
-    + ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),(depths[1] != null ? depths[1].edit : depths[1]),{"name":"if","hash":{},"fn":container.program(34, data, 0, blockParams, depths),"inverse":container.program(7, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
-    + " style=\"display: none\" />\r\n                <label for=\""
-    + alias2(alias1(depth0, depth0))
-    + "-input\" class=\"check-box-wrapper\">\r\n                    <span class=\"check-box\">\r\n                        <svg width=\"12px\" height=\"10px\">\r\n                            <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                        </svg>\r\n                    </span>\r\n                    <span class=\"check-box-label\">"
-    + alias2(alias1(depth0, depth0))
-    + "</span>\r\n                </label>\r\n";
-},"34":function(container,depth0,helpers,partials,data,blockParams,depths) {
-    var stack1;
-
-  return ((stack1 = __default(__webpack_require__(62)).call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,((stack1 = (depths[1] != null ? depths[1].permission : depths[1])) != null ? stack1.visible_columns : stack1),{"name":"contains","hash":{},"fn":container.program(7, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"36":function(container,depth0,helpers,partials,data) {
+},"33":function(container,depth0,helpers,partials,data) {
     var stack1;
 
   return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.permission : depth0)) != null ? stack1.create_transaction : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"38":function(container,depth0,helpers,partials,data) {
+},"35":function(container,depth0,helpers,partials,data) {
     var stack1;
 
   return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.permission : depth0)) != null ? stack1.edit_transaction_settings : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"40":function(container,depth0,helpers,partials,data) {
+},"37":function(container,depth0,helpers,partials,data) {
     var stack1;
 
   return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.permission : depth0)) != null ? stack1.create_store : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"42":function(container,depth0,helpers,partials,data) {
+},"39":function(container,depth0,helpers,partials,data) {
     var stack1;
 
   return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.permission : depth0)) != null ? stack1.edit_store : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"44":function(container,depth0,helpers,partials,data) {
+},"41":function(container,depth0,helpers,partials,data) {
     var stack1;
 
   return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.permission : depth0)) != null ? stack1.delete_store : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"46":function(container,depth0,helpers,partials,data) {
+},"43":function(container,depth0,helpers,partials,data) {
     var stack1;
 
   return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.permission : depth0)) != null ? stack1.create_user_type : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"48":function(container,depth0,helpers,partials,data) {
+},"45":function(container,depth0,helpers,partials,data) {
     var stack1;
 
   return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.permission : depth0)) != null ? stack1.edit_permissions : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"50":function(container,depth0,helpers,partials,data) {
+},"47":function(container,depth0,helpers,partials,data) {
     var stack1;
 
   return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.permission : depth0)) != null ? stack1.delete_user_type : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"52":function(container,depth0,helpers,partials,data) {
+},"49":function(container,depth0,helpers,partials,data) {
     var stack1;
 
   return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.permission : depth0)) != null ? stack1.create_user : stack1),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"54":function(container,depth0,helpers,partials,data) {
+},"51":function(container,depth0,helpers,partials,data) {
     return "                <button class=\"edit\" id=\"edit-user-type-submit\">Edit User Permissions</button>\r\n                <button class=\"delete\" id=\"delete-user-type-submit\">Delete Employee Type</button>\r\n";
-},"56":function(container,depth0,helpers,partials,data) {
+},"53":function(container,depth0,helpers,partials,data) {
     return "                <button class=\"add\" id=\"create-user-type-submit\">Create User Type</button>\r\n";
-},"58":function(container,depth0,helpers,partials,data) {
+},"55":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
   return "        <div class=\"operation-title\">Create an Employee Account</div>\r\n        <div class=\"operation-description\">Create a user to connected to your account.</div>\r\n        <div id=\"create-user-wrapper\">\r\n            <label for=\"assign-store-input\">User Type</label>\r\n            <select class=\"select-input\" id=\"user-type-input\">\r\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.user_types : depth0),{"name":"each","hash":{},"fn":container.program(59, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "            </select>\r\n\r\n            <label for=\"assign-store-input\">Store Assignment</label>\r\n            <div class=\"input-description-wrapper\">\r\n                <div class=\"input-description active\" data-type=\"all\">This user will be connected every store and main inventory.</div>\r\n                <div class=\"input-description\" data-type=\"main\">This user will only be connected to just the main inventory.</div>\r\n                <div class=\"input-description\" data-type=\"store\">This user will only be connected to one store.</div>\r\n            </div>\r\n            <select class=\"select-input\" id=\"assign-store-input\">\r\n                <option value=\"all\">All</option>\r\n                <option value=\"main\">Main</option>\r\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.stores : depth0),{"name":"each","hash":{},"fn":container.program(62, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.user_types : depth0),{"name":"each","hash":{},"fn":container.program(56, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "            </select>\r\n\r\n            <label for=\"assign-store-input\">Store Assignment</label>\r\n            <div class=\"input-description-wrapper\">\r\n                <div class=\"input-description active\" data-type=\"all\">This user will be connected every store inventory.</div>\r\n                <div class=\"input-description\" data-type=\"store\">This user will only be connected to one store.</div>\r\n            </div>\r\n            <select class=\"select-input\" id=\"assign-store-input\">\r\n                <option value=\"all\">All</option>\r\n"
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.stores : depth0),{"name":"each","hash":{},"fn":container.program(59, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </select>\r\n\r\n            <label for=\"assign-store-input\">First Name</label>\r\n            <input class=\"operation-text-input\" id=\"first-name-input\" />\r\n\r\n            <label for=\"assign-store-input\">Last Name</label>\r\n            <input class=\"operation-text-input\" id=\"last-name-input\" />\r\n\r\n            <label for=\"assign-store-input\">Username</label>\r\n            <input class=\"operation-text-input\" id=\"username-input\" />\r\n\r\n            <label for=\"assign-store-input\">Password</label>\r\n            <input type=\"password\" class=\"operation-text-input\" id=\"password-input\" />\r\n\r\n            <button class=\"add\" id=\"create-employee-submit\">Create Employee</button>\r\n        </div>\r\n";
-},"59":function(container,depth0,helpers,partials,data) {
+},"56":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=container.lambda, alias2=container.escapeExpression;
 
   return "                    <option value=\""
     + alias2(alias1((depth0 != null ? depth0.id : depth0), depth0))
     + "\" "
-    + ((stack1 = __default(__webpack_require__(0)).call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.user_type_id : depth0),"==",(depth0 != null ? depth0.id : depth0),{"name":"ifCond","hash":{},"fn":container.program(60, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.user_type_id : depth0),"==",(depth0 != null ? depth0.id : depth0),{"name":"ifCond","hash":{},"fn":container.program(57, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + ">"
     + alias2(alias1((depth0 != null ? depth0.name : depth0), depth0))
     + "</option>\r\n";
-},"60":function(container,depth0,helpers,partials,data) {
+},"57":function(container,depth0,helpers,partials,data) {
     return "selected";
-},"62":function(container,depth0,helpers,partials,data) {
+},"59":function(container,depth0,helpers,partials,data) {
     var alias1=container.lambda, alias2=container.escapeExpression;
 
   return "                    <option value=\""
@@ -12213,26 +12354,15 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + "\">"
     + alias2(alias1((depth0 != null ? depth0.name : depth0), depth0))
     + "</option>\r\n";
-},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams,depths) {
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
   return "<div id=\"operation-popup-wrapper\">\r\n"
-    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","employee_type",{"name":"ifCond","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","employee_type",{"name":"ifCond","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\r\n\r\n"
-    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","create_employee",{"name":"ifCond","hash":{},"fn":container.program(58, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","create_employee",{"name":"ifCond","hash":{},"fn":container.program(55, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "</div>";
-},"useData":true,"useDepths":true});
-
-/***/ }),
-/* 62 */
-/***/ (function(module, exports) {
-
-module.exports = function(elem, list, options) {
-    if(list.indexOf(elem) > -1) {
-        return options.fn(this);
-    }
-    return options.inverse(this);
-};
+},"useData":true});
 
 /***/ })
-],[59]);
+],[68]);

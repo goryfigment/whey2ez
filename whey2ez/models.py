@@ -11,12 +11,15 @@ def get_utc_epoch_time():
 class Store(models.Model):
     name = models.CharField(max_length=100)
     tax = models.CharField(default='0.00', max_length=12)
-    # quantity
     link_columns = JSONField()
-    # included from business
     include_columns = JSONField()
     columns = JSONField()
+    picture_column = models.CharField(max_length=100, default=None)
     inventory = JSONField()
+    # settings
+    order_by = models.CharField(max_length=100, default='none')
+    reverse = models.BooleanField(default=False)
+    transaction_filter = JSONField()
 
     class Meta:
         db_table = "store"
@@ -25,11 +28,6 @@ class Store(models.Model):
 class Business(models.Model):
     stores = models.ManyToManyField(Store)
     name = models.CharField(max_length=100)
-    tax = models.CharField(default='0.00', max_length=12)
-    # cost, quantity, price
-    link_columns = JSONField()
-    columns = JSONField()
-    inventory = JSONField()
 
     class Meta:
         db_table = "business"
@@ -37,11 +35,6 @@ class Business(models.Model):
 
 class Settings(models.Model):
     start_time = models.IntegerField(default=0, blank=True)
-    # INVENTORY SETTINGS
-    order_by = models.CharField(max_length=100, default='none')
-    reverse = models.BooleanField(default=False)
-    # TRANSACTION SETTINGS
-    transaction_filter = JSONField()
     date_range = models.CharField(max_length=15, default='*')
     # RECEIPT SETTINGS
     ip_address = models.CharField(max_length=100, default='192.168.0.0')
@@ -61,7 +54,6 @@ class Boss(models.Model):
 
 
 class Permission(models.Model):
-    visible_columns = JSONField()
     # Inventory
     add_column = models.BooleanField(default=True)
     edit_column = models.BooleanField(default=True)
@@ -105,7 +97,7 @@ class UserType(models.Model):
 
 class Employee(models.Model):
     boss = models.ForeignKey(Boss, default=None)
-    connection = models.CharField(choices=(('all', 'all'), ('main', 'main'), ('store', 'store')), max_length=255, default='all')
+    connection = models.CharField(choices=(('ALL', 'ALL'), ('store', 'store')), max_length=255, default='ALL')
     store = models.ForeignKey(Store, null=True)
     permission = models.ForeignKey(Permission)
     user_type = models.ForeignKey(UserType, null=True)

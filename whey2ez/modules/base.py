@@ -64,7 +64,7 @@ def transaction_total(transactions):
         trans['total'] = 0
         trans['timestamp'] = epoch_strftime(trans['date'], '%b %#d, %Y %I:%M%p')
 
-        for item in trans['items']['list']:
+        for item in trans['items']:
             item_discount += float(item['discount'])
 
         # Calculations
@@ -115,15 +115,8 @@ def get_boss(current_user):
         return current_user.employee.boss
 
 
-def get_establishment(store_id, store_type, boss):
-    if store_type == "main":
-        return boss.business
-    else:
-        return Store.objects.get(id=store_id)
-
-
-def sort_inventory(user_settings, user_inventory):
-    if user_settings.order_by != 'none':
-        return sorted(user_inventory.items(), key=lambda (k, v): v[user_settings.order_by], reverse=user_settings.reverse)
+def sort_inventory(store, user_inventory):
+    if store.order_by != 'none':
+        return sorted(user_inventory.items(), key=lambda (k, v): v[store.order_by], reverse=store.reverse)
     else:
         return sorted(user_inventory.items(), key=lambda (k, v): int(k), reverse=False)

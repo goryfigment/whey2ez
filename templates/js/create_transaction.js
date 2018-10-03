@@ -15,10 +15,7 @@ function init() {
     $('#inventory-search').focus();
     var $searchInput = $('#search-input');
     var $transactionSubmitButton =  $('#transaction-submit-button');
-    $searchInput.data('type', globals.type);
     $searchInput.data('id', globals.id);
-
-    $transactionSubmitButton.data('type', globals.type);
     $transactionSubmitButton.data('id', globals.id);
     var $taxRate = $('#tax-rate');
     $taxRate.data('tax', globals.tax);
@@ -64,6 +61,15 @@ function getReceipt(data) {
 $(document).ready(function() {
     init();
 
+    $(document).on('click', '.link-columns-button', function (e) {
+        e.stopPropagation();
+
+    });
+
+    $(document).on('click', '.create-transaction-button', function () {
+
+    });
+
     $(document).on('click', 'body', function () {
         var $searchPopup = $('#search-popup');
         if($searchPopup.hasClass('active')){
@@ -97,12 +103,10 @@ $(document).ready(function() {
 
         var searchValue = $searchInput.val().toLowerCase().trim();
         var storeId = $searchInput.data('id');
-        var storeType = $searchInput.data('type');
 
         var postData = {
             search_value: searchValue,
-            id: storeId,
-            type: storeType
+            id: storeId
         };
 
         if(searchValue.length > 0) {
@@ -317,7 +321,6 @@ $(document).ready(function() {
 
     $(document).on('click', '#transaction-submit-button', function () {
         var storeId = $(this).data('id');
-        var storeType = $(this).data('type');
         var paymentType = $('.payment-type.selected').attr('data-payment_type');
         var memo = $('#memo-input').val().trim();
         var $receiptResultWrapper = $('#receipt-result-wrapper');
@@ -358,7 +361,6 @@ $(document).ready(function() {
             'tax': tax,
             'memo': memo,
             'items': items,
-            'store_type': storeType,
             'store_id': storeId,
             'tax_rate': taxRate,
             'tax_total': taxTotal,

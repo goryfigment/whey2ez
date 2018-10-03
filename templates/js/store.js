@@ -8,5 +8,5 @@ require('./../library/fontawesome/fontawesome.js');
 //libraries
 var $ = require('jquery');
 var helper = require('./../js/helpers.js');
-
+require('./../js/general.js');
 

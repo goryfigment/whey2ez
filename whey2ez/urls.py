@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from django.contrib import admin
-from whey2ez.controllers import site, account_handler, inventory, employee, operation, transaction
+from whey2ez.controllers import site, account_handler, inventory, employee, operation, transaction, store
 
 urlpatterns = [
     url(r'^$', site.home, name='home'),
@@ -17,13 +17,19 @@ urlpatterns = [
     # Account Handler
     url(r'^account/register/$', account_handler.register, name='register'),
     url(r'^account/login/$', account_handler.user_login, name='login'),
+    url(r'^account/settings/$', account_handler.settings, name='settings'),
+    url(r'^account/save_settings/$', account_handler.save_settings, name='save_settings'),
     url(r'^logout/$', account_handler.user_logout, name='logout'),
 
     # Operation
     url(r'^operation/link_columns/$', operation.link_columns, name='link_columns'),
 
+    # Store
+    url(r'^store/create_store/$', store.create_store, name='create_store'),
+
     # Inventory
     url(r'^inventory/add_column/$', inventory.add_column, name='add_column'),
+    url(r'^inventory/add_picture_column/$', inventory.add_picture_column, name='add_picture_column'),
     url(r'^inventory/add_item/$', inventory.add_item, name='add_item'),
     url(r'^inventory/edit_column/$', inventory.edit_column, name='edit_column'),
     url(r'^inventory/edit_item/$', inventory.edit_item, name='edit_item'),
@@ -35,6 +41,7 @@ urlpatterns = [
     url(r'^inventory/drop_table/$', inventory.drop_table, name='drop_table'),
     url(r'^inventory/item_log/$', inventory.get_item_log, name='item_log'),
     url(r'^inventory/save_settings/$', inventory.save_settings, name='inventory_settings'),
+    url(r'^inventory/file_upload/$', inventory.file_upload, name='file_upload'),
 
     # Inventory Operation
     url(r'^inventory/received/$', inventory.received, name='received'),

@@ -10,7 +10,7 @@ from whey2ez.modules.base import get_boss
 
 @login_required
 @user_permission('create_user_type')
-@data_required(['permissions', 'visible_columns', 'name'], 'BODY')
+@data_required(['permissions', 'name'], 'BODY')
 def create_user_type(request):
     current_user = request.user
     current_boss = get_boss(current_user)
@@ -46,9 +46,6 @@ def create_user_type(request):
         edit_permissions=post_permissions['edit_permissions']
     )
 
-    permissions.visible_columns = request.BODY['visible_columns']
-    permissions.save()
-
     user_type = UserType.objects.create(
         name=name,
         permission=permissions,
@@ -76,7 +73,7 @@ def delete_user_type(request):
 
 @login_required
 @user_permission('edit_permissions')
-@data_required(['permissions', 'visible_columns', 'name', 'user_type'], 'BODY')
+@data_required(['permissions', 'name', 'user_type'], 'BODY')
 def edit_user_type(request):
     post_permissions = request.BODY['permissions']
     name = request.BODY['name'].strip()
@@ -109,8 +106,6 @@ def edit_user_type(request):
     permissions.create_user_type = post_permissions['create_user_type']
     permissions.delete_user_type = post_permissions['delete_user_type']
     permissions.edit_permissions = post_permissions['edit_permissions']
-
-    permissions.visible_columns = request.BODY['visible_columns']
     permissions.save()
 
     return JsonResponse(model_to_dict(user_type), safe=False)

@@ -1,49 +1,79 @@
-<div id="settings-wrapper">
-    <div>
-        <div class="settings-title">Date Range</div>
-        <div class="settings-description">Default date range when opening the transaction page.</div>
+<div id="settings-scroll-wrapper">
+    <div id="start-date-wrapper">
+        <div class="settings-title">Start/End Point</div>
+        <div class="settings-description">The time that starts and ends to develop accurate reports on that day.</div>
         <div id="settings-date-range-wrapper">
-            <select id="date-range-input" data-type="{{type}}">
-                <option value="all" {{#ifCond date_range '==' '*'}}selected{{/ifCond}}>All</option>
-                <option value="1" {{#ifCond date_range '==' '1'}}selected{{/ifCond}}>1 Day</option>
-                <option value="7" {{#ifCond date_range '==' '7'}}selected{{/ifCond}}>7 Days</option>
+            <select id="date-start-input">
+                <option value="0">12:00AM</option>
+                <option value="1">1:00AM</option>
+                <option value="2">2:00AM</option>
+                <option value="3">3:00AM</option>
+                <option value="4">4:00AM</option>
+                <option value="5">5:00AM</option>
+                <option value="6">6:00AM</option>
+                <option value="7">7:00AM</option>
+                <option value="8">8:00AM</option>
+                <option value="9">9:00AM</option>
+                <option value="10">10:00AM</option>
+                <option value="11">11:00AM</option>
+                <option value="12">12:00PM</option>
+                <option value="13">1:00PM</option>
+                <option value="14">2:00PM</option>
+                <option value="15">3:00PM</option>
+                <option value="16">4:00PM</option>
+                <option value="17">5:00PM</option>
+                <option value="18">6:00PM</option>
+                <option value="19">7:00PM</option>
+                <option value="20">8:00PM</option>
+                <option value="21">9:00PM</option>
+                <option value="22">10:00PM</option>
+                <option value="23">11:00PM</option>
             </select>
         </div>
     </div>
 
     <div>
+        <div class="settings-title">Date Range</div>
+        <div class="settings-description">Default date range when opening the transaction & overview page.</div>
+        <div id="settings-date-range-wrapper">
+            <select id="date-range-input">
+                <option value="*">All</option>
+                <option value="1">1 Day</option>
+                <option value="7">7 Days</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="transaction-filter-wrapper">
         <div class="settings-title">Transaction Filter</div>
         <div class="settings-description">Allow transactions to be searchable by the following columns: </div>
-        <div id="settings-filter-wrapper">
-            {{#each column}}
-                <input type="checkbox" id="{{this}}-input" data-name="{{this}}" data-type="columns" class="checkbox-input" {{#if (contains ../settings.filter this)}}checked{{/if}} style="display: none" />
-                <label for="{{this}}-input" class="check-box-wrapper">
-                    <span class="check-box">
-                        <svg width="12px" height="10px">
-                            <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
-                        </svg>
-                    </span>
-                    <span class="check-box-label">{{this}}</span>
-                </label>
-            {{/each}}
-        </div>
-    </div>
-
-    <div>
-        <div class="settings-title">Tax</div>
-        <div class="settings-description">Apply tax to business and different stores.</div>
-        <div id="tax-wrapper">
-            <div class="business-item">
-                <div class="tax-title"> Business: {{business_name}}</div>
-                <input class="business-tax" value="{{settings.business_tax}}"/> %
-            </div>
-
-            {{#each stores}}
-                <div class="store-item">
-                    <div class="tax-title"> Store: {{name}}</div>
-                    <input class="store-tax" data-id="{{id}}" /> %
+        {{#each stores}}
+            <div class="store-filter-wrapper" data-id="{{id}}">
+                <div class="store-title">Store: {{name}}</div>
+                <div id="settings-filter-wrapper">
+                    {{#each columns}}
+                        <input type="checkbox" id="{{this}}-input" data-name="{{this}}" data-type="columns" class="checkbox-input filter-input" {{#contains 'ALL' ../transaction_filter}}checked{{/contains}}{{#contains this ../transaction_filter}}checked{{/contains}} style="display: none" />
+                        <label for="{{this}}-input" class="check-box-wrapper">
+                            <span class="check-box">
+                                <svg width="12px" height="10px">
+                                    <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                                </svg>
+                            </span>
+                            <span class="check-box-label">{{this}}</span>
+                        </label>
+                    {{/each}}
                 </div>
-            {{/each}}
-        </div>
+
+                <div class="settings-title">Tax</div>
+                <div id="tax-wrapper">
+                        <label class="tax-title"> Store: {{name}}</label>
+                        <input class="store-tax" data-id="{{id}}" value="{{tax}}" /> %
+                    </div>
+                </div>
+            </div>
+        {{/each}}
     </div>
+<div id="save-wrapper">
+    <div id="settings-result"></div>
+    <button id="transaction-settings-submit" class="add">Save Settings</button>
 </div>

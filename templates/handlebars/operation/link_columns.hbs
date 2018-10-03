@@ -1,0 +1,38 @@
+<div id="operation-popup-wrapper">
+    <div id="operation-settings-scroll-wrapper">
+        <h2 class="settings-title">{{name}}</h2>
+        <div class="link-column-wrapper">
+            <label class="settings-subtitle">Name</label>
+            <p>The name of the item, you wished to be viewed in reports, transactions, etc.</p>
+            <input id="name-column-input" value="{{#if link_columns.name}}{{link_columns.name}}{{/if}}" />
+        </div>
+        <div class="link-column-wrapper">
+            <label class="settings-subtitle">Price</label>
+            <p class="">The selling price of an item.</p>
+            <select id="price-column-input" data-type="{{type}}">
+                {{#each columns}}
+                    <option value="{{this}}" {{#ifCond this '==' ../link_columns.price}}selected{{/ifCond}}>{{this}}</option>
+                {{/each}}
+            </select>
+        </div>
+        <div class="link-column-wrapper">
+            <label class="settings-subtitle">Quantity</label>
+            <p class="">The amount of an item.</p>
+            <select id="quantity-column-input" data-type="{{type}}">
+                {{#each columns}}
+                    <option value="{{this}}" {{#ifCond this '==' ../link_columns.quantity}}selected{{/ifCond}}>{{this}}</option>
+                {{/each}}
+            </select>
+        </div>
+        <div class="link-column-wrapper">
+            <label class="settings-subtitle">Cost</label>
+            <p class="">The cost of the item, used to calculate profit.</p>
+            <select id="cost-column-input" data-type="{{type}}">
+                {{#each columns}}
+                    <option value="{{this}}" {{#ifCond this '==' ../link_columns.cost}}selected{{/ifCond}}>{{this}}</option>
+                {{/each}}
+            </select>
+        </div>
+    </div>
+    <button id="link-columns-submit" class="add" data-id="{{id}}">Link Columns</button>
+</div>

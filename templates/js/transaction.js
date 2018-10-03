@@ -7,13 +7,19 @@ var transactionTemplate = require('./../handlebars/transaction/transaction.hbs')
 var emptyTransactionTemplate = require('./../handlebars/transaction/empty_transaction.hbs');
 var transactionOperationTemplate = require('./../handlebars/transaction/transaction_operation.hbs');
 var receiptSettingsTemplate = require('./../handlebars/transaction/receipt_settings.hbs');
+var transactionSettingsTemplate = require('./../handlebars/transaction/transaction_settings.hbs');
+var storeItemTemplate = require('./../handlebars/operation/store_item.hbs');
 
 //libraries
 var $ = require('jquery');
 var helper = require('./../js/helpers.js');
+require('./../js/general.js');
 require('./../library/calendar/calendar.js');
 
 function init() {
+    $('.store-container').append(storeItemTemplate({'stores': globals.stores}));
+    $('#settings-wrapper').append(transactionSettingsTemplate({'stores': globals.stores}));
+
     //Start Date
     var d1 = new Date();
     d1.setHours(globals.start_point, 0, 0, 0);
@@ -33,8 +39,7 @@ function init() {
         getTransactionReport(d1.valueOf()/1000, d2.valueOf()/1000 - 1);
     }
 
-    $('#receipt-wrapper').append(receiptSettingsTemplate(globals.receipt_settings));
-
+    $('#receipt-wrapper').append(receiptSettingsTemplate(globals.settings));
     $('#date-start-input [value="' + globals.start_point + '"]').prop('selected', true);
     $('#date-range-input [value="' + globals.date_range + '"]').prop('selected', true);
 }
@@ -72,16 +77,27 @@ function getTransactionReport(start_time, end_time) {
             globals.end_time = response['end_time'];
 
             var $transactionWrapper = $('#transaction-wrapper');
-            response['link_columns'] = globals.link_columns;
+            var transactions = response['store']['transactions'];
             $transactionWrapper.empty();
 
-            globals.transactions = response['transactions'];
+            globals.transactions = transactions;
 
-            if(response['inventory'].length == 0 || response['transactions'].length == 0 || !response['link_columns']['price'] || !response['link_columns']['cost'] || !response['link_columns']['quantity'] || !response['link_columns']['name']) {
+            if(transactions.length == 0) {
                 $transactionWrapper.append(emptyTransactionTemplate(response));
             } else {
                 $transactionWrapper.append(transactionTemplate(response));
             }
+
+            for (var i = 0; i < transactions.length; i++) {
+                var currentTransaction = transactions[i];
+                globals.stores[currentTransaction['store_id'].toString()]['transactions'].push(currentTransaction);
+            }
+
+            //if(response['inventory'].length == 0 || response['transactions'].length == 0 || !response['link_columns']['price'] || !response['link_columns']['cost'] || !response['link_columns']['quantity'] || !response['link_columns']['name']) {
+            //    $transactionWrapper.append(emptyTransactionTemplate(response));
+            //} else {
+            //    $transactionWrapper.append(transactionTemplate(response));
+            //}
         }
     });
 }
@@ -180,20 +196,13 @@ $(document).ready(function() {
     //LINK COLUMNS//
 
     //CREATE TRANSACTION PAGE//
-    $(document).on('click', '.create-transaction-button', function () {
+    $(document).on('click', '.create-transaction-button', function (e) {
+        e.stopPropagation();
         var $createTransactionButton = $(this);
-
-        var $businessItem = $createTransactionButton.closest('.business-item');
-        if($businessItem.length){
-            var type = 'main';
-            var id = $businessItem.attr('data-id');
-        } else {
-            type = 'store';
-            id = $createTransactionButton.closest('.store-item').attr('data-id');
-        }
+        var id = $createTransactionButton.closest('.store-item').attr('data-id');
 
         var createTransactionLink = document.getElementById('create-transaction-link');
-        createTransactionLink.setAttribute("href", '/create_transaction?id=' + id + '&type=' + type);
+        createTransactionLink.setAttribute("href", '/create_transaction?id=' + id );
         createTransactionLink.click();
     });
     //CREATE TRANSACTION PAGE//
@@ -227,34 +236,34 @@ $(document).ready(function() {
     // SAVE SETTINGS //
     $(document).on('click', '#transaction-settings-submit', function () {
         //Get filters, Get default tax, Get every store tax
-        var filter = [];
-        var storeTax = {};
-
+        var stores = {};
         var dateRange = $('#date-range-input').val();
         var startTime = $('#date-start-input').val();
 
-        $('.filter-input:checked').each(function() {
-            filter.push($(this).attr('data-name'));
-        });
+        //$('.filter-input:checked').each(function() {
+        //    filter.push($(this).attr('data-name'));
+        //});
 
-        $('.store-tax-input').each(function() {
-            var $storeTaxInput = $(this);
-            var storeId = $storeTaxInput.attr('data-store_id');
-            var storeTaxValue = $storeTaxInput.val();
-            storeTax[storeId] = $storeTaxInput.val();
-        });
+        $('.store-filter-wrapper').each(function() {
+            var $storeWrapper = $(this);
+            var storeId = $storeWrapper.attr('data-id');
+            var storeFilter = [];
 
-        var $businessTaxInput = $('.business-tax');
-        var businessTax = $businessTaxInput.val();
+            $storeWrapper.find('.filter-input:checked').each(function() {
+                storeFilter.push($(this).attr('data-name'));
+            });
+
+            stores[storeId] = {};
+            stores[storeId]['tax'] = $storeWrapper.find('.store-tax').val();
+            stores[storeId]['filter'] = storeFilter;
+        });
 
         var postData = {
             'settings': {
                 'date_range': dateRange,
-                'filter': filter,
-                'tax': businessTax,
                 'start_time': startTime
             },
-            'store_tax': storeTax
+            'stores': stores
         };
 
         $.ajax({
@@ -445,5 +454,26 @@ $(document).ready(function() {
         $receiptLine.addClass('font-'+$(this).val());
         $this.data('val', $(this).val());
     });
-    //RECEIPT PREVIEW //
+    //RECEIPT PREVIEW//
+
+    //STORE ITEM//
+    $(document).on('click', '.establishment:not(.active)', function () {
+        var $establishment = $(this);
+        $establishment.closest('.inner-side-wrapper').find('.active').removeClass('active');
+        $establishment.addClass('active');
+
+        if ($establishment.hasClass('store-item')) {
+            var storeId = $establishment.attr('data-id');
+            var currentStore = globals.stores[storeId];
+            var $transactionWrapper = $('#transaction-wrapper');
+            $transactionWrapper.empty();
+
+            if(currentStore['transactions'].length == 0) {
+                $transactionWrapper.append(emptyTransactionTemplate({'store': currentStore, 'start_time': globals.start_time, 'end_time': globals.end_time}));
+            } else {
+                $transactionWrapper.append(transactionTemplate({'store': currentStore, 'store_length': Object.keys(globals.stores).length, 'start_time': globals.start_time, 'end_time': globals.end_time}));
+            }
+        }
+    });
+    //STORE ITEM//
 });

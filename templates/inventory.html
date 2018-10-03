@@ -4,15 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Inventory</title>
-
+    <link rel='shortcut icon' type='image/x-icon' href="{% static 'bundle/assets/whey2ez/whey2ez.ico' %}" />
     <script>
         var globals = {};
         globals.base_url = '{{base_url}}';
-        globals.columns = {{columns|safe}};
-        globals.inventory = {{inventory|safe}};
-        globals.item_log = {{item_log|safe}};
-        globals.settings = {{settings|safe}};
-        globals.link_columns = {{link_columns|safe}};
+        globals.active_store = '{{active_store}}';
+        globals.stores = {{stores|safe}};
+        globals.store_log = {{store_log|safe}};
+        globals.boss_username = '{{boss_username}}';
     </script>
 </head>
 <body>
@@ -27,7 +26,7 @@
             <div id="nav-mid-section">
                 <a class="nav-icon" id="overview-link" href="/overview/"><i class="fas fa-tachometer-alt"></i></a>
                 <a class="nav-icon" id="inventory-link" href="/inventory/"><i class="far fa-building"></i></a>
-                <a class="nav-icon" id="store-link" href="/store/"><i class="fas fa-store"></i></a>
+{#                <a class="nav-icon" id="store-link" href="/store/"><i class="fas fa-store"></i></a>#}
                 <a class="nav-icon" id="transaction-link" href="/transaction/"><i class="fas fa-shopping-cart"></i></a>
                 <a class="nav-icon" id="employee-link" href="/employee/"><i class="fas fa-male"></i></a>
             </div>
@@ -43,16 +42,12 @@
                 <div id="side-bar-title">Inventory</div>
                 <div class="inner-side-wrapper">
                     <div class="business-item">
-                        <h4 class="establishment business-name active" data-type="main" data-id="{{business_id}}"><i class="fas fa-building"></i> {{business_name}}</h4>
+                        <h4 class="business-name" data-id="{{business_id}}"><i class="fas fa-building"></i> {{business_name}}</h4>
                         <div class="store-wrapper">
                             <div class="store-container">
-                                {% for key, val in stores.items %}
-                                    <div class="establishment store-item" data-id="{{val.id}}">
-                                        <div class="store-name"><i class="fas fa-store-alt"></i> {{val.name}}</div>
-                                    </div>
-                                {% endfor %}
+
                             </div>
-                            <div class="create-store-button"><i class="fas fa-plus"></i> Create Store</div>
+                            <div id="create-store-button"><i class="fas fa-plus"></i> Create Store</div>
                         </div>
                     </div>
                 </div>
@@ -74,7 +69,9 @@
                     <div class="tab active" id="inventory-tab" data-wrapper="#inventory-wrapper">Inventory</div>
                     <div class="tab" id="operation-tab" data-wrapper="#operation-wrapper">Operation</div>
                     <div class="tab" id="inventory-log-tab" data-wrapper="#log-wrapper">Inventory Log</div>
-                    <div class="tab" id="settings-tab" data-wrapper="#settings-wrapper">Settings</div>
+                    {% if active_store != '' %}
+                        <div class="tab" id="settings-tab" data-wrapper="#settings-wrapper">Settings</div>
+                    {% endif %}
                 </div>
                 <div id="user-wrapper">
                     <div id="user-container">
@@ -132,6 +129,8 @@
     </div>
 
     <div id="operation-overlay"></div>
+
+    <input type="file" id="item-file-upload">
 
     <%= require('html-loader!./library/calendar/calendar.html') %>
 </body>

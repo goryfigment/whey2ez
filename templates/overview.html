@@ -4,14 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Overview</title>
-
+    <link rel='shortcut icon' type='image/x-icon' href="{% static 'bundle/assets/whey2ez/whey2ez.ico' %}" />
     <script>
         var globals = {};
         globals.base_url = '{{base_url}}';
-        globals.columns = {{columns|safe}};
-        globals.link_columns = {{link_columns|safe}};
         globals.date_range = '{{ date_range }}';
         globals.start_point = '{{ start_point }}';
+        globals.stores = {{stores|safe}};
     </script>
 </head>
 <body>
@@ -26,7 +25,7 @@
             <div id="nav-mid-section">
                 <a class="nav-icon active" id="overview-link" href="/overview/"><i class="fas fa-tachometer-alt"></i></a>
                 <a class="nav-icon" id="inventory-link" href="/inventory/"><i class="far fa-building"></i></a>
-                <a class="nav-icon" id="store-link" href="/store/"><i class="fas fa-store"></i></a>
+{#                <a class="nav-icon" id="store-link" href="/store/"><i class="fas fa-store"></i></a>#}
                 <a class="nav-icon" id="transaction-link" href="/transaction/"><i class="fas fa-shopping-cart"></i></a>
                 <a class="nav-icon" id="employee-link" href="/employee/"><i class="fas fa-male"></i></a>
             </div>

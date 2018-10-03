@@ -1,27 +1,28 @@
-import time, numpy
+import time
+import os
+import shutil
+from PIL import Image
 from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.forms.models import model_to_dict
 import pandas as pd
 from io import BytesIO as IO
 from whey2ez.controllers.operation import inventory_operation
 import whey2ez.modules.checker as checker
-from whey2ez.modules.base import get_boss, get_establishment, sort_inventory
-from whey2ez.models import ItemLog, UserType
+from whey2ez.modules.base import get_boss, sort_inventory
+from whey2ez.models import ItemLog, UserType, Store, User
 from whey2ez.decorators import login_required, user_permission, data_required
-
 
 
 @login_required
 @user_permission('add_column')
-@data_required(['column_name', 'id', 'type'], 'POST')
+@data_required(['column_name', 'id'], 'POST')
 def add_column(request):
-    current_user = request.user
-    current_boss = get_boss(current_user)
-    establishment = get_establishment(request.POST['id'], request.POST['type'], current_boss)
+    store_id = request.POST['id']
+    store = Store.objects.get(id=store_id)
 
     column_name = request.POST['column_name'].lower().strip()
-    items = establishment.inventory
-    columns = establishment.columns['columns']
+    items = store.inventory
+    columns = store.columns
 
     if column_name == '':
         return HttpResponseBadRequest('Column name is an empty string.', 'application/json')
@@ -33,23 +34,46 @@ def add_column(request):
     for key, item in items.iteritems():
         item.update({column_name: ""})
 
-    establishment.save()
+    store.save()
 
-    user_settings = current_boss.settings
-    user_inventory = sort_inventory(user_settings, establishment.inventory)
+    store.inventory = sort_inventory(store, store.inventory)
 
-    return JsonResponse({'inventory': user_inventory, 'columns': establishment.columns['columns']}, safe=False)
+    return JsonResponse({'store': model_to_dict(store)}, safe=False)
+
+
+@login_required
+@user_permission('add_column')
+@data_required(['column_name', 'id'], 'POST')
+def add_picture_column(request):
+    store_id = request.POST['id']
+    store = Store.objects.get(id=store_id)
+
+    column_name = request.POST['column_name'].lower().strip()
+    items = store.inventory
+
+    if column_name == '':
+        return HttpResponseBadRequest('Column name is an empty string.', 'application/json')
+
+    store.picture_column = column_name
+
+    for key, item in items.iteritems():
+        item.update({column_name: []})
+
+    store.save()
+
+    store.inventory = sort_inventory(store, store.inventory)
+
+    return JsonResponse({'store': model_to_dict(store)}, safe=False)
 
 
 @login_required
 @user_permission('add_item')
-@data_required(['item', 'id', 'type'], 'BODY')
+@data_required(['item', 'id'], 'BODY')
 def add_item(request):
-    current_user = request.user
-    current_boss = get_boss(current_user)
-    establishment = get_establishment(request.BODY['id'], request.BODY['type'], current_boss)
-    columns = establishment.columns
-    linked_columns = current_boss.business.link_columns
+    store = Store.objects.get(id=request.BODY['id'])
+    columns = store.columns
+    linked_columns = store.link_columns
+
     # Check if all link columns has static data
     item = checker.check_link_columns(linked_columns, request.BODY['item'])
     if isinstance(item, HttpResponseBadRequest):
@@ -59,7 +83,7 @@ def add_item(request):
         if key not in columns:
             return HttpResponseBadRequest('All columns do not exist.', 'application/json')
 
-    items = establishment.inventory
+    items = store.inventory
 
     if len(items):
         item_id = int(max(items, key=int)) + 1
@@ -68,27 +92,26 @@ def add_item(request):
 
     items[item_id] = item
 
-    establishment.save()
+    store.save()
 
-    user_settings = current_boss.settings
-    user_inventory = sort_inventory(user_settings, establishment.inventory)
+    store.inventory = sort_inventory(store, store.inventory)
 
-    return JsonResponse({'item': {item_id: item}, 'inventory': user_inventory}, safe=False)
+    return JsonResponse({'item': {item_id: item}, 'store': model_to_dict(store)}, safe=False)
 
 
 @login_required
 @user_permission('edit_column')
-@data_required(['new_column_name', 'prev_column_name', 'id', 'type'], 'POST')
+@data_required(['new_column_name', 'prev_column_name', 'id'], 'POST')
 def edit_column(request):
     current_user = request.user
     current_boss = get_boss(current_user)
-    establishment = get_establishment(request.POST['id'], request.POST['type'], current_boss)
+    store = Store.objects.get(id=request.POST['id'])
 
     prev_column_name = request.POST['prev_column_name']
     new_column_name = request.POST['new_column_name']
-    columns = establishment.columns['columns']
-    items = establishment.inventory
-    linked_columns = establishment.link_columns
+    columns = store.columns
+    items = store.inventory
+    linked_columns = store.link_columns
 
     if prev_column_name not in columns:
         return HttpResponseBadRequest('Column name does not exist.', 'application/json')
@@ -97,7 +120,7 @@ def edit_column(request):
         return HttpResponseBadRequest('Column name is an empty string.', 'application/json')
 
     # Edit column list
-    establishment.columns['columns'] = [w.replace(prev_column_name, new_column_name) for w in columns]
+    store.columns = [w.replace(prev_column_name, new_column_name) for w in columns]
 
     # Edit inventory
     for key, item in items.iteritems():
@@ -113,38 +136,33 @@ def edit_column(request):
     if name_regex:
         linked_columns['name'] = name_regex.replace('{{' + prev_column_name + '}}', '{{' + new_column_name + '}}')
 
-    establishment.save()
-
     user_settings = current_boss.settings
 
     # Check transaction filters
     user_settings.transaction_filter['filter'] = [w.replace(prev_column_name, new_column_name) for w in columns]
 
-    if prev_column_name == user_settings.order_by:
-        user_settings.order_by = new_column_name
+    if prev_column_name == store.order_by:
+        store.order_by = new_column_name
 
+    store.save()
     user_settings.save()
 
-    # Check every permission visible columns
     user_types = UserType.objects.filter(boss=current_boss)
     for user_type in user_types:
         permission = user_type.permission
-        permission.visible_columns = [w.replace(prev_column_name, new_column_name) for w in columns]
         permission.save()
 
-    user_inventory = sort_inventory(user_settings, establishment.inventory)
+    store.inventory = sort_inventory(store, store.inventory)
 
-    return JsonResponse({'columns': establishment.columns['columns'], 'inventory': user_inventory}, safe=False)
+    return JsonResponse({'columns': store.columns, 'store': model_to_dict(store)}, safe=False)
 
 
 @login_required
 @user_permission('edit_item')
-@data_required(['item', 'item_id', 'id', 'type'], 'BODY')
+@data_required(['item', 'item_id', 'id'], 'BODY')
 def edit_item(request):
-    current_user = request.user
-    current_boss = get_boss(current_user)
-    establishment = get_establishment(request.BODY['id'], request.BODY['type'], current_boss)
-    linked_columns = establishment.link_columns
+    store = Store.objects.get(id=request.BODY['id'])
+    linked_columns = store.link_columns
 
     item = checker.check_link_columns(linked_columns, request.BODY['item'])
 
@@ -152,34 +170,33 @@ def edit_item(request):
         return item
 
     item_id = str(request.BODY['item_id'])
-    columns = establishment.columns['columns']
-    items = establishment.inventory
+    columns = store.columns
+    items = store.inventory
 
     for key, val in item.iteritems():
         if key not in columns:
             return HttpResponseBadRequest('All columns do not exist.', 'application/json')
 
     items[item_id] = item
-    establishment.save()
+    store.save()
 
-    user_settings = current_boss.settings
-    user_inventory = sort_inventory(user_settings, establishment.inventory)
+    store.inventory = sort_inventory(store, store.inventory)
 
-    return JsonResponse({'item': {item_id: item}, 'inventory': user_inventory}, safe=False)
+    return JsonResponse({'item': {item_id: item}, 'store': model_to_dict(store)}, safe=False)
 
 
 @login_required
 @user_permission('delete_column')
-@data_required(['column_name', 'id', 'type'], 'POST')
+@data_required(['column_name', 'id'], 'POST')
 def delete_column(request):
     current_user = request.user
     current_boss = get_boss(current_user)
-    establishment = get_establishment(request.POST['id'], request.POST['type'], current_boss)
+    store = Store.objects.get(id=request.POST['id'])
 
     column_name = request.POST['column_name']
-    columns = establishment.columns['columns']
-    items = establishment.inventory
-    linked_columns = establishment.link_columns
+    columns = store.columns
+    items = store.inventory
+    linked_columns = store.link_columns
 
     if column_name == '':
         return HttpResponseBadRequest('Column name is an empty string.', 'application/json')
@@ -199,49 +216,38 @@ def delete_column(request):
         if linked_columns[key] == column_name:
             linked_columns[key] = False
 
-    establishment.save()
-
     user_settings = current_boss.settings
     transaction_filter = user_settings.transaction_filter['filter']
 
-    if column_name == user_settings.order_by:
-        user_settings.order_by = "none"
+    if column_name == store.order_by:
+        store.order_by = "none"
 
     # Check transaction filter
     if column_name in transaction_filter:
         transaction_filter.remove(column_name)
 
+    store.save()
     user_settings.save()
 
-    # Check every permission visible columns
-    user_types = UserType.objects.filter(boss=current_boss)
-    for user_type in user_types:
-        permission = user_type.permission
-        if column_name in permission.visible_columns:
-            permission.visible_columns.remove(column_name)
-            permission.save()
+    store.inventory = sort_inventory(store, store.inventory)
 
-    user_inventory = sort_inventory(user_settings, establishment.inventory)
-
-    return JsonResponse({'columns': establishment.columns['columns'], 'inventory': user_inventory}, safe=False)
+    return JsonResponse({'store': model_to_dict(store)}, safe=False)
 
 
 @login_required
 @user_permission('delete_item')
-@data_required(['item_id', 'id', 'type'], 'POST')
+@data_required(['item_id', 'id'], 'POST')
 def delete_item(request):
-    current_user = request.user
-    current_boss = get_boss(current_user)
-    establishment = get_establishment(request.POST['id'], request.POST['type'], current_boss)
+    store = Store.objects.get(id=request.POST['id'])
 
     item_id = str(request.POST['item_id'])
-    items = establishment.inventory
+    items = store.inventory
 
     items.pop(item_id, None)
-    establishment.save()
-    user_inventory = sort_inventory(current_boss.settings, establishment.inventory)
+    store.save()
+    store.inventory = sort_inventory(store, store.inventory)
 
-    return JsonResponse({'inventory': user_inventory}, safe=False)
+    return JsonResponse({'store': model_to_dict(store)}, safe=False)
 
 
 @login_required
@@ -281,17 +287,14 @@ def read_excel(request):
 
 @login_required
 @user_permission('import_file')
-@data_required(['inventory', 'columns', 'type', 'id'], 'BODY')
+@data_required(['inventory', 'columns', 'id'], 'BODY')
 def import_submit(request):
-    current_user = request.user
-    current_boss = get_boss(current_user)
-    establishment = get_establishment(request.BODY['id'], request.BODY['type'], current_boss)
-
+    store = Store.objects.get(id=request.BODY['id'])
     post_inventory = request.BODY['inventory']
-    custom_column = establishment.columns['columns']
+    custom_column = store.columns
     post_column = request.BODY['columns']
-    user_inventory = establishment.inventory
-    linked_columns = establishment.link_columns
+    user_inventory = store.inventory
+    linked_columns = store.link_columns
     missing_columns = []
 
     for column in custom_column:
@@ -300,7 +303,7 @@ def import_submit(request):
         else:
             missing_columns.append(column)
 
-    establishment.columns['columns'] = custom_column + post_column
+    store.columns = custom_column + post_column
 
     # Check every item
     if len(user_inventory):
@@ -346,12 +349,12 @@ def import_submit(request):
 
                 item[price_column] = price
 
-    user_inventory.update(post_inventory)
-    establishment.save()
+    store.inventory.update(post_inventory)
+    store.save()
 
-    user_inventory = sort_inventory(current_boss.settings, establishment.inventory)
+    store.inventory = sort_inventory(store, store.inventory)
 
-    return JsonResponse({'inventory': user_inventory, 'columns': establishment.columns['columns']}, safe=False)
+    return JsonResponse({'store': model_to_dict(store)}, safe=False)
 
 
 @login_required
@@ -381,29 +384,41 @@ def export_submit(request):
 
 @login_required
 @user_permission('drop_table')
-@data_required(['drop_table', 'type', 'id'], 'POST')
+@data_required(['drop_table', 'id'], 'POST')
 def drop_table(request):
     current_user = request.user
     current_boss = get_boss(current_user)
-    establishment = get_establishment(request.POST['id'], request.POST['type'], current_boss)
+    if current_user.boss:
+        boss_username = current_user.username
+    else:
+        boss_username = User.objects.get(boss=current_user.employee.boss).username
+
+    store = Store.objects.get(id=request.POST['id'])
 
     if request.POST['drop_table']:
-        establishment.inventory = {}
-        establishment.columns = {'columns': []}
-        establishment.link_columns = {"quantity": False, "price": False, "cost": False, "name": False}
-        establishment.save()
+        # Remove directory
+        asset_directory = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', '..', 'templates', 'bundle', 'assets', 'files'))
+        boss_directory = os.path.join(asset_directory, boss_username)
+        store_directory = os.path.join(boss_directory, store.name)
+
+        if os.path.exists(store_directory):
+            shutil.rmtree(store_directory)
+
+        store.inventory = {}
+        store.columns = []
+        store.link_columns = {"quantity": False, "price": False, "cost": False, "name": False}
+        store.picture_column = ''
+        store.save()
 
         user_settings = current_boss.settings
-        user_settings.order_by = "none"
-        user_settings.transaction_filter['filter'] = ['ALL']
         user_settings.save()
 
-        return JsonResponse({'columns': establishment.columns['columns'], 'inventory': establishment.inventory}, safe=False)
+        return JsonResponse({'store': model_to_dict(store)}, safe=False)
 
 
 @login_required
 @user_permission('receive')
-@data_required(['item_id', 'change_value', 'id', 'type', 'details'], 'POST')
+@data_required(['item_id', 'change_value', 'id', 'details'], 'POST')
 def received(request):
     try:
         request.POST['change_value'] = int(request.POST['change_value'])
@@ -418,7 +433,7 @@ def received(request):
 
 @login_required
 @user_permission('damage')
-@data_required(['item_id', 'change_value', 'id', 'type', 'details'], 'POST')
+@data_required(['item_id', 'change_value', 'id', 'details'], 'POST')
 def damaged(request):
     try:
         request.POST['change_value'] = int(request.POST['change_value'])
@@ -433,7 +448,7 @@ def damaged(request):
 
 @login_required
 @user_permission('reset_cost')
-@data_required(['item_id', 'change_value', 'id', 'type', 'details'], 'POST')
+@data_required(['item_id', 'change_value', 'id', 'details'], 'POST')
 def reset_cost(request):
     try:
         request.POST['change_value'] = float(request.POST['change_value'])
@@ -448,7 +463,7 @@ def reset_cost(request):
 
 @login_required
 @user_permission('reset_cost')
-@data_required(['item_id', 'change_value', 'id', 'type', 'details'], 'POST')
+@data_required(['item_id', 'change_value', 'id', 'details'], 'POST')
 def reset_price(request):
     try:
         request.POST['change_value'] = float(request.POST['change_value'])
@@ -483,19 +498,55 @@ def get_item_log(request):
 
 
 @login_required
-@user_permission('')
-@data_required(['order_by', 'reverse', 'id', 'type'], 'BODY')
+@user_permission('edit_column')
+@data_required(['order_by', 'reverse', 'id'], 'BODY')
 def save_settings(request):
+    store = Store.objects.get(id=request.BODY['id'])
+    store.order_by = request.BODY["order_by"]
+    store.reverse = request.BODY["reverse"]
+    store.save()
+
+    store_inventory = sort_inventory(store, store.inventory)
+
+    return JsonResponse({'store': model_to_dict(store), 'inventory': store_inventory}, safe=False)
+
+
+@login_required
+@user_permission('edit_item')
+@data_required(['file', 'id', 'item_id'], 'FILES')
+def file_upload(request):
     current_user = request.user
-    current_boss = get_boss(current_user)
-    user_settings = current_boss.settings
-    establishment = get_establishment(request.BODY['id'], request.BODY['type'], current_boss)
 
-    user_settings.order_by = request.BODY["order_by"]
-    user_settings.reverse = request.BODY["reverse"]
+    if current_user.boss:
+        boss_username = current_user.username
+    else:
+        boss_username = User.objects.get(boss=current_user.employee.boss).username
 
-    user_settings.save()
+    store = Store.objects.get(id=request.POST['id'])
+    store_name = store.name
+    item_id = request.POST['item_id']
 
-    user_inventory = sort_inventory(user_settings, establishment.inventory)
+    try:
+        picture_file = Image.open(request.FILES['file'])
+    except:
+        return HttpResponseBadRequest('Must be an image.', 'application/json')
 
-    return JsonResponse({'inventory_settings': model_to_dict(user_settings), 'inventory': user_inventory}, safe=False)
+    asset_directory = os.path.abspath(os.path.join(os.path.dirname( __file__ ), '..', '..', 'templates', 'bundle', 'assets', 'files'))
+    boss_directory = os.path.join(asset_directory, boss_username)
+    store_directory = os.path.join(boss_directory, store_name)
+    file_name = item_id + '_' + str(int(time.time())) + '.' + picture_file.format.lower()
+
+    if not os.path.exists(boss_directory):
+        os.mkdir(os.path.join(asset_directory, boss_username))
+
+    if not os.path.exists(store_directory):
+        os.mkdir(os.path.join(boss_directory, store_name))
+
+    picture_file.save(os.path.join(store_directory, file_name))
+
+    store.inventory[item_id][store.picture_column].append(file_name)
+    store.save()
+
+    store_inventory = sort_inventory(store, store.inventory)
+
+    return JsonResponse({'store': model_to_dict(store), 'inventory': store_inventory}, safe=False)

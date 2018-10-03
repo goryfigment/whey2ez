@@ -7,6 +7,7 @@ def login_required(function):
         if request.user.is_authenticated():
             return function(request, *args, **kwargs)
         else:
+            print 'User not login'
             raise PermissionDenied('User not login.')
     wrap.__doc__ = function.__doc__
     wrap.__name__ = function.__name__
@@ -19,10 +20,16 @@ def user_permission(permission_type):
             current_user = request.user
             if not current_user.boss:
                 current_permission = current_user.employee.permission
-                if permission_type == 'add_column':
+                if permission_type == 'boss_only':
+                    if current_user.boss:
+                        return function(request, *args, **kwargs)
+                    else:
+                        raise PermissionDenied('Does not have permission: ' + permission_type)
+                elif permission_type == 'add_column':
                     if current_permission.add_column:
                         return function(request, *args, **kwargs)
                     else:
+                        print 'Does not have permission: ' + permission_type
                         raise PermissionDenied('Does not have permission: ' + permission_type)
                 elif permission_type == 'edit_column':
                     if current_permission.edit_column:
@@ -142,6 +149,12 @@ def data_required(required_data, request_type):
 
             for data in required_data:
                 if data not in query_request:
+
+                    if request_type == 'FILES':
+                        if data in request.POST:
+                            continue
+
+                    print data + ' does not exist!'
                     raise PermissionDenied(data + ' does not exist!')
             return function(request, *args, **kwargs)
         wrap.__doc__ = function.__doc__

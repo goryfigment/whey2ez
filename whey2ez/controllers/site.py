@@ -2,9 +2,9 @@ from django.shortcuts import render
 from whey2ez.modules.base import get_base_url
 from django.http import HttpResponseRedirect
 from django.forms.models import model_to_dict
-from whey2ez.modules.base import decimal_format, get_transactions, get_utc_epoch_time, get_boss, get_establishment
-from whey2ez.models import UserType, Employee, User, ItemLog
-import json, time
+from whey2ez.modules.base import decimal_format, get_boss
+from whey2ez.models import UserType, Employee, User, ItemLog, Store
+import json
 
 
 def error_page(request):
@@ -67,32 +67,44 @@ def inventory(request):
         return HttpResponseRedirect('/login/')
 
     current_boss = get_boss(current_user)
-    user_business = current_boss.business
-    user_settings = current_boss.settings
-
-    # Item Log
-    item_log = json.dumps(list(ItemLog.objects.filter(business=user_business).order_by('-date').values(
-        'user__first_name', 'user__last_name', 'action', 'operation', 'item_name', 'change', 'previous_value',
-        'date', 'details', 'id')))
-
-    user_inventory = user_business.inventory
-
-    if user_settings.order_by != 'none':
-        sorted_inventory = sorted(user_inventory.items(), key=lambda (k, v): v[user_settings.order_by], reverse=user_settings.reverse)
+    if current_user.boss:
+        boss_username = current_user.username
     else:
-        sorted_inventory = sorted(user_inventory.items(), key=lambda (k, v): int(k), reverse=False)
+        boss_username = User.objects.get(boss=current_user.employee.boss).username
+
+    user_business = current_boss.business
+    stores = user_business.stores.all().values()
+    store_log = {}
+    store_dict = {}
+
+    if len(stores):
+        active_store = str(stores.first()['id'])
+    else:
+        active_store = ''
+
+    for current_store in stores:
+        store_id = str(current_store['id'])
+        store_dict[store_id] = current_store
+        store_inventory = current_store['inventory']
+
+        if current_store['order_by'] != 'none':
+            current_store['inventory'] = sorted(store_inventory.items(), key=lambda (k, v): v[current_store['order_by']], reverse=current_store.reverse)
+        else:
+            current_store['inventory'] = sorted(store_inventory.items(), key=lambda (k, v): int(k), reverse=False)
+
+        store_log[store_id] = list(ItemLog.objects.filter(store=store_id).order_by('-date').values(
+            'user__first_name', 'user__last_name', 'action', 'operation', 'item_name', 'change', 'previous_value',
+            'date', 'details', 'id'))
 
     data = {
+        'boss_username': boss_username,
         'base_url': get_base_url(),
         'business_id': user_business.id,
         'business_name': user_business.name,
-        'inventory': json.dumps(sorted_inventory),
-        'link_columns': json.dumps(user_business.link_columns),
-        'columns': json.dumps(user_business.columns['columns']),
+        'active_store': active_store,
+        'store_log': json.dumps(store_log),
         'name': current_user.first_name + " " + current_user.last_name,
-        'stores': list(user_business.stores.all().values()),
-        'item_log': item_log,
-        'settings': json.dumps(model_to_dict(user_settings))
+        'stores': json.dumps(store_dict)
     }
 
     return render(request, 'inventory.html', data)
@@ -107,16 +119,25 @@ def employee(request):
 
     current_boss = get_boss(current_user)
     user_business = current_boss.business
-
     user_types = list(UserType.objects.filter(boss=current_boss).values())
     employees = Employee.objects.filter(boss=current_boss).order_by('-user_type')
+    stores = user_business.stores.all().values()
 
     employees_list = []
 
     for current_employee in employees:
         employee_user = User.objects.get(employee=current_employee.id)
         name = employee_user.first_name + ' ' + employee_user.last_name
-        employees_list.append({'name': name, 'title': current_employee.user_type.name, 'username': employee_user.username})
+        employees_list.append({'name': name, 'title': current_employee.user_type.name, 'username': employee_user.username, 'store': employee_user.employee.store})
+
+    store_dict = {}
+
+    for current_store in stores:
+        store_id = str(current_store['id'])
+        store_dict[store_id] = current_store
+        store_dict[store_id]['transactions'] = []
+
+    print employees_list
 
     data = {
         'base_url': get_base_url(),
@@ -125,10 +146,8 @@ def employee(request):
         'user_types': json.dumps(user_types),
         'employee_list': employees_list,
         'employees': json.dumps(employees_list),
-        'columns': json.dumps(user_business.columns['columns'])
+        'stores': json.dumps(store_dict)
     }
-
-    print data
 
     return render(request, 'employee.html', data)
 
@@ -144,29 +163,30 @@ def transaction(request):
 
     user_settings = model_to_dict(current_boss.settings)
     user_business = current_boss.business
-    user_settings['business_tax'] = decimal_format(float(user_business.tax)*100, 3, False)
+    # user_settings['business_tax'] = decimal_format(float(user_business.tax)*100, 3, False)
     user_settings['ip_address'] = user_settings['ip_address'].split('.')
-    user_settings['link_columns'] = user_business.link_columns
+    stores = user_business.stores.all().values()
+    store_dict = {}
+
+    for current_store in stores:
+        store_id = str(current_store['id'])
+        store_dict[store_id] = current_store
+        store_dict[store_id]['transactions'] = []
 
     data = {
         'base_url': get_base_url(),
         'name': current_user.first_name + " " + current_user.last_name,
-        'column_list': user_business.columns['columns'],
-        'columns': json.dumps(user_business.columns['columns']),
-        'link_columns': json.dumps(user_business.link_columns),
-        'link_dict': user_business.link_columns,
         'business_id': user_business.id,
         'business_name': user_business.name,
-        'stores': list(user_business.stores.all().values()),
-        'settings': user_settings,
+        'stores': json.dumps(store_dict),
         'start_point': user_settings['start_time'],
         'date_range': user_settings['date_range'],
-        'receipt_settings': json.dumps(user_settings),
+        'settings': json.dumps(user_settings),
         'all': 'ALL'
     }
 
-    if len(user_business.inventory):
-        user_settings['example_item'] = next(iter(user_business.inventory.items()))[1]
+    # if len(user_business.inventory):
+    #     user_settings['example_item'] = next(iter(user_business.inventory.items()))[1]
 
     return render(request, 'transaction.html', data)
 
@@ -178,12 +198,10 @@ def create_transaction_page(request):
     if not current_user.is_authenticated():
         return HttpResponseRedirect('/login/')
 
-    current_boss = get_boss(current_user)
-    establishment = get_establishment(request.GET['id'], request.GET['type'], current_boss)
+    establishment = Store.objects.get(id=request.GET['id'])
 
     data = {
         'base_url': get_base_url(),
-        'type': request.GET['type'],
         'id': establishment.id,
         'tax': establishment.tax,
         'tax_percent': decimal_format(float(establishment.tax)*100, 3, False)
@@ -202,17 +220,19 @@ def overview_page(request):
     current_boss = get_boss(current_user)
     user_settings = model_to_dict(current_boss.settings)
     user_business = current_boss.business
+    stores = user_business.stores.all().values()
+    store_dict = {}
 
-    date_range = user_settings['date_range']
+    for current_store in stores:
+        store_id = str(current_store['id'])
+        store_dict[store_id] = current_store
 
     data = {
         'base_url': get_base_url(),
         'business_id': user_business.id,
         'business_name': user_business.name,
-        'columns': json.dumps(user_business.columns['columns']),
-        'link_columns': json.dumps(user_business.link_columns),
-        'date_range': date_range,
-        'inventory': len(user_business.inventory),
+        'stores': json.dumps(store_dict),
+        'date_range': user_settings['date_range'],
         'start_point': user_settings['start_time']
     }
 

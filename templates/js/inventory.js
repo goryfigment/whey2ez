@@ -8,27 +8,34 @@ var inventoryTemplate = require('./../handlebars/inventory/inventory.hbs');
 var itemLogTemplate = require('./../handlebars/inventory/item_log.hbs');
 var settingsTemplate = require('./../handlebars/inventory/inventory_settings.hbs');
 var rowTemplate = require('./../handlebars/inventory/row.hbs');
+var storeTemplate = require('./../handlebars/operation/store.hbs');
 var inventoryOperationTemplate = require('./../handlebars/inventory/inventory_operation.hbs');
 var operationTemplate = require('./../handlebars/operation/operation.hbs');
+var storeItemTemplate = require('./../handlebars/operation/store_item.hbs');
 
 //libraries
 var $ = require('jquery');
 var helper = require('./../js/helpers.js');
 require('./../library/tippy/tippy.js');
+require('./../js/general.js');
 require('./../library/calendar/calendar.js');
 
-
 function init() {
+    var activeStore = globals.stores[globals.active_store];
+
     $('#inventory-link').addClass('active');
+    $('.store-container').append(storeItemTemplate({'stores': globals.stores, 'active_store': parseInt(globals.active_store)}));
 
     var $inventoryWrapper = $('#inventory-wrapper');
-    $inventoryWrapper.append(inventoryTemplate({'columns': globals.columns, 'inventory': globals.inventory}));
+    $inventoryWrapper.append(inventoryTemplate({'stores_length': Object.keys(globals.stores).length, 'store': activeStore, 'boss_username': globals.boss_username}));
 
     var $logWrapper = $inventoryWrapper.siblings('#log-wrapper');
-    $logWrapper.append(itemLogTemplate({'item_log': globals.item_log}));
+    $logWrapper.append(itemLogTemplate({'item_log': globals.store_log[globals.active_store]}));
 
-    var $settingsWrapper = $inventoryWrapper.siblings('#settings-wrapper');
-    $settingsWrapper.append(settingsTemplate({'columns': globals.columns, 'settings': globals.settings}));
+    if(globals.active_store != '') {
+        var $settingsWrapper = $inventoryWrapper.siblings('#settings-wrapper');
+        $settingsWrapper.append(settingsTemplate({'columns': activeStore['columns'], 'settings': activeStore['settings']}));
+    }
 }
 
 function tabHandler($clickedTab) {
@@ -73,7 +80,6 @@ function getLogReport(start_time, end_time) {
         type: "GET",
         success: function (response) {
             //console.log(response);
-
             var $logWrapper = $('#log-wrapper');
             globals.item_log = response['item_log'];
             $logWrapper.empty();
@@ -98,6 +104,46 @@ $(document).ready(function() {
         $('#operation-overlay').removeClass('active');
     });
     //OPERATION POPUP//
+
+    //FILE UPLOAD//
+    $(document).on('click', '.file-upload-button', function () {
+        var $itemFileUpload = $('#item-file-upload');
+        $itemFileUpload.attr('data-id', $(this).closest('tr').attr('data-id'));
+        $itemFileUpload.click();
+    });
+
+    $(document).on('change', '#item-file-upload', function () {
+        var $fileUploadButton = $(this);
+        var file = $fileUploadButton.get(0).files[0];
+        var fileType = file["type"];
+        var ValidImageTypes = ["image/jpeg", "image/png"];
+        if ($.inArray(fileType, ValidImageTypes) < 0) {
+            alert('Must be an image file: jpeg, png.');
+            return;
+        }
+
+        var storeId = $('.establishment.active').attr('data-id');
+
+        var formData = new FormData();
+        formData.append('file', file);
+        formData.append('id', storeId);
+        formData.append('item_id', $fileUploadButton.attr('data-id'));
+
+        $.ajax({
+            headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
+            url: globals.base_url + '/inventory/file_upload/',
+            data: formData,
+            type: "POST",
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                //console.log(JSON.stringify(response));
+
+            }
+        });
+    });
+    //FILE UPLOAD//
 
     //SEARCH ITEM//
     $(document).on('keyup', '#search-input, #operation-search-input', function () {
@@ -141,17 +187,19 @@ $(document).ready(function() {
 
     //ADD COLUMN FUNCTIONS//
     $(document).on('click', '#add-button', function (e) {
-        popupHandler(e, {type: "add", columns: globals.columns});
+        var $activeInventory = $('.establishment.active');
+        var store = globals.stores[$activeInventory.attr('data-id')];
+        popupHandler(e, {type: "add", columns: store['columns'], 'picture_column': store['picture_column']});
     });
 
     $(document).on('click', '#add-column-submit', function () {
         var $activeInventory = $('.establishment.active');
         var columnName = $(this).siblings('#add-column-input').val();
+        var storeId = $activeInventory.attr('data-id');
 
         var postData = {
             column_name: columnName,
-            id: $activeInventory.attr('data-id'),
-            type: $activeInventory.attr('data-type')
+            id: storeId
         };
 
         $.ajax({
@@ -166,14 +214,53 @@ $(document).ready(function() {
                 // Show updated inventory
                 var $inventoryWrapper = $('#inventory-wrapper');
                 $inventoryWrapper.empty();
-                $inventoryWrapper.append(inventoryTemplate({'columns': response['columns'], 'inventory': response['inventory']}));
+                $inventoryWrapper.append(inventoryTemplate({'store': response['store'], 'boss_username': globals.boss_username}));
 
                 // Remove popup
                 $('#operation-overlay').removeClass('active');
 
                 // CACHE THE DATA
-                globals.columns = response['columns'];
-                globals.inventory = response['inventory'];
+                globals.stores[storeId] = response['store'];
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    $('#add-column-wrapper').find('.error').text('Permission Denied').show();
+                } else {
+                    $('#add-column-wrapper').find('.error').text(response.responseText).show();
+                }
+            }
+        });
+    });
+
+    $(document).on('click', '#add-picture-column-submit', function () {
+        var $activeInventory = $('.establishment.active');
+        var columnName = $(this).siblings('#add-picture-column-input').val();
+        var storeId = $activeInventory.attr('data-id');
+
+        var postData = {
+            column_name: columnName,
+            id: storeId
+        };
+
+        $.ajax({
+            headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
+            url: globals.base_url + '/inventory/add_picture_column/',
+            data: postData,
+            dataType: 'json',
+            type: "POST",
+            success: function (response) {
+                //console.log(JSON.stringify(response));
+
+                // Show updated inventory
+                var $inventoryWrapper = $('#inventory-wrapper');
+                $inventoryWrapper.empty();
+                $inventoryWrapper.append(inventoryTemplate({'store': response['store'], 'boss_username': globals.boss_username}));
+
+                // Remove popup
+                $('#operation-overlay').removeClass('active');
+
+                // CACHE THE DATA
+                globals.stores[storeId] = response['store'];
             },
             error: function (response) {
                 if(response.status && response.status == 403) {
@@ -191,6 +278,7 @@ $(document).ready(function() {
     $(document).on('click', '#add-item-submit', function () {
         var $activeInventory = $('.establishment.active');
         var $operationOverlay = $(this).closest('#operation-overlay');
+        var storeId = $activeInventory.attr('data-id');
 
         var itemData = {};
         $operationOverlay.find('.add-item-input').each(function() {
@@ -201,16 +289,18 @@ $(document).ready(function() {
         $.ajax({
             headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
             url: globals.base_url + '/inventory/add_item/',
-            data: JSON.stringify({'item': itemData, id: $activeInventory.attr('data-id'), type: $activeInventory.attr('data-type')}),
+            data: JSON.stringify({'item': itemData, id: storeId}),
             dataType: 'json',
             type: "POST",
             success: function (response) {
                 //console.log(JSON.stringify(response));
                 $operationOverlay.removeClass('active');
                 var $inventoryTable = $('#inventory-table tbody');
-                $inventoryTable.prepend(rowTemplate({'item': response['item'], 'columns': globals.columns}));
 
-                globals.inventory = response['inventory'];
+                $inventoryTable.prepend(rowTemplate({'item': response['item'], 'columns': response['store']['columns']}));
+
+                // CACHE THE DATA
+                globals.stores[storeId] = response['store'];
             },
             error: function (response) {
                 var $wrapper = $('#add-item-wrapper');
@@ -237,7 +327,10 @@ $(document).ready(function() {
 
     //EDIT COLUMN FUNCTIONS//
     $(document).on('click', '#edit-button', function (e) {
-        popupHandler(e, {type: "edit", columns: globals.columns, inventory: globals.inventory, inventory_length: Object.keys(globals.inventory).length});
+        var $activeInventory = $('.establishment.active');
+        var storeId = $activeInventory.attr('data-id');
+
+        popupHandler(e, {type: "edit", columns: globals.stores[storeId]['columns'], inventory: globals.stores[storeId]['inventory'], inventory_length: globals.stores[storeId]['inventory'].length});
     });
 
     $(document).on('click', '#edit-column-submit', function () {
@@ -246,12 +339,12 @@ $(document).ready(function() {
         var $operationOverlay = $columnEditSubmit.closest('#operation-overlay');
         var prevColumnName = $operationOverlay.find('#edit-prev-column-input').val();
         var newColumnName = $operationOverlay.find('#edit-column-input').val();
+        var storeId = $activeInventory.attr('data-id');
 
         var postData = {
             new_column_name: newColumnName,
             prev_column_name: prevColumnName,
-            id: $activeInventory.attr('data-id'),
-            type: $activeInventory.attr('data-type')
+            id: storeId
         };
 
         $.ajax({
@@ -272,9 +365,8 @@ $(document).ready(function() {
                 $filterContainer.html('<input class="column-filter" type="checkbox" value="' + newColumnName +'" checked=""> ' + newColumnName);
                 //Close overlay
                 $operationOverlay.removeClass('active');
-                //Maintain current inventory in the frontend
-                globals.inventory = response['inventory'];
-                globals.columns = response['columns']
+                //CACHE
+                globals.stores[storeId] = response['store'];
             },
             error: function (response) {
                 if(response.status && response.status == 403) {
@@ -291,13 +383,12 @@ $(document).ready(function() {
     //EDIT ITEM FUNCTIONS//
     $(document).on('click', '#operation-table.edit tbody tr', function () {
         var itemId = $(this).attr('data-id');
-        var inventoryJson = globals.inventory;
-        var item = null;
+        var storeInventory = globals.stores[$('.establishment.active').attr('data-id')]['inventory'];
 
-        for (var i = 0; i < inventoryJson.length; i++) {
-            var current_item = inventoryJson[i];
-            if (current_item[0] == itemId) {
-                item = current_item[1];
+        for (var i = 0; i < storeInventory.length; i++) {
+            var currentId = storeInventory[i][0];
+            if(currentId == itemId) {
+                var item = storeInventory[i][1];
                 break;
             }
         }
@@ -324,6 +415,8 @@ $(document).ready(function() {
         var $activeInventory = $('.establishment.active');
         var itemId = $editItemSubmit.data('id');
         var $operationOverlay = $editItemSubmit.closest('#operation-overlay');
+        var storeId = $activeInventory.attr('data-id');
+
         var itemData = {};
 
         $operationOverlay.find('.edit-item-input').each(function() {
@@ -334,8 +427,7 @@ $(document).ready(function() {
         var postData = {
             'item': itemData,
             'item_id': itemId,
-            id: $activeInventory.attr('data-id'),
-            type: $activeInventory.attr('data-type')
+            'id': storeId
         };
 
         $.ajax({
@@ -348,12 +440,12 @@ $(document).ready(function() {
                 //console.log(JSON.stringify(response));
                 //Replace old item with new item
                 var $row = $('#inventory-table [data-id="' + itemId + '"]');
-                $(rowTemplate({'item_id': itemId, 'item': response['item'], 'columns': globals.columns})).insertAfter($row);
+                $(rowTemplate({'item_id': itemId, 'item': response['item'], 'columns': response['store']['columns']})).insertAfter($row);
                 $row.remove();
                 //Remove popup
                 $operationOverlay.removeClass('active');
                 //Maintain current inventory in the frontend
-                globals.inventory = response['inventory'];
+                globals.stores[storeId] = response['store'];
             },
             error: function (response) {
                 var $wrapper = $('#edit-item-wrapper');
@@ -381,17 +473,18 @@ $(document).ready(function() {
 
     //DELETE COLUMN FUNCTIONS//
     $(document).on('click', '#delete-button', function (e) {
-        popupHandler(e, {type: "delete", columns: globals.columns, inventory: globals.inventory, inventory_length: Object.keys(globals.inventory).length});
+        var $activeInventory = $('.establishment.active');
+        popupHandler(e, {type: "delete", columns: globals.stores[$activeInventory.attr('data-id')]['columns'], inventory: globals.stores[$activeInventory.attr('data-id')]['inventory'], inventory_length: Object.keys(globals.stores[$activeInventory.attr('data-id')]['inventory']).length});
     });
 
     $(document).on('click', '#delete-column-submit', function () {
         var columnName = $(this).siblings('#delete-column-input').val();
         var $activeInventory = $('.establishment.active');
+        var storeId = $activeInventory.attr('data-id');
 
         var postData = {
             column_name: columnName,
-            id: $activeInventory.attr('data-id'),
-            type: $activeInventory.attr('data-type')
+            id: storeId
         };
 
         $.ajax({
@@ -415,13 +508,12 @@ $(document).ready(function() {
                 //Close overlay
                 $('#operation-overlay').removeClass('active');
                 //Maintain current inventory in the frontend
-                globals.columns = response['columns'];
-                globals.inventory = response['inventory'];
+                globals.stores[storeId] = response['store'];
 
-                if(!globals.columns.length) {
+                if(!globals.stores[storeId]['columns'].length) {
                     var $inventoryWrapper = $('#inventory-wrapper');
                     $inventoryWrapper.empty();
-                    $inventoryWrapper.append(inventoryTemplate({'columns': globals.columns, 'inventory': globals.inventory}));
+                    $inventoryWrapper.append(inventoryTemplate({'store': response['store'], 'boss_username': globals.boss_username}));
                 }
             },
             error: function (response) {
@@ -439,10 +531,19 @@ $(document).ready(function() {
     //DELETE ITEM FUNCTIONS//
     $(document).on('click', '#operation-table.delete tbody tr', function () {
         var $row = $(this);
-        var itemId = $(this).attr('data-id');
-        var item = globals.inventory[itemId];
         var $deleteStep2 = $('#delete-step-2');
         var $deleteItemContainer = $('#delete-item-container');
+        var itemId = $(this).attr('data-id');
+        var storeInventory = globals.stores[$('.establishment.active').attr('data-id')]['inventory'];
+
+        for (var i = 0; i < storeInventory.length; i++) {
+            var currentId = storeInventory[i][0];
+            if(currentId == itemId) {
+                var item = storeInventory[i][1];
+                break;
+            }
+        }
+
         $deleteItemContainer.empty();
         $deleteItemContainer.append($row.parent().siblings('thead').clone());
         $deleteItemContainer.append('<tbody></tbody>');
@@ -464,11 +565,11 @@ $(document).ready(function() {
         var itemId = $deleteItemSubmit.data('id');
         var $operationOverlay = $deleteItemSubmit.closest('#operation-overlay');
         var $activeInventory = $('.establishment.active');
+        var storeId = $activeInventory.attr('data-id');
 
         var postData = {
             item_id: itemId,
-            id: $activeInventory.attr('data-id'),
-            type: $activeInventory.attr('data-type')
+            id: storeId
         };
 
         $.ajax({
@@ -481,7 +582,9 @@ $(document).ready(function() {
                 //console.log(JSON.stringify(response));
                 $operationOverlay.removeClass('active');
                 $('#inventory-table [data-id="' + itemId + '"]').remove();
-                globals.inventory = response['inventory'];
+
+                //CACHE
+                globals.stores[storeId] = response['store'];
             },
             error: function (response) {
                 var $wrapper = $('#delete-item-wrapper');
@@ -556,10 +659,17 @@ $(document).ready(function() {
         var $importTable = $('#import-table');
         var column = [];
         var inventory = {};
-        var id = 1;
-        var globalInventory = globals.inventory;
-        var globalKeys = Object.keys(globalInventory);
         var $activeInventory = $('.establishment.active');
+        var storeId = $activeInventory.attr('data-id');
+        var id = 1;
+        var storeInventory = globals.stores[storeId]['inventory'];
+        var inventoryObject = {};
+
+        for (var i = 0; i < storeInventory.length; i++) {
+            inventoryObject[storeInventory[i][0]] = storeInventory[i][1];
+        }
+
+        var globalKeys = Object.keys(inventoryObject);
 
         if(Object.keys(globalKeys).length !== 0) {
             id = parseInt(globalKeys[globalKeys.length-1]);
@@ -590,8 +700,7 @@ $(document).ready(function() {
         var postData = {
             columns: column,
             inventory: inventory,
-            id: $activeInventory.attr('data-id'),
-            type: $activeInventory.attr('data-type')
+            id: storeId
         };
 
         $.ajax({
@@ -605,9 +714,10 @@ $(document).ready(function() {
                 $('#operation-overlay').removeClass('active');
                 var $inventoryWrapper = $('#inventory-wrapper');
                 $inventoryWrapper.empty();
-                $inventoryWrapper.append(inventoryTemplate(response));
-                globals.inventory = response['inventory'];
-                globals.columns = response['columns'];
+                $inventoryWrapper.append(inventoryTemplate({'store': response['store'], 'boss_username': globals.boss_username}));
+
+                //CACHE
+                globals.stores[storeId] = response['store'];
             },
             error: function (response) {
                 if(response.status && response.status == 403) {
@@ -629,14 +739,16 @@ $(document).ready(function() {
     $(document).on('click', '#export-submit', function () {
         var fileType = $('#export-type-input').val();
         var exportLink = document.getElementById('export-download');
-        var inventory = globals.inventory;
-        var columns = globals.columns;
+        var store = globals.stores[$('.establishment.active').attr('data-id')];
+        var storeInventory = store['inventory'];
+        var columns = store['columns'];
+        var inventory = {};
         var valid = false;
-
         var inventoryJson = [];
 
-        for (var key in inventory){
-            inventoryJson.push(inventory[key]);
+        for (var i = 0; i < storeInventory.length; i++) {
+            inventory[storeInventory[i][0]] = storeInventory[i][1];
+            inventoryJson.push(storeInventory[i][1]);
         }
 
         if(fileType == 'csv' || fileType == 'json') {
@@ -675,7 +787,8 @@ $(document).ready(function() {
                 }
 
                 for (var p = 0; p < inventoryJson.length; p++) {
-                    var currentRow = inventoryJson[p][1];
+                    var currentRow = inventoryJson[p];
+
                     for (var c = 0; c < columns.length; c++) {
                         if (c == columns.length - 1) {
                             csvFile += '"' + currentRow[columns[c]] + '"\r\n';
@@ -691,14 +804,8 @@ $(document).ready(function() {
                 exportLink.setAttribute("download", "inventory.csv");
                 exportLink.click();
             } else if (valid && fileType == 'json') {
-                var newJsonInventory = [];
-
-                for (var j = 0; j < inventoryJson.length; j++) {
-                    newJsonInventory.push(inventoryJson[j][1])
-                }
-
                 tab.document.open();
-                tab.document.write('<pre style="background:#000; color:#fff; margin: -8px;">' + JSON.stringify({'inventory': newJsonInventory}, null, 2) + '</pre>');
+                tab.document.write('<pre style="background:#000; color:#fff; margin: -8px;">' + JSON.stringify({'inventory': inventoryJson}, null, 2) + '</pre>');
                 tab.document.close();
             }
         }
@@ -733,10 +840,11 @@ $(document).ready(function() {
 
     $(document).on('click', '#drop-table-submit', function () {
         var $activeInventory = $('.establishment.active');
+        var storeId = $activeInventory.attr('data-id');
+
         var postData = {
             drop_table: true,
-            id: $activeInventory.attr('data-id'),
-            type: $activeInventory.attr('data-type')
+            id: storeId
         };
 
         $.ajax({
@@ -749,12 +857,12 @@ $(document).ready(function() {
                 //console.log(JSON.stringify(response));
                 $('#operation-overlay').removeClass('active');
 
-                globals.inventory = response['inventory'];
-                globals.columns = response['columns'];
+                //CACHE
+                globals.stores[storeId] = response['store'];
 
                 var $inventoryWrapper = $('#inventory-wrapper');
                 $inventoryWrapper.empty();
-                $inventoryWrapper.append(inventoryTemplate({'columns': globals.columns, 'inventory': globals.inventory}));
+                $inventoryWrapper.append(inventoryTemplate({'store': response['store'], 'boss_username': globals.boss_username}));
             },
             error: function (response) {
                 if(response.status && response.status == 403) {
@@ -768,19 +876,30 @@ $(document).ready(function() {
 
     //RECIEVED FUNCTIONS//
     $(document).on('click', '#receiving-button', function (e) {
-        if(!globals.link_columns['quantity']){
-            popupHandler(e, {type: "quantity", columns: globals.columns, link_columns: globals.link_columns}, operationTemplate);
-        } else if(!globals.link_columns['name']) {
-            popupHandler(e, {type: "name", columns: globals.columns, link_columns: globals.link_columns}, operationTemplate);
+        var store = globals.stores[$('.establishment.active').attr('data-id')];
+
+        if(!store['link_columns']['quantity']){
+            popupHandler(e, {type: "quantity", columns: store['columns'], link_columns: store['link_columns']}, operationTemplate);
+        } else if(!store['link_columns']['name']) {
+            popupHandler(e, {type: "name", columns: store['columns'], link_columns: store['link_columns']}, operationTemplate);
         } else {
-            popupHandler(e, {type: "received", columns: globals.columns, inventory: globals.inventory, inventory_length: Object.keys(globals.inventory).length});
+            popupHandler(e, {type: "received", columns: store['columns'], inventory: store['inventory'], inventory_length: store['inventory'].length});
         }
     });
 
     $(document).on('click', '#operation-table.add tbody tr', function () {
         var $row = $(this);
         var itemId = $(this).attr('data-id');
-        var item = globals.inventory[itemId];
+        var storeInventory = globals.stores[$('.establishment.active').attr('data-id')]['inventory'];
+
+        for (var i = 0; i < storeInventory.length; i++) {
+            var currentId = storeInventory[i][0];
+            if(currentId == itemId) {
+                var item = storeInventory[i][1];
+                break;
+            }
+        }
+
         var $deleteStep2 = $('#received-step-2');
         var $deleteItemContainer = $('#received-item-container');
         $deleteItemContainer.empty();
@@ -800,10 +919,10 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '#received-item-submit', function () {
-        var $activeInventory = $('.establishment.active');
+        var storeId = $('.establishment.active').attr('data-id');
+
         var postData = {
-            id: $activeInventory.attr('data-id'),
-            type: $activeInventory.attr('data-type'),
+            id: storeId,
             change_value: $('#received-input').val(),
             details: $('#details-input').val(),
             item_id: $(this).data('id')
@@ -819,16 +938,16 @@ $(document).ready(function() {
                 //console.log(JSON.stringify(response));
                 $('#operation-overlay').removeClass('active');
 
-                globals.inventory = response['inventory'];
-                globals.item_log = response['item_log'];
+                globals.stores[storeId] = response['store'];
+                globals.store_log[storeId] = response['item_log'];
 
                 var $inventoryWrapper = $('#inventory-wrapper');
                 $inventoryWrapper.empty();
-                $inventoryWrapper.append(inventoryTemplate({'columns': globals.columns, 'inventory': globals.inventory}));
+                $inventoryWrapper.append(inventoryTemplate({'store': response['store'], 'boss_username': globals.boss_username}));
 
                 var $logWrapper = $inventoryWrapper.siblings('#log-wrapper');
                 $logWrapper.empty();
-                $logWrapper.append(itemLogTemplate({'item_log': globals.item_log}));
+                $logWrapper.append(itemLogTemplate({'item_log': response['item_log']}));
 
                 tabHandler($('#log-tab'));
             },
@@ -845,21 +964,32 @@ $(document).ready(function() {
 
     //DAMAGED FUNCTIONS//
     $(document).on('click', '#damaged-button', function (e) {
-        if(!globals.link_columns['quantity']){
-            popupHandler(e, {type: "cost", columns: globals.columns, link_columns: globals.link_columns}, operationTemplate);
-        } else if(!globals.link_columns['name']) {
-            popupHandler(e, {type: "name", columns: globals.columns, link_columns: globals.link_columns}, operationTemplate);
+        var store = globals.stores[$('.establishment.active').attr('data-id')];
+
+        if(!store['link_columns']['quantity']){
+            popupHandler(e, {type: "quantity", columns: store['columns'], link_columns: store['link_columns']}, operationTemplate);
+        } else if(!store['link_columns']['name']) {
+            popupHandler(e, {type: "name", columns: store['columns'], link_columns: store['link_columns']}, operationTemplate);
         } else {
-            popupHandler(e, {type: "damaged", columns: globals.columns, inventory: globals.inventory, inventory_length: Object.keys(globals.inventory).length});
+            popupHandler(e, {type: "damaged", columns: store['columns'], inventory: store['inventory'], inventory_length: store['inventory'].length});
         }
     });
 
-    $(document).on('click', '#operation-table.delete tbody tr', function () {
+    $(document).on('click', '#operation-table.delete.damaged tbody tr', function () {
         var $row = $(this);
-        var itemId = $(this).attr('data-id');
-        var item = globals.inventory[itemId];
         var $deleteStep2 = $('#damaged-step-2');
         var $deleteItemContainer = $('#damaged-item-container');
+        var itemId = $(this).attr('data-id');
+        var storeInventory = globals.stores[$('.establishment.active').attr('data-id')]['inventory'];
+
+        for (var i = 0; i < storeInventory.length; i++) {
+            var currentId = storeInventory[i][0];
+            if(currentId == itemId) {
+                var item = storeInventory[i][1];
+                break;
+            }
+        }
+
         $deleteItemContainer.empty();
         $deleteItemContainer.append($row.parent().siblings('thead').clone());
         $deleteItemContainer.append('<tbody></tbody>');
@@ -877,10 +1007,9 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '#damaged-item-submit', function () {
-        var $activeInventory = $('.establishment.active');
+        var storeId = $('.establishment.active').attr('data-id');
         var postData = {
-            id: $activeInventory.attr('data-id'),
-            type: $activeInventory.attr('data-type'),
+            id: storeId,
             change_value: $('#damaged-input').val(),
             details: $('#details-input').val(),
             item_id: $(this).data('id')
@@ -896,15 +1025,15 @@ $(document).ready(function() {
                 //console.log(JSON.stringify(response));
                 $('#operation-overlay').removeClass('active');
 
-                globals.inventory = response['inventory'];
+                globals.stores[storeId] = response['store'];
 
                 var $inventoryWrapper = $('#inventory-wrapper');
                 $inventoryWrapper.empty();
-                $inventoryWrapper.append(inventoryTemplate({'columns': globals.columns, 'inventory': globals.inventory}));
+                $inventoryWrapper.append(inventoryTemplate({'store': response['store'], 'boss_username': globals.boss_username}));
 
                 var $logWrapper = $inventoryWrapper.siblings('#log-wrapper');
                 $logWrapper.empty();
-                $logWrapper.append(itemLogTemplate({'item_log': globals.item_log}));
+                $logWrapper.append(itemLogTemplate({'item_log': response['item_log']}));
 
                 tabHandler($('inventory-tab'));
             },
@@ -921,12 +1050,14 @@ $(document).ready(function() {
 
     //RESET COST FUNCTIONS//
     $(document).on('click', '#reset-cost-button', function (e) {
-        if(!globals.link_columns['cost']){
-            popupHandler(e, {type: "cost", columns: globals.columns, link_columns: globals.link_columns}, operationTemplate);
-        } else if(!globals.link_columns['name']) {
-            popupHandler(e, {type: "name", columns: globals.columns, link_columns: globals.link_columns}, operationTemplate);
+        var store = globals.stores[$('.establishment.active').attr('data-id')];
+
+        if(!store['link_columns']['cost']){
+            popupHandler(e, {type: "cost", columns: store['columns'], link_columns: store['link_columns']}, operationTemplate);
+        } else if(!store['link_columns']['name']) {
+            popupHandler(e, {type: "name", columns: store['columns'], link_columns: store['link_columns']}, operationTemplate);
         } else {
-            popupHandler(e, {type: "reset_cost", columns: globals.columns, inventory: globals.inventory, inventory_length: Object.keys(globals.inventory).length});
+            popupHandler(e, {type: "reset_cost", columns: store['columns'], inventory: store['inventory'], inventory_length: store['inventory'].length});
         }
     });
 
@@ -936,10 +1067,19 @@ $(document).ready(function() {
         $deleteStep2.siblings('#reset-cost-step-1').addClass('active');
     });
 
-    $(document).on('click', '#operation-table.edit tbody tr', function () {
+    $(document).on('click', '#operation-table.reset-cost tbody tr', function () {
         var $row = $(this);
         var itemId = $(this).attr('data-id');
-        var item = globals.inventory[itemId];
+        var storeInventory = globals.stores[$('.establishment.active').attr('data-id')]['inventory'];
+
+        for (var i = 0; i < storeInventory.length; i++) {
+            var currentId = storeInventory[i][0];
+            if(currentId == itemId) {
+                var item = storeInventory[i][1];
+                break;
+            }
+        }
+
         var $deleteStep2 = $('#reset-cost-step-2');
         var $deleteItemContainer = $('#reset-cost-item-container');
         $deleteItemContainer.empty();
@@ -953,10 +1093,9 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '#reset-cost-item-submit', function () {
-        var $activeInventory = $('.establishment.active');
+        var storeId = $('.establishment.active').attr('data-id');
         var postData = {
-            id: $activeInventory.attr('data-id'),
-            type: $activeInventory.attr('data-type'),
+            id: storeId,
             change_value: $('#reset-cost-input').val(),
             details: $('#details-input').val(),
             item_id: $(this).data('id')
@@ -972,15 +1111,15 @@ $(document).ready(function() {
                 //console.log(JSON.stringify(response));
                 $('#operation-overlay').removeClass('active');
 
-                globals.inventory = response['inventory'];
+                globals.stores[storeId] = response['store'];
 
                 var $inventoryWrapper = $('#inventory-wrapper');
                 $inventoryWrapper.empty();
-                $inventoryWrapper.append(inventoryTemplate({'columns': globals.columns, 'inventory': globals.inventory}));
+                $inventoryWrapper.append(inventoryTemplate({'store': response['store'], 'boss_username': globals.boss_username}));
 
                 var $logWrapper = $inventoryWrapper.siblings('#log-wrapper');
                 $logWrapper.empty();
-                $logWrapper.append(itemLogTemplate({'item_log': globals.item_log}));
+                $logWrapper.append(itemLogTemplate({'item_log': response['item_log']}));
 
                 tabHandler($('inventory-tab'));
             },
@@ -997,12 +1136,14 @@ $(document).ready(function() {
 
     //RESET PRICE FUNCTIONS//
     $(document).on('click', '#reset-price-button', function (e) {
-        if(!globals.link_columns['price']){
-            popupHandler(e, {type: "price", columns: globals.columns, link_columns: globals.link_columns}, operationTemplate);
-        } else if(!globals.link_columns['name']) {
-            popupHandler(e, {type: "name", columns: globals.columns, link_columns: globals.link_columns}, operationTemplate);
+        var store = globals.stores[$('.establishment.active').attr('data-id')];
+
+        if(!store['link_columns']['price']){
+            popupHandler(e, {type: "price", columns: store['columns'], link_columns: store['link_columns']}, operationTemplate);
+        } else if(!store['link_columns']['name']) {
+            popupHandler(e, {type: "name", columns: store['columns'], link_columns: store['link_columns']}, operationTemplate);
         } else {
-            popupHandler(e, {type: "reset_price", columns: globals.columns, inventory: globals.inventory, inventory_length: Object.keys(globals.inventory).length});
+            popupHandler(e, {type: "reset_price", columns: store['columns'], inventory: store['inventory'], inventory_length: store['inventory'].length});
         }
     });
 
@@ -1012,12 +1153,21 @@ $(document).ready(function() {
         $deleteStep2.siblings('#reset-price-step-1').addClass('active');
     });
 
-    $(document).on('click', '#operation-table.edit tbody tr', function () {
+    $(document).on('click', '#operation-table.reset-price tbody tr', function () {
         var $row = $(this);
         var itemId = $(this).attr('data-id');
-        var item = globals.inventory[itemId];
+        var storeInventory = globals.stores[$('.establishment.active').attr('data-id')]['inventory'];
         var $deleteStep2 = $('#reset-price-step-2');
         var $deleteItemContainer = $('#reset-price-item-container');
+
+        for (var i = 0; i < storeInventory.length; i++) {
+            var currentId = storeInventory[i][0];
+            if(currentId == itemId) {
+                var item = storeInventory[i][1];
+                break;
+            }
+        }
+
         $deleteItemContainer.empty();
         $deleteItemContainer.append($row.parent().siblings('thead').clone());
         $deleteItemContainer.append('<tbody></tbody>');
@@ -1029,10 +1179,9 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '#reset-price-item-submit', function () {
-        var $activeInventory = $('.establishment.active');
+        var storeId = $('.establishment.active').attr('data-id');
         var postData = {
-            id: $activeInventory.attr('data-id'),
-            type: $activeInventory.attr('data-type'),
+            id: storeId,
             change_value: $('#reset-price-input').val(),
             details: $('#details-input').val(),
             item_id: $(this).data('id')
@@ -1048,15 +1197,15 @@ $(document).ready(function() {
                 //console.log(JSON.stringify(response));
                 $('#operation-overlay').removeClass('active');
 
-                globals.inventory = response['inventory'];
+                globals.stores[storeId] = response['store'];
 
                 var $inventoryWrapper = $('#inventory-wrapper');
                 $inventoryWrapper.empty();
-                $inventoryWrapper.append(inventoryTemplate({'columns': globals.columns, 'inventory': globals.inventory}));
+                $inventoryWrapper.append(inventoryTemplate({'store': response['store'], 'boss_username': globals.boss_username}));
 
                 var $logWrapper = $inventoryWrapper.siblings('#log-wrapper');
                 $logWrapper.empty();
-                $logWrapper.append(itemLogTemplate({'item_log': globals.item_log}));
+                $logWrapper.append(itemLogTemplate({'item_log': response['item_log']}));
 
                 tabHandler($('inventory-tab'));
             },
@@ -1100,51 +1249,50 @@ $(document).ready(function() {
 
 
     // SAVE SETTINGS
-    $(document).on('click', '#inventory-settings-submit', function () {
-        //Get filters, Get default tax, Get every store tax
-        var $orderByInput = $('#order-by-input');
-        var $reverseCheckbox = $('#reverse-checkbox');
-        var $activeInventory = $('.establishment.active');
-
-        var postData = {
-            id: $activeInventory.attr('data-id'),
-            type: $activeInventory.attr('data-type'),
-            'order_by': $orderByInput.val(),
-            'reverse': $reverseCheckbox.is(":checked")
-        };
-
-        $.ajax({
-            headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
-            url: globals.base_url + '/inventory/save_settings/',
-            data: JSON.stringify(postData),
-            dataType: 'json',
-            type: "POST",
-            success: function (response) {
-                globals.inventory = response['inventory'];
-
-                var $inventoryWrapper = $('#inventory-wrapper');
-                $inventoryWrapper.empty();
-                $inventoryWrapper.append(inventoryTemplate({'columns': globals.columns, 'inventory': globals.inventory}));
-
-                var $settingResult = $('#settings-result');
-                $settingResult.removeClass('denied');
-                $settingResult.addClass('success');
-                $settingResult.text('Saved!');
-                $settingResult.show();
-                $settingResult.fadeOut(2000);
-            },
-            error: function (response) {
-                if(response.status && response.status == 403) {
-                    var $settingResult = $('#settings-result');
-                    $settingResult.removeClass('success');
-                    $settingResult.addClass('denied');
-                    $settingResult.text('Permission Denied');
-                    $settingResult.show();
-                    $settingResult.fadeOut(2000);
-                }
-            }
-        });
-    });
+    //$(document).on('click', '#inventory-settings-submit', function () {
+    //    //Get filters, Get default tax, Get every store tax
+    //    var $orderByInput = $('#order-by-input');
+    //    var $reverseCheckbox = $('#reverse-checkbox');
+    //    var $activeInventory = $('.establishment.active');
+    //
+    //    var postData = {
+    //        id: $activeInventory.attr('data-id'),
+    //        'order_by': $orderByInput.val(),
+    //        'reverse': $reverseCheckbox.is(":checked")
+    //    };
+    //
+    //    $.ajax({
+    //        headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
+    //        url: globals.base_url + '/inventory/save_settings/',
+    //        data: JSON.stringify(postData),
+    //        dataType: 'json',
+    //        type: "POST",
+    //        success: function (response) {
+    //            globals.inventory = response['inventory'];
+    //
+    //            var $inventoryWrapper = $('#inventory-wrapper');
+    //            $inventoryWrapper.empty();
+    //            $inventoryWrapper.append(inventoryTemplate({'columns': globals.columns, 'inventory': globals.inventory}));
+    //
+    //            var $settingResult = $('#settings-result');
+    //            $settingResult.removeClass('denied');
+    //            $settingResult.addClass('success');
+    //            $settingResult.text('Saved!');
+    //            $settingResult.show();
+    //            $settingResult.fadeOut(2000);
+    //        },
+    //        error: function (response) {
+    //            if(response.status && response.status == 403) {
+    //                var $settingResult = $('#settings-result');
+    //                $settingResult.removeClass('success');
+    //                $settingResult.addClass('denied');
+    //                $settingResult.text('Permission Denied');
+    //                $settingResult.show();
+    //                $settingResult.fadeOut(2000);
+    //            }
+    //        }
+    //    });
+    //});
     // SAVE SETTINGS
 
 
@@ -1152,10 +1300,12 @@ $(document).ready(function() {
     $(document).on('click', '#link-column-submit', function () {
         var $operationOverlay = $('#operation-overlay');
         var $linkColumnInput = $operationOverlay.find('#link-column-input');
+        var storeId = $('.establishment.active').attr('data-id');
 
         var postData = {
             link_type: $linkColumnInput.attr('data-type'),
-            column: $linkColumnInput.val()
+            column: $linkColumnInput.val(),
+            id: storeId
         };
 
         $.ajax({
@@ -1171,7 +1321,11 @@ $(document).ready(function() {
                 $('#operation-overlay').removeClass('active');
 
                 // CACHE THE DATA
-                globals.link_columns = response['link_columns'];
+                globals.stores[storeId] = response['store'];
+
+                console.log(globals.stores[storeId])
+
+                console.log(response['store'])
             },
             error: function (response) {
                 if(response.status && response.status == 403) {
@@ -1181,4 +1335,58 @@ $(document).ready(function() {
         });
     });
     // LINK COLUMN //
+
+    // STORE //
+    $(document).on('click', '#create-store-button, #create-store-link', function (e) {
+        popupHandler(e, {}, storeTemplate);
+    });
+
+    $(document).on('click', '#create-store-submit', function () {
+        $.ajax({
+            headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
+            url: globals.base_url + '/store/create_store/',
+            data: {'store_name': $('#store-name-input').val()},
+            dataType: 'json',
+            type: "POST",
+            success: function (response) {
+                console.log(JSON.stringify(response));
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    $('#link-column-wrapper').find('.error').text('Permission Denied').show();
+                } else {
+                    $('#operation-overlay').find('.error').text(response.responseText).show();
+                }
+            }
+        });
+    });
+
+    $(document).on('click', '.establishment:not(.active)', function (e) {
+        var $establishment = $(this);
+        $establishment.closest('.inner-side-wrapper').find('.active').removeClass('active');
+        $establishment.addClass('active');
+
+        if ($establishment.hasClass('store-item')) {
+            var storeId = $establishment.attr('data-id');
+            var currentStore = globals.stores[storeId];
+
+            var $inventoryWrapper = $('#inventory-wrapper');
+            $inventoryWrapper.empty();
+            $inventoryWrapper.append(inventoryTemplate({'store': currentStore, 'boss_username': globals.boss_username}));
+
+            var $logWrapper = $inventoryWrapper.siblings('#log-wrapper');
+            $logWrapper.empty();
+            $logWrapper.append(itemLogTemplate({'item_log': globals.store_log[storeId]}));
+        }
+        //else {
+        //    $inventoryWrapper = $('#inventory-wrapper');
+        //    $inventoryWrapper.empty();
+        //    $inventoryWrapper.append(inventoryTemplate({'columns': globals.columns, 'inventory': globals.inventory}));
+        //
+        //    $logWrapper = $inventoryWrapper.siblings('#log-wrapper');
+        //    $logWrapper.empty();
+        //    $logWrapper.append(itemLogTemplate({'item_log': globals.item_log}));
+        //}
+    });
+    // STORE //
 });

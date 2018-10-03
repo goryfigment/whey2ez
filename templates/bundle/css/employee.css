@@ -111,7 +111,7 @@
 .operation-popup-container{
 	width: 80%;
     margin: 0 auto;
-	height: 100%;
+	height: 94%;
 }
 
 .check-box-wrapper + .checkbox-input + .check-box-wrapper  {
@@ -136,7 +136,7 @@
 
 #create-user-wrapper {
 	overflow-y: auto;
-    height: calc(100% - 70px);
+    height: calc(100% - 80px);
     display: -ms-flexbox;
     display: flex;
     margin: 20px;
@@ -155,7 +155,7 @@
 	display: none;
 }
 
-.input-description.active{
+.input-description.active {
 	display: block;
 }
 
@@ -177,6 +177,11 @@
 .error {
     display: none;
     font-size: 13px;
+}
+
+#create-employee-submit {
+    min-height: 30px;
+    margin: 20px 0;
 }
 /* OPERATION POPUP */
 

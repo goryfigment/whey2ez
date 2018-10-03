@@ -1,11 +1,15 @@
 import json
 import re
-from django.http import HttpResponseRedirect, HttpResponseBadRequest
+from django.http import HttpResponseRedirect, HttpResponseBadRequest, JsonResponse
 from whey2ez.modules.base import render_json
 import whey2ez.modules.checker as checker
 import whey2ez.modules.base as helper
 from django.contrib.auth import authenticate, login, logout
-from whey2ez.models import User, Boss, Business, Settings
+from whey2ez.models import User, Boss, Business, Settings, Store
+from whey2ez.decorators import login_required, data_required
+from whey2ez.modules.base import get_boss
+from whey2ez.modules.base import decimal_format
+from django.forms.models import model_to_dict
 
 
 def register(request):
@@ -66,9 +70,9 @@ def register(request):
         data = {'success': False,  'error_msg': 'Email exists.'}
         return HttpResponseBadRequest(json.dumps(data), 'application/json')
 
-    settings = Settings.objects.create()
+    user_settings = Settings.objects.create()
     business = Business.objects.create(name=business_name)
-    boss = Boss.objects.create(settings=settings, business=business)
+    boss = Boss.objects.create(settings=user_settings, business=business)
     User.objects.create(
         username=username,
         email=email,
@@ -77,14 +81,6 @@ def register(request):
         last_name=last_name,
         boss=boss
     )
-
-    # Business
-    business.link_columns = {"quantity": False, "price": False, "cost": False, 'name': False}
-    business.columns.setdefault('columns', [])
-    business.save()
-    # Setting
-    settings.transaction_filter.setdefault('filter', ['ALL'])
-    settings.save()
 
     # Validate password
     auth_user = authenticate(email=email, password=password)
@@ -134,3 +130,44 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return HttpResponseRedirect('/login/')
+
+
+@login_required
+def settings(request):
+    current_user = request.user
+    current_boss = get_boss(current_user)
+    establishment = current_boss.business
+
+    return JsonResponse({'link_columns': establishment.link_columns, 'columns': establishment.columns['columns'], 'name': establishment.name}, safe=False)
+
+
+@login_required
+@data_required(['link_columns', 'store_id'], 'BODY')
+def save_settings(request):
+    store = Store.objects.get(id=request.BODY['store_id'])
+    store_inventory = store.inventory
+
+    link_columns = request.BODY['link_columns']
+
+    for link_type, column in link_columns.iteritems():
+        if link_type == 'price' or link_type == 'cost':  # Turn all data to float values
+            for item_id, item in store_inventory.iteritems():
+                current_price = item[column]
+                if current_price.replace('.', '', 1).isdigit():
+                    item[column] = decimal_format(float(current_price), 2, False)
+                else:
+                    item[column] = '0.00'
+
+        elif link_type == 'quantity':  # Turn all data to int values
+            for key, item in store_inventory.iteritems():
+                current_quantity = item[column]
+                if str(current_quantity).isdigit():
+                    item[column] = int(current_quantity)
+                else:
+                    item[column] = 0
+
+    store.link_columns = link_columns
+
+    store.save()
+
+    return JsonResponse(model_to_dict(store), safe=False)

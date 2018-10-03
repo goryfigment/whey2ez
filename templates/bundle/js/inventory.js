@@ -160,6 +160,15 @@ function appendContextPath(contextPath, id) {
 
 /***/ }),
 /* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// Create a simple path alias to allow browserify to resolve
+// the runtime on a supported path.
+module.exports = __webpack_require__(9)['default'];
+
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports) {
 
 module.exports = function(row, start_day, month_length, block) {
@@ -182,15 +191,6 @@ module.exports = function(row, start_day, month_length, block) {
     }
     return accum;
 };
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// Create a simple path alias to allow browserify to resolve
-// the runtime on a supported path.
-module.exports = __webpack_require__(11)['default'];
-
 
 /***/ }),
 /* 4 */
@@ -10532,11 +10532,11 @@ var _exception = __webpack_require__(4);
 
 var _exception2 = _interopRequireDefault(_exception);
 
-var _helpers = __webpack_require__(12);
+var _helpers = __webpack_require__(10);
 
-var _decorators = __webpack_require__(20);
+var _decorators = __webpack_require__(18);
 
-var _logger = __webpack_require__(22);
+var _logger = __webpack_require__(20);
 
 var _logger2 = _interopRequireDefault(_logger);
 
@@ -10637,142 +10637,6 @@ exports.logger = _logger2['default'];
 
 /***/ }),
 /* 9 */
-/***/ (function(module, exports) {
-
-function numberCommaFormat(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
-
-function replaceAll(str, find, replace) {
-    return str.replace(new RegExp(find.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1"), 'g'), replace);
-}
-
-function scrollToElement($container, $element, speed){
-    var elementTop = $element.offset().top;
-    var elementHeight = $element.height();
-    var containerTop = $container.offset().top;
-    var containerHeight = $container.height();
-
-    if ((((elementTop - containerTop) + elementHeight) > 0) && ((elementTop - containerTop) < containerHeight)) {
-
-    } else {
-        $container.animate({
-            scrollTop: $element.offset().top - $container.offset().top + $container.scrollTop()
-        }, speed);
-    }
-}
-
-
-function upAndDownPopups(keyCode, $popup, $options, scroll) {
-    var $selected = $popup.find('.selected');
-    var $firstOption = $options.filter(':visible').eq(0);
-    var $lastOption = $options.filter(':visible').eq(-1);
-
-    if (keyCode == 40) { //down arrow
-        var $nextOption = $selected.nextAll($options).filter(':visible').first();
-        if($selected.length) {
-            $selected.removeClass('selected');
-            if($nextOption.length){
-                $nextOption.addClass('selected');
-                if(scroll) {
-                    scrollToElement($popup, $nextOption, 50);
-                }
-            } else{
-                $firstOption.addClass('selected');
-                if(scroll) {
-                    scrollToElement($popup, $firstOption, 50);
-                }
-            }
-        } else {
-            $firstOption.addClass('selected');
-            if(scroll) {
-                scrollToElement($popup, $firstOption, 50);
-            }
-        }
-    } else if (keyCode == 38) { //up arrow
-        var $prevOption = $selected.prevAll($options).filter(':visible').first();
-        if($selected.length) {
-            $selected.removeClass('selected');
-            if($prevOption.length){
-                $prevOption.addClass('selected');
-                if(scroll) {
-                    scrollToElement($popup, $prevOption, 50);
-                }
-            }else{
-                $lastOption.addClass('selected');
-                if(scroll) {
-                    scrollToElement($popup, $lastOption, 50);
-                }
-            }
-        } else {
-            $lastOption.addClass('selected');
-            if(scroll) {
-                scrollToElement($popup, $lastOption, 50);
-            }
-        }
-    } else if(keyCode == 13) { //enter button
-        $selected.trigger('click');
-    }
-}
-
-function currencyFormat(cents) {
-    cents = Math.round(cents);
-
-    if (cents == 0) {
-        return cents.toFixed(2);
-    } else if(cents < 100){
-        if (cents > 0 || cents > -100) {
-            return (cents/100).toFixed(2);
-        } else {
-            cents = cents.toString();
-            return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
-        }
-    }else {
-        cents = cents.toString();
-        return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
-    }
-}
-
-function currencyMath(leftVal, operator, curRightVal, round, both) {
-    leftVal = parseFloat(leftVal);
-    curRightVal = parseFloat(curRightVal) * 100;
-
-    if (both == 'true') {
-        leftVal = leftVal * 100;
-    }
-
-    var cents = {
-        "+": curRightVal + leftVal,
-        "-": curRightVal - leftVal,
-        "*": curRightVal * leftVal,
-        "/": curRightVal / leftVal,
-        "%": curRightVal % leftVal
-    }[operator];
-
-    if (round == 'true') {
-        cents = Math.round(cents);
-    }
-
-    if (cents == 0) {
-        return cents.toFixed(2);
-    } else {
-        cents = cents.toString();
-        return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
-    }
-}
-
-module.exports = {
-    numberCommaFormat: numberCommaFormat,
-    replaceAll: replaceAll,
-    scrollToElement: scrollToElement,
-    upAndDownPopups: upAndDownPopups,
-    currencyFormat: currencyFormat,
-    currencyMath: currencyMath
-};
-
-/***/ }),
-/* 10 */,
-/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10794,7 +10658,7 @@ var base = _interopRequireWildcard(_handlebarsBase);
 // Each of these augment the Handlebars object. No need to setup here.
 // (This is done to easily share code between commonjs and browse envs)
 
-var _handlebarsSafeString = __webpack_require__(23);
+var _handlebarsSafeString = __webpack_require__(21);
 
 var _handlebarsSafeString2 = _interopRequireDefault(_handlebarsSafeString);
 
@@ -10806,11 +10670,11 @@ var _handlebarsUtils = __webpack_require__(1);
 
 var Utils = _interopRequireWildcard(_handlebarsUtils);
 
-var _handlebarsRuntime = __webpack_require__(24);
+var _handlebarsRuntime = __webpack_require__(22);
 
 var runtime = _interopRequireWildcard(_handlebarsRuntime);
 
-var _handlebarsNoConflict = __webpack_require__(25);
+var _handlebarsNoConflict = __webpack_require__(23);
 
 var _handlebarsNoConflict2 = _interopRequireDefault(_handlebarsNoConflict);
 
@@ -10845,7 +10709,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 12 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10857,31 +10721,31 @@ exports.registerDefaultHelpers = registerDefaultHelpers;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _helpersBlockHelperMissing = __webpack_require__(13);
+var _helpersBlockHelperMissing = __webpack_require__(11);
 
 var _helpersBlockHelperMissing2 = _interopRequireDefault(_helpersBlockHelperMissing);
 
-var _helpersEach = __webpack_require__(14);
+var _helpersEach = __webpack_require__(12);
 
 var _helpersEach2 = _interopRequireDefault(_helpersEach);
 
-var _helpersHelperMissing = __webpack_require__(15);
+var _helpersHelperMissing = __webpack_require__(13);
 
 var _helpersHelperMissing2 = _interopRequireDefault(_helpersHelperMissing);
 
-var _helpersIf = __webpack_require__(16);
+var _helpersIf = __webpack_require__(14);
 
 var _helpersIf2 = _interopRequireDefault(_helpersIf);
 
-var _helpersLog = __webpack_require__(17);
+var _helpersLog = __webpack_require__(15);
 
 var _helpersLog2 = _interopRequireDefault(_helpersLog);
 
-var _helpersLookup = __webpack_require__(18);
+var _helpersLookup = __webpack_require__(16);
 
 var _helpersLookup2 = _interopRequireDefault(_helpersLookup);
 
-var _helpersWith = __webpack_require__(19);
+var _helpersWith = __webpack_require__(17);
 
 var _helpersWith2 = _interopRequireDefault(_helpersWith);
 
@@ -10898,7 +10762,7 @@ function registerDefaultHelpers(instance) {
 
 
 /***/ }),
-/* 13 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10944,7 +10808,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 14 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11045,7 +10909,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 15 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11077,7 +10941,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 16 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11113,7 +10977,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 17 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11146,7 +11010,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 18 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11165,7 +11029,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 19 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11205,7 +11069,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 20 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11217,7 +11081,7 @@ exports.registerDefaultDecorators = registerDefaultDecorators;
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-var _decoratorsInline = __webpack_require__(21);
+var _decoratorsInline = __webpack_require__(19);
 
 var _decoratorsInline2 = _interopRequireDefault(_decoratorsInline);
 
@@ -11228,7 +11092,7 @@ function registerDefaultDecorators(instance) {
 
 
 /***/ }),
-/* 21 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11264,7 +11128,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 22 */
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11318,7 +11182,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 23 */
+/* 21 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11340,7 +11204,7 @@ module.exports = exports['default'];
 
 
 /***/ }),
-/* 24 */
+/* 22 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11654,7 +11518,7 @@ function executeDecorators(fn, prog, container, depths, data, blockParams) {
 
 
 /***/ }),
-/* 25 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11679,10 +11543,10 @@ exports['default'] = function (Handlebars) {
 module.exports = exports['default'];
 //# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uLy4uLy4uL2xpYi9oYW5kbGViYXJzL25vLWNvbmZsaWN0LmpzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7O3FCQUNlLFVBQVMsVUFBVSxFQUFFOztBQUVsQyxNQUFJLElBQUksR0FBRyxPQUFPLE1BQU0sS0FBSyxXQUFXLEdBQUcsTUFBTSxHQUFHLE1BQU07TUFDdEQsV0FBVyxHQUFHLElBQUksQ0FBQyxVQUFVLENBQUM7O0FBRWxDLFlBQVUsQ0FBQyxVQUFVLEdBQUcsWUFBVztBQUNqQyxRQUFJLElBQUksQ0FBQyxVQUFVLEtBQUssVUFBVSxFQUFFO0FBQ2xDLFVBQUksQ0FBQyxVQUFVLEdBQUcsV0FBVyxDQUFDO0tBQy9CO0FBQ0QsV0FBTyxVQUFVLENBQUM7R0FDbkIsQ0FBQztDQUNIIiwiZmlsZSI6Im5vLWNvbmZsaWN0LmpzIiwic291cmNlc0NvbnRlbnQiOlsiLyogZ2xvYmFsIHdpbmRvdyAqL1xuZXhwb3J0IGRlZmF1bHQgZnVuY3Rpb24oSGFuZGxlYmFycykge1xuICAvKiBpc3RhbmJ1bCBpZ25vcmUgbmV4dCAqL1xuICBsZXQgcm9vdCA9IHR5cGVvZiBnbG9iYWwgIT09ICd1bmRlZmluZWQnID8gZ2xvYmFsIDogd2luZG93LFxuICAgICAgJEhhbmRsZWJhcnMgPSByb290LkhhbmRsZWJhcnM7XG4gIC8qIGlzdGFuYnVsIGlnbm9yZSBuZXh0ICovXG4gIEhhbmRsZWJhcnMubm9Db25mbGljdCA9IGZ1bmN0aW9uKCkge1xuICAgIGlmIChyb290LkhhbmRsZWJhcnMgPT09IEhhbmRsZWJhcnMpIHtcbiAgICAgIHJvb3QuSGFuZGxlYmFycyA9ICRIYW5kbGViYXJzO1xuICAgIH1cbiAgICByZXR1cm4gSGFuZGxlYmFycztcbiAgfTtcbn1cbiJdfQ==
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(26)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(24)))
 
 /***/ }),
-/* 26 */
+/* 24 */
 /***/ (function(module, exports) {
 
 var g;
@@ -11709,17 +11573,322 @@ module.exports = g;
 
 
 /***/ }),
-/* 27 */
+/* 25 */
+/***/ (function(module, exports) {
+
+function numberCommaFormat(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+function replaceAll(str, find, replace) {
+    return str.replace(new RegExp(find.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1"), 'g'), replace);
+}
+
+function scrollToElement($container, $element, speed){
+    var elementTop = $element.offset().top;
+    var elementHeight = $element.height();
+    var containerTop = $container.offset().top;
+    var containerHeight = $container.height();
+
+    if ((((elementTop - containerTop) + elementHeight) > 0) && ((elementTop - containerTop) < containerHeight)) {
+
+    } else {
+        $container.animate({
+            scrollTop: $element.offset().top - $container.offset().top + $container.scrollTop()
+        }, speed);
+    }
+}
+
+
+function upAndDownPopups(keyCode, $popup, $options, scroll) {
+    var $selected = $popup.find('.selected');
+    var $firstOption = $options.filter(':visible').eq(0);
+    var $lastOption = $options.filter(':visible').eq(-1);
+
+    if (keyCode == 40) { //down arrow
+        var $nextOption = $selected.nextAll($options).filter(':visible').first();
+        if($selected.length) {
+            $selected.removeClass('selected');
+            if($nextOption.length){
+                $nextOption.addClass('selected');
+                if(scroll) {
+                    scrollToElement($popup, $nextOption, 50);
+                }
+            } else{
+                $firstOption.addClass('selected');
+                if(scroll) {
+                    scrollToElement($popup, $firstOption, 50);
+                }
+            }
+        } else {
+            $firstOption.addClass('selected');
+            if(scroll) {
+                scrollToElement($popup, $firstOption, 50);
+            }
+        }
+    } else if (keyCode == 38) { //up arrow
+        var $prevOption = $selected.prevAll($options).filter(':visible').first();
+        if($selected.length) {
+            $selected.removeClass('selected');
+            if($prevOption.length){
+                $prevOption.addClass('selected');
+                if(scroll) {
+                    scrollToElement($popup, $prevOption, 50);
+                }
+            }else{
+                $lastOption.addClass('selected');
+                if(scroll) {
+                    scrollToElement($popup, $lastOption, 50);
+                }
+            }
+        } else {
+            $lastOption.addClass('selected');
+            if(scroll) {
+                scrollToElement($popup, $lastOption, 50);
+            }
+        }
+    } else if(keyCode == 13) { //enter button
+        $selected.trigger('click');
+    }
+}
+
+function currencyFormat(cents) {
+    cents = Math.round(cents);
+
+    if (cents == 0) {
+        return cents.toFixed(2);
+    } else if(cents < 100){
+        if (cents > 0 || cents > -100) {
+            return (cents/100).toFixed(2);
+        } else {
+            cents = cents.toString();
+            return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
+        }
+    }else {
+        cents = cents.toString();
+        return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
+    }
+}
+
+function currencyMath(leftVal, operator, curRightVal, round, both) {
+    leftVal = parseFloat(leftVal);
+    curRightVal = parseFloat(curRightVal) * 100;
+
+    if (both == 'true') {
+        leftVal = leftVal * 100;
+    }
+
+    var cents = {
+        "+": curRightVal + leftVal,
+        "-": curRightVal - leftVal,
+        "*": curRightVal * leftVal,
+        "/": curRightVal / leftVal,
+        "%": curRightVal % leftVal
+    }[operator];
+
+    if (round == 'true') {
+        cents = Math.round(cents);
+    }
+
+    if (cents == 0) {
+        return cents.toFixed(2);
+    } else {
+        cents = cents.toString();
+        return cents.substring(0,cents.length-2)+"."+cents.substring(cents.length-2)
+    }
+}
+
+module.exports = {
+    numberCommaFormat: numberCommaFormat,
+    replaceAll: replaceAll,
+    scrollToElement: scrollToElement,
+    upAndDownPopups: upAndDownPopups,
+    currencyFormat: currencyFormat,
+    currencyMath: currencyMath
+};
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Handlebars = __webpack_require__(2);
+function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
+module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=container.lambda, alias3=container.escapeExpression;
+
+  return "    <div class=\"establishment store-item"
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.id : depth0),"==",(depths[1] != null ? depths[1].active_store : depths[1]),{"name":"ifCond","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\" data-id=\""
+    + alias3(alias2((depth0 != null ? depth0.id : depth0), depth0))
+    + "\">\r\n        <div class=\"store-name\">\r\n            <span class=\"bulletin-wrapper\"><span class=\"arrow-tail\"></span><span><i class=\"fas fa-caret-right\"></i></span></span>\r\n            "
+    + alias3(alias2((depth0 != null ? depth0.name : depth0), depth0))
+    + "\r\n            <span class=\"store-icon-wrapper\">\r\n"
+    + ((stack1 = helpers.unless.call(alias1,__default(__webpack_require__(30)).call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.price : stack1),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.cost : stack1),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.quantity : stack1),{"name":"or","hash":{},"data":data}),{"name":"unless","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.program(6, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
+    + "            </span>\r\n        </div>\r\n    </div>\r\n";
+},"2":function(container,depth0,helpers,partials,data) {
+    return " active";
+},"4":function(container,depth0,helpers,partials,data) {
+    return "                    <span class=\"link-columns-button\"><i class=\"fas fa-exclamation-triangle\"></i></span>\r\n";
+},"6":function(container,depth0,helpers,partials,data) {
+    return "                    <span class=\"create-transaction-button\"><i class=\"fas fa-cart-plus\"></i></span>\r\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1;
+
+  return ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.stores : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"useData":true,"useDepths":true});
+
+/***/ }),
+/* 27 */,
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+//handlebars
+var linkColumnsTemplate = __webpack_require__(29);
+var storeItemTemplate = __webpack_require__(26);
+//libraries
+var $ = __webpack_require__(5);
+
+function popupHandler(e, popupData, template) {
+    e.stopPropagation();
+    var $overlay = $('#operation-overlay');
+    $overlay.empty();
+    $overlay.addClass('active');
+    $overlay.append(template(popupData));
+}
+
+$(document).ready(function() {
+    $(document).on('click', '.link-columns-button', function (e) {
+        popupHandler(e, globals.stores[$(this).closest('.store-item').attr('data-id')], linkColumnsTemplate);
+    });
+
+    $(document).on('click', '#link-columns-submit', function () {
+        var $wrapper = $('#operation-settings-scroll-wrapper');
+
+        var postData = {
+            'store_id': $(this).attr('data-id'),
+            'link_columns': {
+                'name': $wrapper.find('#name-column-input').val(),
+                'price': $wrapper.find('#price-column-input').val(),
+                'quantity': $wrapper.find('#quantity-column-input').val(),
+                'cost': $wrapper.find('#cost-column-input').val()
+            }
+        };
+
+        $.ajax({
+            headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
+            url: globals.base_url + '/account/save_settings/',
+            data: JSON.stringify(postData),
+            dataType: 'json',
+            type: "POST",
+            success: function (response) {
+                //JSON.stringify(response);
+                var $storeContainer = $('.store-container');
+                $storeContainer.empty();
+                $storeContainer.append(storeItemTemplate({'stores': globals.stores}));
+
+                $('#operation-overlay').removeClass('active');
+                globals.stores[response['id']] = response;
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    $('#import-wrapper').find('.error').text('Permission Denied').show();
+                } else {
+                    $('#import-wrapper').find('.error').text(response.responseText).show();
+                }
+            }
+        });
+    });
+
+
+});
+
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Handlebars = __webpack_require__(2);
+function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
+module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return container.escapeExpression(container.lambda(((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1), depth0));
+},"3":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
+
+  return "                    <option value=\""
+    + alias2(alias1(depth0, depth0))
+    + "\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,"==",((stack1 = (depths[1] != null ? depths[1].link_columns : depths[1])) != null ? stack1.price : stack1),{"name":"ifCond","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">"
+    + alias2(alias1(depth0, depth0))
+    + "</option>\r\n";
+},"4":function(container,depth0,helpers,partials,data) {
+    return "selected";
+},"6":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
+
+  return "                    <option value=\""
+    + alias2(alias1(depth0, depth0))
+    + "\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,"==",((stack1 = (depths[1] != null ? depths[1].link_columns : depths[1])) != null ? stack1.quantity : stack1),{"name":"ifCond","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">"
+    + alias2(alias1(depth0, depth0))
+    + "</option>\r\n";
+},"8":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
+
+  return "                    <option value=\""
+    + alias2(alias1(depth0, depth0))
+    + "\" "
+    + ((stack1 = __default(__webpack_require__(0)).call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,"==",((stack1 = (depths[1] != null ? depths[1].link_columns : depths[1])) != null ? stack1.cost : stack1),{"name":"ifCond","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">"
+    + alias2(alias1(depth0, depth0))
+    + "</option>\r\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=container.lambda, alias2=container.escapeExpression, alias3=depth0 != null ? depth0 : (container.nullContext || {});
+
+  return "<div id=\"operation-popup-wrapper\">\r\n    <div id=\"operation-settings-scroll-wrapper\">\r\n        <h2 class=\"settings-title\">"
+    + alias2(alias1((depth0 != null ? depth0.name : depth0), depth0))
+    + "</h2>\r\n        <div class=\"link-column-wrapper\">\r\n            <label class=\"settings-subtitle\">Name</label>\r\n            <p>The name of the item, you wished to be viewed in reports, transactions, etc.</p>\r\n            <input id=\"name-column-input\" value=\""
+    + ((stack1 = helpers["if"].call(alias3,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1),{"name":"if","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\" />\r\n        </div>\r\n        <div class=\"link-column-wrapper\">\r\n            <label class=\"settings-subtitle\">Price</label>\r\n            <p class=\"\">The selling price of an item.</p>\r\n            <select id=\"price-column-input\" data-type=\""
+    + alias2(alias1((depth0 != null ? depth0.type : depth0), depth0))
+    + "\">\r\n"
+    + ((stack1 = helpers.each.call(alias3,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(3, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "            </select>\r\n        </div>\r\n        <div class=\"link-column-wrapper\">\r\n            <label class=\"settings-subtitle\">Quantity</label>\r\n            <p class=\"\">The amount of an item.</p>\r\n            <select id=\"quantity-column-input\" data-type=\""
+    + alias2(alias1((depth0 != null ? depth0.type : depth0), depth0))
+    + "\">\r\n"
+    + ((stack1 = helpers.each.call(alias3,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(6, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "            </select>\r\n        </div>\r\n        <div class=\"link-column-wrapper\">\r\n            <label class=\"settings-subtitle\">Cost</label>\r\n            <p class=\"\">The cost of the item, used to calculate profit.</p>\r\n            <select id=\"cost-column-input\" data-type=\""
+    + alias2(alias1((depth0 != null ? depth0.type : depth0), depth0))
+    + "\">\r\n"
+    + ((stack1 = helpers.each.call(alias3,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(8, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "            </select>\r\n        </div>\r\n    </div>\r\n    <button id=\"link-columns-submit\" class=\"add\" data-id=\""
+    + alias2(alias1((depth0 != null ? depth0.id : depth0), depth0))
+    + "\">Link Columns</button>\r\n</div>";
+},"useData":true,"useDepths":true});
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports) {
+
+module.exports = function() {
+    return Array.prototype.slice.call(arguments, 0, -1).some(Boolean);
+};
+
+/***/ }),
+/* 31 */
 /***/ (function(module, exports, __webpack_require__) {
 
 //css
-__webpack_require__(28);
+__webpack_require__(32);
 
 //jquery
 var $ = __webpack_require__(5);
 
 //handlebars
-var calendarTemplate = __webpack_require__(29);
+var calendarTemplate = __webpack_require__(33);
 
 // these are human-readable month name labels, in order
 var calMonthsLabels = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -12297,16 +12466,16 @@ $(document).ready(function() {
 });
 
 /***/ }),
-/* 28 */
+/* 32 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 29 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Handlebars = __webpack_require__(3);
+var Handlebars = __webpack_require__(2);
 function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
 module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
     var stack1;
@@ -12344,17 +12513,17 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + "</span> <span class=\"year\">"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.year : stack1), depth0))
     + "</span></div>\r\n    </div>\r\n    <table class=\"month-calendar\">\r\n        <thead class=\"day-of-week\">\r\n            <tr>\r\n                <th scope=\"col\">S</th>\r\n                <th scope=\"col\">M</th>\r\n                <th scope=\"col\">T</th>\r\n                <th scope=\"col\">W</th>\r\n                <th scope=\"col\">Th</th>\r\n                <th scope=\"col\">F</th>\r\n                <th scope=\"col\">S</th>\r\n            </tr>\r\n        </thead>\r\n\r\n        <tbody>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,1,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,1,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,2,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,2,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,3,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,3,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,4,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,4,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,5,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,5,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,6,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,6,((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.previous : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n        </tbody>\r\n    </table>\r\n</div>\r\n\r\n<div class=\"month-wrapper\" id=\"right-calendar\">\r\n    <div class=\"month-header\">\r\n        <div><span class=\"month\" data-month=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_number : stack1), depth0))
     + "\">"
@@ -12364,26 +12533,26 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + "</span></div>\r\n        <div class=\"side-arrow right-arrow\" data-month=\""
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.subtract : stack1), depth0))
     + "\"><i class=\"fa fa-chevron-right\"></i></div>\r\n    </div>\r\n    <table class=\"month-calendar\">\r\n        <thead class=\"day-of-week\">\r\n            <tr>\r\n                <th scope=\"col\">S</th>\r\n                <th scope=\"col\">M</th>\r\n                <th scope=\"col\">T</th>\r\n                <th scope=\"col\">W</th>\r\n                <th scope=\"col\">Th</th>\r\n                <th scope=\"col\">F</th>\r\n                <th scope=\"col\">S</th>\r\n            </tr>\r\n        </thead>\r\n\r\n        <tbody>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,1,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,1,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,2,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,2,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,3,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,3,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,4,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,4,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,5,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,5,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n            <tr>\r\n"
-    + ((stack1 = __default(__webpack_require__(2)).call(alias3,6,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(3)).call(alias3,6,((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.starting_day : stack1),((stack1 = (depth0 != null ? depth0.current : depth0)) != null ? stack1.month_length : stack1),{"name":"calendar","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tr>\r\n        </tbody>\r\n    </table>\r\n</div>";
 },"useData":true,"useDepths":true});
 
 /***/ }),
-/* 30 */,
-/* 31 */
+/* 34 */,
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Handlebars = __webpack_require__(51);
+var Handlebars = __webpack_require__(57);
 module.exports = function(data, column) {
     var html = "";
 
@@ -12395,11 +12564,14 @@ module.exports = function(data, column) {
 };
 
 /***/ }),
-/* 32 */,
-/* 33 */,
-/* 34 */,
-/* 35 */,
-/* 36 */,
+/* 36 */
+/***/ (function(module, exports) {
+
+module.exports = function(dict, key) {
+    return dict[key];
+};
+
+/***/ }),
 /* 37 */,
 /* 38 */,
 /* 39 */,
@@ -12410,40 +12582,53 @@ module.exports = function(data, column) {
 /* 44 */,
 /* 45 */,
 /* 46 */,
-/* 47 */
+/* 47 */,
+/* 48 */,
+/* 49 */,
+/* 50 */,
+/* 51 */,
+/* 52 */,
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(10);
-__webpack_require__(48);
+__webpack_require__(27);
+__webpack_require__(54);
 __webpack_require__(8);
-__webpack_require__(49);
+__webpack_require__(55);
 
 //handlebars
-var inventoryTemplate = __webpack_require__(50);
-var itemLogTemplate = __webpack_require__(52);
-var settingsTemplate = __webpack_require__(54);
-var rowTemplate = __webpack_require__(55);
-var inventoryOperationTemplate = __webpack_require__(56);
-var operationTemplate = __webpack_require__(57);
+var inventoryTemplate = __webpack_require__(56);
+var itemLogTemplate = __webpack_require__(60);
+var settingsTemplate = __webpack_require__(62);
+var rowTemplate = __webpack_require__(63);
+var storeTemplate = __webpack_require__(64);
+var inventoryOperationTemplate = __webpack_require__(65);
+var operationTemplate = __webpack_require__(66);
+var storeItemTemplate = __webpack_require__(26);
 
 //libraries
 var $ = __webpack_require__(5);
-var helper = __webpack_require__(9);
-__webpack_require__(58);
-__webpack_require__(27);
-
+var helper = __webpack_require__(25);
+__webpack_require__(67);
+__webpack_require__(28);
+__webpack_require__(31);
 
 function init() {
+    var activeStore = globals.stores[globals.active_store];
+
     $('#inventory-link').addClass('active');
+    $('.store-container').append(storeItemTemplate({'stores': globals.stores, 'active_store': parseInt(globals.active_store)}));
 
     var $inventoryWrapper = $('#inventory-wrapper');
-    $inventoryWrapper.append(inventoryTemplate({'columns': globals.columns, 'inventory': globals.inventory}));
+    $inventoryWrapper.append(inventoryTemplate({'stores_length': Object.keys(globals.stores).length, 'store': activeStore, 'boss_username': globals.boss_username}));
 
     var $logWrapper = $inventoryWrapper.siblings('#log-wrapper');
-    $logWrapper.append(itemLogTemplate({'item_log': globals.item_log}));
+    $logWrapper.append(itemLogTemplate({'item_log': globals.store_log[globals.active_store]}));
 
-    var $settingsWrapper = $inventoryWrapper.siblings('#settings-wrapper');
-    $settingsWrapper.append(settingsTemplate({'columns': globals.columns, 'settings': globals.settings}));
+    if(globals.active_store != '') {
+        var $settingsWrapper = $inventoryWrapper.siblings('#settings-wrapper');
+        $settingsWrapper.append(settingsTemplate({'columns': activeStore['columns'], 'settings': activeStore['settings']}));
+    }
 }
 
 function tabHandler($clickedTab) {
@@ -12488,7 +12673,6 @@ function getLogReport(start_time, end_time) {
         type: "GET",
         success: function (response) {
             //console.log(response);
-
             var $logWrapper = $('#log-wrapper');
             globals.item_log = response['item_log'];
             $logWrapper.empty();
@@ -12513,6 +12697,46 @@ $(document).ready(function() {
         $('#operation-overlay').removeClass('active');
     });
     //OPERATION POPUP//
+
+    //FILE UPLOAD//
+    $(document).on('click', '.file-upload-button', function () {
+        var $itemFileUpload = $('#item-file-upload');
+        $itemFileUpload.attr('data-id', $(this).closest('tr').attr('data-id'));
+        $itemFileUpload.click();
+    });
+
+    $(document).on('change', '#item-file-upload', function () {
+        var $fileUploadButton = $(this);
+        var file = $fileUploadButton.get(0).files[0];
+        var fileType = file["type"];
+        var ValidImageTypes = ["image/jpeg", "image/png"];
+        if ($.inArray(fileType, ValidImageTypes) < 0) {
+            alert('Must be an image file: jpeg, png.');
+            return;
+        }
+
+        var storeId = $('.establishment.active').attr('data-id');
+
+        var formData = new FormData();
+        formData.append('file', file);
+        formData.append('id', storeId);
+        formData.append('item_id', $fileUploadButton.attr('data-id'));
+
+        $.ajax({
+            headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
+            url: globals.base_url + '/inventory/file_upload/',
+            data: formData,
+            type: "POST",
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (response) {
+                //console.log(JSON.stringify(response));
+
+            }
+        });
+    });
+    //FILE UPLOAD//
 
     //SEARCH ITEM//
     $(document).on('keyup', '#search-input, #operation-search-input', function () {
@@ -12556,17 +12780,19 @@ $(document).ready(function() {
 
     //ADD COLUMN FUNCTIONS//
     $(document).on('click', '#add-button', function (e) {
-        popupHandler(e, {type: "add", columns: globals.columns});
+        var $activeInventory = $('.establishment.active');
+        var store = globals.stores[$activeInventory.attr('data-id')];
+        popupHandler(e, {type: "add", columns: store['columns'], 'picture_column': store['picture_column']});
     });
 
     $(document).on('click', '#add-column-submit', function () {
         var $activeInventory = $('.establishment.active');
         var columnName = $(this).siblings('#add-column-input').val();
+        var storeId = $activeInventory.attr('data-id');
 
         var postData = {
             column_name: columnName,
-            id: $activeInventory.attr('data-id'),
-            type: $activeInventory.attr('data-type')
+            id: storeId
         };
 
         $.ajax({
@@ -12581,14 +12807,53 @@ $(document).ready(function() {
                 // Show updated inventory
                 var $inventoryWrapper = $('#inventory-wrapper');
                 $inventoryWrapper.empty();
-                $inventoryWrapper.append(inventoryTemplate({'columns': response['columns'], 'inventory': response['inventory']}));
+                $inventoryWrapper.append(inventoryTemplate({'store': response['store'], 'boss_username': globals.boss_username}));
 
                 // Remove popup
                 $('#operation-overlay').removeClass('active');
 
                 // CACHE THE DATA
-                globals.columns = response['columns'];
-                globals.inventory = response['inventory'];
+                globals.stores[storeId] = response['store'];
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    $('#add-column-wrapper').find('.error').text('Permission Denied').show();
+                } else {
+                    $('#add-column-wrapper').find('.error').text(response.responseText).show();
+                }
+            }
+        });
+    });
+
+    $(document).on('click', '#add-picture-column-submit', function () {
+        var $activeInventory = $('.establishment.active');
+        var columnName = $(this).siblings('#add-picture-column-input').val();
+        var storeId = $activeInventory.attr('data-id');
+
+        var postData = {
+            column_name: columnName,
+            id: storeId
+        };
+
+        $.ajax({
+            headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
+            url: globals.base_url + '/inventory/add_picture_column/',
+            data: postData,
+            dataType: 'json',
+            type: "POST",
+            success: function (response) {
+                //console.log(JSON.stringify(response));
+
+                // Show updated inventory
+                var $inventoryWrapper = $('#inventory-wrapper');
+                $inventoryWrapper.empty();
+                $inventoryWrapper.append(inventoryTemplate({'store': response['store'], 'boss_username': globals.boss_username}));
+
+                // Remove popup
+                $('#operation-overlay').removeClass('active');
+
+                // CACHE THE DATA
+                globals.stores[storeId] = response['store'];
             },
             error: function (response) {
                 if(response.status && response.status == 403) {
@@ -12606,6 +12871,7 @@ $(document).ready(function() {
     $(document).on('click', '#add-item-submit', function () {
         var $activeInventory = $('.establishment.active');
         var $operationOverlay = $(this).closest('#operation-overlay');
+        var storeId = $activeInventory.attr('data-id');
 
         var itemData = {};
         $operationOverlay.find('.add-item-input').each(function() {
@@ -12616,16 +12882,18 @@ $(document).ready(function() {
         $.ajax({
             headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
             url: globals.base_url + '/inventory/add_item/',
-            data: JSON.stringify({'item': itemData, id: $activeInventory.attr('data-id'), type: $activeInventory.attr('data-type')}),
+            data: JSON.stringify({'item': itemData, id: storeId}),
             dataType: 'json',
             type: "POST",
             success: function (response) {
                 //console.log(JSON.stringify(response));
                 $operationOverlay.removeClass('active');
                 var $inventoryTable = $('#inventory-table tbody');
-                $inventoryTable.prepend(rowTemplate({'item': response['item'], 'columns': globals.columns}));
 
-                globals.inventory = response['inventory'];
+                $inventoryTable.prepend(rowTemplate({'item': response['item'], 'columns': response['store']['columns']}));
+
+                // CACHE THE DATA
+                globals.stores[storeId] = response['store'];
             },
             error: function (response) {
                 var $wrapper = $('#add-item-wrapper');
@@ -12652,7 +12920,10 @@ $(document).ready(function() {
 
     //EDIT COLUMN FUNCTIONS//
     $(document).on('click', '#edit-button', function (e) {
-        popupHandler(e, {type: "edit", columns: globals.columns, inventory: globals.inventory, inventory_length: Object.keys(globals.inventory).length});
+        var $activeInventory = $('.establishment.active');
+        var storeId = $activeInventory.attr('data-id');
+
+        popupHandler(e, {type: "edit", columns: globals.stores[storeId]['columns'], inventory: globals.stores[storeId]['inventory'], inventory_length: globals.stores[storeId]['inventory'].length});
     });
 
     $(document).on('click', '#edit-column-submit', function () {
@@ -12661,12 +12932,12 @@ $(document).ready(function() {
         var $operationOverlay = $columnEditSubmit.closest('#operation-overlay');
         var prevColumnName = $operationOverlay.find('#edit-prev-column-input').val();
         var newColumnName = $operationOverlay.find('#edit-column-input').val();
+        var storeId = $activeInventory.attr('data-id');
 
         var postData = {
             new_column_name: newColumnName,
             prev_column_name: prevColumnName,
-            id: $activeInventory.attr('data-id'),
-            type: $activeInventory.attr('data-type')
+            id: storeId
         };
 
         $.ajax({
@@ -12687,9 +12958,8 @@ $(document).ready(function() {
                 $filterContainer.html('<input class="column-filter" type="checkbox" value="' + newColumnName +'" checked=""> ' + newColumnName);
                 //Close overlay
                 $operationOverlay.removeClass('active');
-                //Maintain current inventory in the frontend
-                globals.inventory = response['inventory'];
-                globals.columns = response['columns']
+                //CACHE
+                globals.stores[storeId] = response['store'];
             },
             error: function (response) {
                 if(response.status && response.status == 403) {
@@ -12706,13 +12976,12 @@ $(document).ready(function() {
     //EDIT ITEM FUNCTIONS//
     $(document).on('click', '#operation-table.edit tbody tr', function () {
         var itemId = $(this).attr('data-id');
-        var inventoryJson = globals.inventory;
-        var item = null;
+        var storeInventory = globals.stores[$('.establishment.active').attr('data-id')]['inventory'];
 
-        for (var i = 0; i < inventoryJson.length; i++) {
-            var current_item = inventoryJson[i];
-            if (current_item[0] == itemId) {
-                item = current_item[1];
+        for (var i = 0; i < storeInventory.length; i++) {
+            var currentId = storeInventory[i][0];
+            if(currentId == itemId) {
+                var item = storeInventory[i][1];
                 break;
             }
         }
@@ -12739,6 +13008,8 @@ $(document).ready(function() {
         var $activeInventory = $('.establishment.active');
         var itemId = $editItemSubmit.data('id');
         var $operationOverlay = $editItemSubmit.closest('#operation-overlay');
+        var storeId = $activeInventory.attr('data-id');
+
         var itemData = {};
 
         $operationOverlay.find('.edit-item-input').each(function() {
@@ -12749,8 +13020,7 @@ $(document).ready(function() {
         var postData = {
             'item': itemData,
             'item_id': itemId,
-            id: $activeInventory.attr('data-id'),
-            type: $activeInventory.attr('data-type')
+            'id': storeId
         };
 
         $.ajax({
@@ -12763,12 +13033,12 @@ $(document).ready(function() {
                 //console.log(JSON.stringify(response));
                 //Replace old item with new item
                 var $row = $('#inventory-table [data-id="' + itemId + '"]');
-                $(rowTemplate({'item_id': itemId, 'item': response['item'], 'columns': globals.columns})).insertAfter($row);
+                $(rowTemplate({'item_id': itemId, 'item': response['item'], 'columns': response['store']['columns']})).insertAfter($row);
                 $row.remove();
                 //Remove popup
                 $operationOverlay.removeClass('active');
                 //Maintain current inventory in the frontend
-                globals.inventory = response['inventory'];
+                globals.stores[storeId] = response['store'];
             },
             error: function (response) {
                 var $wrapper = $('#edit-item-wrapper');
@@ -12796,17 +13066,18 @@ $(document).ready(function() {
 
     //DELETE COLUMN FUNCTIONS//
     $(document).on('click', '#delete-button', function (e) {
-        popupHandler(e, {type: "delete", columns: globals.columns, inventory: globals.inventory, inventory_length: Object.keys(globals.inventory).length});
+        var $activeInventory = $('.establishment.active');
+        popupHandler(e, {type: "delete", columns: globals.stores[$activeInventory.attr('data-id')]['columns'], inventory: globals.stores[$activeInventory.attr('data-id')]['inventory'], inventory_length: Object.keys(globals.stores[$activeInventory.attr('data-id')]['inventory']).length});
     });
 
     $(document).on('click', '#delete-column-submit', function () {
         var columnName = $(this).siblings('#delete-column-input').val();
         var $activeInventory = $('.establishment.active');
+        var storeId = $activeInventory.attr('data-id');
 
         var postData = {
             column_name: columnName,
-            id: $activeInventory.attr('data-id'),
-            type: $activeInventory.attr('data-type')
+            id: storeId
         };
 
         $.ajax({
@@ -12830,13 +13101,12 @@ $(document).ready(function() {
                 //Close overlay
                 $('#operation-overlay').removeClass('active');
                 //Maintain current inventory in the frontend
-                globals.columns = response['columns'];
-                globals.inventory = response['inventory'];
+                globals.stores[storeId] = response['store'];
 
-                if(!globals.columns.length) {
+                if(!globals.stores[storeId]['columns'].length) {
                     var $inventoryWrapper = $('#inventory-wrapper');
                     $inventoryWrapper.empty();
-                    $inventoryWrapper.append(inventoryTemplate({'columns': globals.columns, 'inventory': globals.inventory}));
+                    $inventoryWrapper.append(inventoryTemplate({'store': response['store'], 'boss_username': globals.boss_username}));
                 }
             },
             error: function (response) {
@@ -12854,10 +13124,19 @@ $(document).ready(function() {
     //DELETE ITEM FUNCTIONS//
     $(document).on('click', '#operation-table.delete tbody tr', function () {
         var $row = $(this);
-        var itemId = $(this).attr('data-id');
-        var item = globals.inventory[itemId];
         var $deleteStep2 = $('#delete-step-2');
         var $deleteItemContainer = $('#delete-item-container');
+        var itemId = $(this).attr('data-id');
+        var storeInventory = globals.stores[$('.establishment.active').attr('data-id')]['inventory'];
+
+        for (var i = 0; i < storeInventory.length; i++) {
+            var currentId = storeInventory[i][0];
+            if(currentId == itemId) {
+                var item = storeInventory[i][1];
+                break;
+            }
+        }
+
         $deleteItemContainer.empty();
         $deleteItemContainer.append($row.parent().siblings('thead').clone());
         $deleteItemContainer.append('<tbody></tbody>');
@@ -12879,11 +13158,11 @@ $(document).ready(function() {
         var itemId = $deleteItemSubmit.data('id');
         var $operationOverlay = $deleteItemSubmit.closest('#operation-overlay');
         var $activeInventory = $('.establishment.active');
+        var storeId = $activeInventory.attr('data-id');
 
         var postData = {
             item_id: itemId,
-            id: $activeInventory.attr('data-id'),
-            type: $activeInventory.attr('data-type')
+            id: storeId
         };
 
         $.ajax({
@@ -12896,7 +13175,9 @@ $(document).ready(function() {
                 //console.log(JSON.stringify(response));
                 $operationOverlay.removeClass('active');
                 $('#inventory-table [data-id="' + itemId + '"]').remove();
-                globals.inventory = response['inventory'];
+
+                //CACHE
+                globals.stores[storeId] = response['store'];
             },
             error: function (response) {
                 var $wrapper = $('#delete-item-wrapper');
@@ -12971,10 +13252,17 @@ $(document).ready(function() {
         var $importTable = $('#import-table');
         var column = [];
         var inventory = {};
-        var id = 1;
-        var globalInventory = globals.inventory;
-        var globalKeys = Object.keys(globalInventory);
         var $activeInventory = $('.establishment.active');
+        var storeId = $activeInventory.attr('data-id');
+        var id = 1;
+        var storeInventory = globals.stores[storeId]['inventory'];
+        var inventoryObject = {};
+
+        for (var i = 0; i < storeInventory.length; i++) {
+            inventoryObject[storeInventory[i][0]] = storeInventory[i][1];
+        }
+
+        var globalKeys = Object.keys(inventoryObject);
 
         if(Object.keys(globalKeys).length !== 0) {
             id = parseInt(globalKeys[globalKeys.length-1]);
@@ -13005,8 +13293,7 @@ $(document).ready(function() {
         var postData = {
             columns: column,
             inventory: inventory,
-            id: $activeInventory.attr('data-id'),
-            type: $activeInventory.attr('data-type')
+            id: storeId
         };
 
         $.ajax({
@@ -13020,9 +13307,10 @@ $(document).ready(function() {
                 $('#operation-overlay').removeClass('active');
                 var $inventoryWrapper = $('#inventory-wrapper');
                 $inventoryWrapper.empty();
-                $inventoryWrapper.append(inventoryTemplate(response));
-                globals.inventory = response['inventory'];
-                globals.columns = response['columns'];
+                $inventoryWrapper.append(inventoryTemplate({'store': response['store'], 'boss_username': globals.boss_username}));
+
+                //CACHE
+                globals.stores[storeId] = response['store'];
             },
             error: function (response) {
                 if(response.status && response.status == 403) {
@@ -13044,14 +13332,16 @@ $(document).ready(function() {
     $(document).on('click', '#export-submit', function () {
         var fileType = $('#export-type-input').val();
         var exportLink = document.getElementById('export-download');
-        var inventory = globals.inventory;
-        var columns = globals.columns;
+        var store = globals.stores[$('.establishment.active').attr('data-id')];
+        var storeInventory = store['inventory'];
+        var columns = store['columns'];
+        var inventory = {};
         var valid = false;
-
         var inventoryJson = [];
 
-        for (var key in inventory){
-            inventoryJson.push(inventory[key]);
+        for (var i = 0; i < storeInventory.length; i++) {
+            inventory[storeInventory[i][0]] = storeInventory[i][1];
+            inventoryJson.push(storeInventory[i][1]);
         }
 
         if(fileType == 'csv' || fileType == 'json') {
@@ -13090,7 +13380,8 @@ $(document).ready(function() {
                 }
 
                 for (var p = 0; p < inventoryJson.length; p++) {
-                    var currentRow = inventoryJson[p][1];
+                    var currentRow = inventoryJson[p];
+
                     for (var c = 0; c < columns.length; c++) {
                         if (c == columns.length - 1) {
                             csvFile += '"' + currentRow[columns[c]] + '"\r\n';
@@ -13106,14 +13397,8 @@ $(document).ready(function() {
                 exportLink.setAttribute("download", "inventory.csv");
                 exportLink.click();
             } else if (valid && fileType == 'json') {
-                var newJsonInventory = [];
-
-                for (var j = 0; j < inventoryJson.length; j++) {
-                    newJsonInventory.push(inventoryJson[j][1])
-                }
-
                 tab.document.open();
-                tab.document.write('<pre style="background:#000; color:#fff; margin: -8px;">' + JSON.stringify({'inventory': newJsonInventory}, null, 2) + '</pre>');
+                tab.document.write('<pre style="background:#000; color:#fff; margin: -8px;">' + JSON.stringify({'inventory': inventoryJson}, null, 2) + '</pre>');
                 tab.document.close();
             }
         }
@@ -13148,10 +13433,11 @@ $(document).ready(function() {
 
     $(document).on('click', '#drop-table-submit', function () {
         var $activeInventory = $('.establishment.active');
+        var storeId = $activeInventory.attr('data-id');
+
         var postData = {
             drop_table: true,
-            id: $activeInventory.attr('data-id'),
-            type: $activeInventory.attr('data-type')
+            id: storeId
         };
 
         $.ajax({
@@ -13164,12 +13450,12 @@ $(document).ready(function() {
                 //console.log(JSON.stringify(response));
                 $('#operation-overlay').removeClass('active');
 
-                globals.inventory = response['inventory'];
-                globals.columns = response['columns'];
+                //CACHE
+                globals.stores[storeId] = response['store'];
 
                 var $inventoryWrapper = $('#inventory-wrapper');
                 $inventoryWrapper.empty();
-                $inventoryWrapper.append(inventoryTemplate({'columns': globals.columns, 'inventory': globals.inventory}));
+                $inventoryWrapper.append(inventoryTemplate({'store': response['store'], 'boss_username': globals.boss_username}));
             },
             error: function (response) {
                 if(response.status && response.status == 403) {
@@ -13183,19 +13469,30 @@ $(document).ready(function() {
 
     //RECIEVED FUNCTIONS//
     $(document).on('click', '#receiving-button', function (e) {
-        if(!globals.link_columns['quantity']){
-            popupHandler(e, {type: "quantity", columns: globals.columns, link_columns: globals.link_columns}, operationTemplate);
-        } else if(!globals.link_columns['name']) {
-            popupHandler(e, {type: "name", columns: globals.columns, link_columns: globals.link_columns}, operationTemplate);
+        var store = globals.stores[$('.establishment.active').attr('data-id')];
+
+        if(!store['link_columns']['quantity']){
+            popupHandler(e, {type: "quantity", columns: store['columns'], link_columns: store['link_columns']}, operationTemplate);
+        } else if(!store['link_columns']['name']) {
+            popupHandler(e, {type: "name", columns: store['columns'], link_columns: store['link_columns']}, operationTemplate);
         } else {
-            popupHandler(e, {type: "received", columns: globals.columns, inventory: globals.inventory, inventory_length: Object.keys(globals.inventory).length});
+            popupHandler(e, {type: "received", columns: store['columns'], inventory: store['inventory'], inventory_length: store['inventory'].length});
         }
     });
 
     $(document).on('click', '#operation-table.add tbody tr', function () {
         var $row = $(this);
         var itemId = $(this).attr('data-id');
-        var item = globals.inventory[itemId];
+        var storeInventory = globals.stores[$('.establishment.active').attr('data-id')]['inventory'];
+
+        for (var i = 0; i < storeInventory.length; i++) {
+            var currentId = storeInventory[i][0];
+            if(currentId == itemId) {
+                var item = storeInventory[i][1];
+                break;
+            }
+        }
+
         var $deleteStep2 = $('#received-step-2');
         var $deleteItemContainer = $('#received-item-container');
         $deleteItemContainer.empty();
@@ -13215,10 +13512,10 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '#received-item-submit', function () {
-        var $activeInventory = $('.establishment.active');
+        var storeId = $('.establishment.active').attr('data-id');
+
         var postData = {
-            id: $activeInventory.attr('data-id'),
-            type: $activeInventory.attr('data-type'),
+            id: storeId,
             change_value: $('#received-input').val(),
             details: $('#details-input').val(),
             item_id: $(this).data('id')
@@ -13234,16 +13531,16 @@ $(document).ready(function() {
                 //console.log(JSON.stringify(response));
                 $('#operation-overlay').removeClass('active');
 
-                globals.inventory = response['inventory'];
-                globals.item_log = response['item_log'];
+                globals.stores[storeId] = response['store'];
+                globals.store_log[storeId] = response['item_log'];
 
                 var $inventoryWrapper = $('#inventory-wrapper');
                 $inventoryWrapper.empty();
-                $inventoryWrapper.append(inventoryTemplate({'columns': globals.columns, 'inventory': globals.inventory}));
+                $inventoryWrapper.append(inventoryTemplate({'store': response['store'], 'boss_username': globals.boss_username}));
 
                 var $logWrapper = $inventoryWrapper.siblings('#log-wrapper');
                 $logWrapper.empty();
-                $logWrapper.append(itemLogTemplate({'item_log': globals.item_log}));
+                $logWrapper.append(itemLogTemplate({'item_log': response['item_log']}));
 
                 tabHandler($('#log-tab'));
             },
@@ -13260,21 +13557,32 @@ $(document).ready(function() {
 
     //DAMAGED FUNCTIONS//
     $(document).on('click', '#damaged-button', function (e) {
-        if(!globals.link_columns['quantity']){
-            popupHandler(e, {type: "cost", columns: globals.columns, link_columns: globals.link_columns}, operationTemplate);
-        } else if(!globals.link_columns['name']) {
-            popupHandler(e, {type: "name", columns: globals.columns, link_columns: globals.link_columns}, operationTemplate);
+        var store = globals.stores[$('.establishment.active').attr('data-id')];
+
+        if(!store['link_columns']['quantity']){
+            popupHandler(e, {type: "quantity", columns: store['columns'], link_columns: store['link_columns']}, operationTemplate);
+        } else if(!store['link_columns']['name']) {
+            popupHandler(e, {type: "name", columns: store['columns'], link_columns: store['link_columns']}, operationTemplate);
         } else {
-            popupHandler(e, {type: "damaged", columns: globals.columns, inventory: globals.inventory, inventory_length: Object.keys(globals.inventory).length});
+            popupHandler(e, {type: "damaged", columns: store['columns'], inventory: store['inventory'], inventory_length: store['inventory'].length});
         }
     });
 
-    $(document).on('click', '#operation-table.delete tbody tr', function () {
+    $(document).on('click', '#operation-table.delete.damaged tbody tr', function () {
         var $row = $(this);
-        var itemId = $(this).attr('data-id');
-        var item = globals.inventory[itemId];
         var $deleteStep2 = $('#damaged-step-2');
         var $deleteItemContainer = $('#damaged-item-container');
+        var itemId = $(this).attr('data-id');
+        var storeInventory = globals.stores[$('.establishment.active').attr('data-id')]['inventory'];
+
+        for (var i = 0; i < storeInventory.length; i++) {
+            var currentId = storeInventory[i][0];
+            if(currentId == itemId) {
+                var item = storeInventory[i][1];
+                break;
+            }
+        }
+
         $deleteItemContainer.empty();
         $deleteItemContainer.append($row.parent().siblings('thead').clone());
         $deleteItemContainer.append('<tbody></tbody>');
@@ -13292,10 +13600,9 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '#damaged-item-submit', function () {
-        var $activeInventory = $('.establishment.active');
+        var storeId = $('.establishment.active').attr('data-id');
         var postData = {
-            id: $activeInventory.attr('data-id'),
-            type: $activeInventory.attr('data-type'),
+            id: storeId,
             change_value: $('#damaged-input').val(),
             details: $('#details-input').val(),
             item_id: $(this).data('id')
@@ -13311,15 +13618,15 @@ $(document).ready(function() {
                 //console.log(JSON.stringify(response));
                 $('#operation-overlay').removeClass('active');
 
-                globals.inventory = response['inventory'];
+                globals.stores[storeId] = response['store'];
 
                 var $inventoryWrapper = $('#inventory-wrapper');
                 $inventoryWrapper.empty();
-                $inventoryWrapper.append(inventoryTemplate({'columns': globals.columns, 'inventory': globals.inventory}));
+                $inventoryWrapper.append(inventoryTemplate({'store': response['store'], 'boss_username': globals.boss_username}));
 
                 var $logWrapper = $inventoryWrapper.siblings('#log-wrapper');
                 $logWrapper.empty();
-                $logWrapper.append(itemLogTemplate({'item_log': globals.item_log}));
+                $logWrapper.append(itemLogTemplate({'item_log': response['item_log']}));
 
                 tabHandler($('inventory-tab'));
             },
@@ -13336,12 +13643,14 @@ $(document).ready(function() {
 
     //RESET COST FUNCTIONS//
     $(document).on('click', '#reset-cost-button', function (e) {
-        if(!globals.link_columns['cost']){
-            popupHandler(e, {type: "cost", columns: globals.columns, link_columns: globals.link_columns}, operationTemplate);
-        } else if(!globals.link_columns['name']) {
-            popupHandler(e, {type: "name", columns: globals.columns, link_columns: globals.link_columns}, operationTemplate);
+        var store = globals.stores[$('.establishment.active').attr('data-id')];
+
+        if(!store['link_columns']['cost']){
+            popupHandler(e, {type: "cost", columns: store['columns'], link_columns: store['link_columns']}, operationTemplate);
+        } else if(!store['link_columns']['name']) {
+            popupHandler(e, {type: "name", columns: store['columns'], link_columns: store['link_columns']}, operationTemplate);
         } else {
-            popupHandler(e, {type: "reset_cost", columns: globals.columns, inventory: globals.inventory, inventory_length: Object.keys(globals.inventory).length});
+            popupHandler(e, {type: "reset_cost", columns: store['columns'], inventory: store['inventory'], inventory_length: store['inventory'].length});
         }
     });
 
@@ -13351,10 +13660,19 @@ $(document).ready(function() {
         $deleteStep2.siblings('#reset-cost-step-1').addClass('active');
     });
 
-    $(document).on('click', '#operation-table.edit tbody tr', function () {
+    $(document).on('click', '#operation-table.reset-cost tbody tr', function () {
         var $row = $(this);
         var itemId = $(this).attr('data-id');
-        var item = globals.inventory[itemId];
+        var storeInventory = globals.stores[$('.establishment.active').attr('data-id')]['inventory'];
+
+        for (var i = 0; i < storeInventory.length; i++) {
+            var currentId = storeInventory[i][0];
+            if(currentId == itemId) {
+                var item = storeInventory[i][1];
+                break;
+            }
+        }
+
         var $deleteStep2 = $('#reset-cost-step-2');
         var $deleteItemContainer = $('#reset-cost-item-container');
         $deleteItemContainer.empty();
@@ -13368,10 +13686,9 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '#reset-cost-item-submit', function () {
-        var $activeInventory = $('.establishment.active');
+        var storeId = $('.establishment.active').attr('data-id');
         var postData = {
-            id: $activeInventory.attr('data-id'),
-            type: $activeInventory.attr('data-type'),
+            id: storeId,
             change_value: $('#reset-cost-input').val(),
             details: $('#details-input').val(),
             item_id: $(this).data('id')
@@ -13387,15 +13704,15 @@ $(document).ready(function() {
                 //console.log(JSON.stringify(response));
                 $('#operation-overlay').removeClass('active');
 
-                globals.inventory = response['inventory'];
+                globals.stores[storeId] = response['store'];
 
                 var $inventoryWrapper = $('#inventory-wrapper');
                 $inventoryWrapper.empty();
-                $inventoryWrapper.append(inventoryTemplate({'columns': globals.columns, 'inventory': globals.inventory}));
+                $inventoryWrapper.append(inventoryTemplate({'store': response['store'], 'boss_username': globals.boss_username}));
 
                 var $logWrapper = $inventoryWrapper.siblings('#log-wrapper');
                 $logWrapper.empty();
-                $logWrapper.append(itemLogTemplate({'item_log': globals.item_log}));
+                $logWrapper.append(itemLogTemplate({'item_log': response['item_log']}));
 
                 tabHandler($('inventory-tab'));
             },
@@ -13412,12 +13729,14 @@ $(document).ready(function() {
 
     //RESET PRICE FUNCTIONS//
     $(document).on('click', '#reset-price-button', function (e) {
-        if(!globals.link_columns['price']){
-            popupHandler(e, {type: "price", columns: globals.columns, link_columns: globals.link_columns}, operationTemplate);
-        } else if(!globals.link_columns['name']) {
-            popupHandler(e, {type: "name", columns: globals.columns, link_columns: globals.link_columns}, operationTemplate);
+        var store = globals.stores[$('.establishment.active').attr('data-id')];
+
+        if(!store['link_columns']['price']){
+            popupHandler(e, {type: "price", columns: store['columns'], link_columns: store['link_columns']}, operationTemplate);
+        } else if(!store['link_columns']['name']) {
+            popupHandler(e, {type: "name", columns: store['columns'], link_columns: store['link_columns']}, operationTemplate);
         } else {
-            popupHandler(e, {type: "reset_price", columns: globals.columns, inventory: globals.inventory, inventory_length: Object.keys(globals.inventory).length});
+            popupHandler(e, {type: "reset_price", columns: store['columns'], inventory: store['inventory'], inventory_length: store['inventory'].length});
         }
     });
 
@@ -13427,12 +13746,21 @@ $(document).ready(function() {
         $deleteStep2.siblings('#reset-price-step-1').addClass('active');
     });
 
-    $(document).on('click', '#operation-table.edit tbody tr', function () {
+    $(document).on('click', '#operation-table.reset-price tbody tr', function () {
         var $row = $(this);
         var itemId = $(this).attr('data-id');
-        var item = globals.inventory[itemId];
+        var storeInventory = globals.stores[$('.establishment.active').attr('data-id')]['inventory'];
         var $deleteStep2 = $('#reset-price-step-2');
         var $deleteItemContainer = $('#reset-price-item-container');
+
+        for (var i = 0; i < storeInventory.length; i++) {
+            var currentId = storeInventory[i][0];
+            if(currentId == itemId) {
+                var item = storeInventory[i][1];
+                break;
+            }
+        }
+
         $deleteItemContainer.empty();
         $deleteItemContainer.append($row.parent().siblings('thead').clone());
         $deleteItemContainer.append('<tbody></tbody>');
@@ -13444,10 +13772,9 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '#reset-price-item-submit', function () {
-        var $activeInventory = $('.establishment.active');
+        var storeId = $('.establishment.active').attr('data-id');
         var postData = {
-            id: $activeInventory.attr('data-id'),
-            type: $activeInventory.attr('data-type'),
+            id: storeId,
             change_value: $('#reset-price-input').val(),
             details: $('#details-input').val(),
             item_id: $(this).data('id')
@@ -13463,15 +13790,15 @@ $(document).ready(function() {
                 //console.log(JSON.stringify(response));
                 $('#operation-overlay').removeClass('active');
 
-                globals.inventory = response['inventory'];
+                globals.stores[storeId] = response['store'];
 
                 var $inventoryWrapper = $('#inventory-wrapper');
                 $inventoryWrapper.empty();
-                $inventoryWrapper.append(inventoryTemplate({'columns': globals.columns, 'inventory': globals.inventory}));
+                $inventoryWrapper.append(inventoryTemplate({'store': response['store'], 'boss_username': globals.boss_username}));
 
                 var $logWrapper = $inventoryWrapper.siblings('#log-wrapper');
                 $logWrapper.empty();
-                $logWrapper.append(itemLogTemplate({'item_log': globals.item_log}));
+                $logWrapper.append(itemLogTemplate({'item_log': response['item_log']}));
 
                 tabHandler($('inventory-tab'));
             },
@@ -13515,51 +13842,50 @@ $(document).ready(function() {
 
 
     // SAVE SETTINGS
-    $(document).on('click', '#inventory-settings-submit', function () {
-        //Get filters, Get default tax, Get every store tax
-        var $orderByInput = $('#order-by-input');
-        var $reverseCheckbox = $('#reverse-checkbox');
-        var $activeInventory = $('.establishment.active');
-
-        var postData = {
-            id: $activeInventory.attr('data-id'),
-            type: $activeInventory.attr('data-type'),
-            'order_by': $orderByInput.val(),
-            'reverse': $reverseCheckbox.is(":checked")
-        };
-
-        $.ajax({
-            headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
-            url: globals.base_url + '/inventory/save_settings/',
-            data: JSON.stringify(postData),
-            dataType: 'json',
-            type: "POST",
-            success: function (response) {
-                globals.inventory = response['inventory'];
-
-                var $inventoryWrapper = $('#inventory-wrapper');
-                $inventoryWrapper.empty();
-                $inventoryWrapper.append(inventoryTemplate({'columns': globals.columns, 'inventory': globals.inventory}));
-
-                var $settingResult = $('#settings-result');
-                $settingResult.removeClass('denied');
-                $settingResult.addClass('success');
-                $settingResult.text('Saved!');
-                $settingResult.show();
-                $settingResult.fadeOut(2000);
-            },
-            error: function (response) {
-                if(response.status && response.status == 403) {
-                    var $settingResult = $('#settings-result');
-                    $settingResult.removeClass('success');
-                    $settingResult.addClass('denied');
-                    $settingResult.text('Permission Denied');
-                    $settingResult.show();
-                    $settingResult.fadeOut(2000);
-                }
-            }
-        });
-    });
+    //$(document).on('click', '#inventory-settings-submit', function () {
+    //    //Get filters, Get default tax, Get every store tax
+    //    var $orderByInput = $('#order-by-input');
+    //    var $reverseCheckbox = $('#reverse-checkbox');
+    //    var $activeInventory = $('.establishment.active');
+    //
+    //    var postData = {
+    //        id: $activeInventory.attr('data-id'),
+    //        'order_by': $orderByInput.val(),
+    //        'reverse': $reverseCheckbox.is(":checked")
+    //    };
+    //
+    //    $.ajax({
+    //        headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
+    //        url: globals.base_url + '/inventory/save_settings/',
+    //        data: JSON.stringify(postData),
+    //        dataType: 'json',
+    //        type: "POST",
+    //        success: function (response) {
+    //            globals.inventory = response['inventory'];
+    //
+    //            var $inventoryWrapper = $('#inventory-wrapper');
+    //            $inventoryWrapper.empty();
+    //            $inventoryWrapper.append(inventoryTemplate({'columns': globals.columns, 'inventory': globals.inventory}));
+    //
+    //            var $settingResult = $('#settings-result');
+    //            $settingResult.removeClass('denied');
+    //            $settingResult.addClass('success');
+    //            $settingResult.text('Saved!');
+    //            $settingResult.show();
+    //            $settingResult.fadeOut(2000);
+    //        },
+    //        error: function (response) {
+    //            if(response.status && response.status == 403) {
+    //                var $settingResult = $('#settings-result');
+    //                $settingResult.removeClass('success');
+    //                $settingResult.addClass('denied');
+    //                $settingResult.text('Permission Denied');
+    //                $settingResult.show();
+    //                $settingResult.fadeOut(2000);
+    //            }
+    //        }
+    //    });
+    //});
     // SAVE SETTINGS
 
 
@@ -13567,10 +13893,12 @@ $(document).ready(function() {
     $(document).on('click', '#link-column-submit', function () {
         var $operationOverlay = $('#operation-overlay');
         var $linkColumnInput = $operationOverlay.find('#link-column-input');
+        var storeId = $('.establishment.active').attr('data-id');
 
         var postData = {
             link_type: $linkColumnInput.attr('data-type'),
-            column: $linkColumnInput.val()
+            column: $linkColumnInput.val(),
+            id: storeId
         };
 
         $.ajax({
@@ -13586,7 +13914,11 @@ $(document).ready(function() {
                 $('#operation-overlay').removeClass('active');
 
                 // CACHE THE DATA
-                globals.link_columns = response['link_columns'];
+                globals.stores[storeId] = response['store'];
+
+                console.log(globals.stores[storeId])
+
+                console.log(response['store'])
             },
             error: function (response) {
                 if(response.status && response.status == 403) {
@@ -13596,37 +13928,92 @@ $(document).ready(function() {
         });
     });
     // LINK COLUMN //
+
+    // STORE //
+    $(document).on('click', '#create-store-button, #create-store-link', function (e) {
+        popupHandler(e, {}, storeTemplate);
+    });
+
+    $(document).on('click', '#create-store-submit', function () {
+        $.ajax({
+            headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
+            url: globals.base_url + '/store/create_store/',
+            data: {'store_name': $('#store-name-input').val()},
+            dataType: 'json',
+            type: "POST",
+            success: function (response) {
+                console.log(JSON.stringify(response));
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    $('#link-column-wrapper').find('.error').text('Permission Denied').show();
+                } else {
+                    $('#operation-overlay').find('.error').text(response.responseText).show();
+                }
+            }
+        });
+    });
+
+    $(document).on('click', '.establishment:not(.active)', function (e) {
+        var $establishment = $(this);
+        $establishment.closest('.inner-side-wrapper').find('.active').removeClass('active');
+        $establishment.addClass('active');
+
+        if ($establishment.hasClass('store-item')) {
+            var storeId = $establishment.attr('data-id');
+            var currentStore = globals.stores[storeId];
+
+            var $inventoryWrapper = $('#inventory-wrapper');
+            $inventoryWrapper.empty();
+            $inventoryWrapper.append(inventoryTemplate({'store': currentStore, 'boss_username': globals.boss_username}));
+
+            var $logWrapper = $inventoryWrapper.siblings('#log-wrapper');
+            $logWrapper.empty();
+            $logWrapper.append(itemLogTemplate({'item_log': globals.store_log[storeId]}));
+        }
+        //else {
+        //    $inventoryWrapper = $('#inventory-wrapper');
+        //    $inventoryWrapper.empty();
+        //    $inventoryWrapper.append(inventoryTemplate({'columns': globals.columns, 'inventory': globals.inventory}));
+        //
+        //    $logWrapper = $inventoryWrapper.siblings('#log-wrapper');
+        //    $logWrapper.empty();
+        //    $logWrapper.append(itemLogTemplate({'item_log': globals.item_log}));
+        //}
+    });
+    // STORE //
 });
 
 /***/ }),
-/* 48 */
+/* 54 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 49 */
+/* 55 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 50 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Handlebars = __webpack_require__(3);
+var Handlebars = __webpack_require__(2);
 function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
 module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
   return "    <div id=\"search-wrapper\">\r\n        <input id=\"search-input\" data-table=\"#inventory-table\" />\r\n        <div class=\"search-filter-wrapper\">\r\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(alias1,((stack1 = (depth0 != null ? depth0.store : depth0)) != null ? stack1.columns : stack1),{"name":"each","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "        </div>\r\n    </div>\r\n\r\n\r\n    <table id=\"inventory-table\" class=\"table-container\">\r\n            <thead>\r\n                <tr>\r\n                    <th class=\"action\">Action</th>\r\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.store : depth0)) != null ? stack1.picture_column : stack1),{"name":"if","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(alias1,((stack1 = (depth0 != null ? depth0.store : depth0)) != null ? stack1.columns : stack1),{"name":"each","hash":{},"fn":container.program(6, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                </tr>\r\n            </thead>\r\n\r\n            <tbody>\r\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.trans : depth0),{"name":"each","hash":{},"fn":container.program(6, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.trans : depth0),{"name":"each","hash":{},"fn":container.program(8, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.inventory : depth0),{"name":"each","hash":{},"fn":container.program(8, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(alias1,((stack1 = (depth0 != null ? depth0.store : depth0)) != null ? stack1.inventory : stack1),{"name":"each","hash":{},"fn":container.program(10, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </tbody>\r\n    </table>\r\n";
 },"2":function(container,depth0,helpers,partials,data) {
     var alias1=container.lambda, alias2=container.escapeExpression;
@@ -13641,6 +14028,14 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + alias2(alias1(depth0, depth0))
     + "</span>\r\n                    </label>\r\n                </span>\r\n";
 },"4":function(container,depth0,helpers,partials,data) {
+    var stack1, alias1=container.lambda, alias2=container.escapeExpression;
+
+  return "                        <th class=\"custom-column\" data-value=\""
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.store : depth0)) != null ? stack1.picture_column : stack1), depth0))
+    + "\"><span class=\"column-text\">"
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.store : depth0)) != null ? stack1.picture_column : stack1), depth0))
+    + "</span></th>\r\n";
+},"6":function(container,depth0,helpers,partials,data) {
     var alias1=container.lambda, alias2=container.escapeExpression;
 
   return "                        <th class=\"custom-column\" data-value=\""
@@ -13648,32 +14043,60 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + "\"><span class=\"column-text\">"
     + alias2(alias1(depth0, depth0))
     + "</span><span class=\"inline action\"><span class=\"edit-column-button\"><i class=\"fas fa-pencil-alt\"></i></span><span class=\"column-delete-button\"><i class=\"far fa-trash-alt\"></i></span></span></th>\r\n";
-},"6":function(container,depth0,helpers,partials,data,blockParams,depths) {
-    var alias1=container.escapeExpression;
+},"8":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=container.escapeExpression;
 
   return "                    <tr data-id=\""
     + alias1(container.lambda((data && data.key), depth0))
     + "\">\r\n                        <td class=\"action\"><span class=\"edit-item-button\"><i class=\"fas fa-pencil-alt\"></i></span><span class=\"delete-item-button\"><i class=\"far fa-trash-alt\"></i></span></td>\r\n                        "
-    + alias1(__default(__webpack_require__(31)).call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,(depths[1] != null ? depths[1].columns : depths[1]),{"name":"tableHandler","hash":{},"data":data}))
+    + alias1(__default(__webpack_require__(35)).call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,((stack1 = (depths[1] != null ? depths[1].store : depths[1])) != null ? stack1.columns : stack1),{"name":"tableHandler","hash":{},"data":data}))
     + "\r\n                    </tr>\r\n";
-},"8":function(container,depth0,helpers,partials,data,blockParams,depths) {
-    var alias1=container.escapeExpression;
+},"10":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=container.escapeExpression, alias2=depth0 != null ? depth0 : (container.nullContext || {});
 
   return "                    <tr data-id=\""
     + alias1(container.lambda((depth0 != null ? depth0["0"] : depth0), depth0))
-    + "\">\r\n                        <td class=\"action\"><span class=\"edit-item-button\"><i class=\"fas fa-pencil-alt\"></i></span><span class=\"delete-item-button\"><i class=\"far fa-trash-alt\"></i></span></td>\r\n                        "
-    + alias1(__default(__webpack_require__(31)).call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0["1"] : depth0),(depths[1] != null ? depths[1].columns : depths[1]),{"name":"tableHandler","hash":{},"data":data}))
+    + "\">\r\n                        <td class=\"action\"><span class=\"edit-item-button\"><i class=\"fas fa-pencil-alt\"></i></span><span class=\"delete-item-button\"><i class=\"far fa-trash-alt\"></i></span></td>\r\n"
+    + ((stack1 = helpers["if"].call(alias2,((stack1 = (depths[1] != null ? depths[1].store : depths[1])) != null ? stack1.picture_column : stack1),{"name":"if","hash":{},"fn":container.program(11, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "                        "
+    + alias1(__default(__webpack_require__(35)).call(alias2,(depth0 != null ? depth0["1"] : depth0),((stack1 = (depths[1] != null ? depths[1].store : depths[1])) != null ? stack1.columns : stack1),{"name":"tableHandler","hash":{},"data":data}))
     + "\r\n                    </tr>\r\n";
-},"10":function(container,depth0,helpers,partials,data) {
-    return "    <div id=\"empty-inventory-wrapper\">\r\n        <span id=\"empty-inventory-icon\"><i class=\"fas fa-database\"></i></span> Inventory is empty!\r\n    </div>\r\n";
+},"11":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
+
+  return ((stack1 = __default(__webpack_require__(58)).call(alias1,__default(__webpack_require__(36)).call(alias1,(depth0 != null ? depth0["1"] : depth0),((stack1 = (depths[1] != null ? depths[1].store : depths[1])) != null ? stack1.picture_column : stack1),{"name":"dict","hash":{},"data":data}),{"name":"checkList","hash":{},"fn":container.program(12, data, 0, blockParams, depths),"inverse":container.program(14, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "");
+},"12":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, alias1=container.escapeExpression, alias2=depth0 != null ? depth0 : (container.nullContext || {});
+
+  return "                            <td class=\""
+    + alias1(container.lambda(((stack1 = (depths[1] != null ? depths[1].store : depths[1])) != null ? stack1.picture_column : stack1), depth0))
+    + "\"> <img class=\"inventory-icon\" src=\""
+    + alias1(__default(__webpack_require__(59)).call(alias2,"base_url","/templates/bundle/assets/files/",(depths[1] != null ? depths[1].boss_username : depths[1]),"/",((stack1 = (depths[1] != null ? depths[1].store : depths[1])) != null ? stack1.name : stack1),"/",__default(__webpack_require__(36)).call(alias2,(depth0 != null ? depth0["1"] : depth0),((stack1 = (depths[1] != null ? depths[1].store : depths[1])) != null ? stack1.picture_column : stack1),{"name":"dict","hash":{},"data":data}),{"name":"concat","hash":{},"data":data}))
+    + "\" height=\"42\" width=\"42\"></td>\r\n";
+},"14":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1;
+
+  return "                            <td class=\""
+    + container.escapeExpression(container.lambda(((stack1 = (depths[1] != null ? depths[1].store : depths[1])) != null ? stack1.picture_column : stack1), depth0))
+    + " picture-icon\"><span class=\"file-upload-button\"><i class=\"fas fa-upload\"></i></span></td>\r\n";
+},"16":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return "    <div id=\"empty-inventory-wrapper\">\r\n        <span id=\"empty-inventory-icon\"><i class=\"fas fa-database\"></i></span>\r\n        <div>\r\n"
+    + ((stack1 = __default(__webpack_require__(0)).call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.stores_length : depth0),"==",0,{"name":"ifCond","hash":{},"fn":container.program(17, data, 0),"inverse":container.program(19, data, 0),"data":data})) != null ? stack1 : "")
+    + "        </div>\r\n\r\n    </div>\r\n";
+},"17":function(container,depth0,helpers,partials,data) {
+    return "                <div>To get started:</div>\r\n                <ul>\r\n                    <li id=\"create-store-link\">Create a store!</li>\r\n                </ul>\r\n";
+},"19":function(container,depth0,helpers,partials,data) {
+    return "                <div>Inventory is empty!</div>\r\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1;
 
-  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.columns : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.program(10, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "");
+  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depth0 != null ? depth0.store : depth0)) != null ? stack1.columns : stack1),{"name":"if","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.program(16, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "");
 },"useData":true,"useDepths":true});
 
 /***/ }),
-/* 51 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**!
@@ -13707,10 +14130,40 @@ THE SOFTWARE.
 var f=g.nameLookup(e,b[c],a);return d?[" && ",f]:[" != null ? ",f," : ",e]})},resolvePossibleLambda:function(){this.push([this.aliasable("container.lambda"),"(",this.popStack(),", ",this.contextName(0),")"])},pushStringParam:function(a,b){this.pushContext(),this.pushString(b),"SubExpression"!==b&&("string"==typeof a?this.pushString(a):this.pushStackLiteral(a))},emptyHash:function(a){this.trackIds&&this.push("{}"),this.stringParams&&(this.push("{}"),this.push("{}")),this.pushStackLiteral(a?"undefined":"{}")},pushHash:function(){this.hash&&this.hashes.push(this.hash),this.hash={values:[],types:[],contexts:[],ids:[]}},popHash:function(){var a=this.hash;this.hash=this.hashes.pop(),this.trackIds&&this.push(this.objectLiteral(a.ids)),this.stringParams&&(this.push(this.objectLiteral(a.contexts)),this.push(this.objectLiteral(a.types))),this.push(this.objectLiteral(a.values))},pushString:function(a){this.pushStackLiteral(this.quotedString(a))},pushLiteral:function(a){this.pushStackLiteral(a)},pushProgram:function(a){null!=a?this.pushStackLiteral(this.programExpression(a)):this.pushStackLiteral(null)},registerDecorator:function(a,b){var c=this.nameLookup("decorators",b,"decorator"),d=this.setupHelperArgs(b,a);this.decorators.push(["fn = ",this.decorators.functionCall(c,"",["fn","props","container",d])," || fn;"])},invokeHelper:function(a,b,c){var d=this.popStack(),e=this.setupHelper(a,b),f=c?[e.name," || "]:"",g=["("].concat(f,d);this.options.strict||g.push(" || ",this.aliasable("helpers.helperMissing")),g.push(")"),this.push(this.source.functionCall(g,"call",e.callParams))},invokeKnownHelper:function(a,b){var c=this.setupHelper(a,b);this.push(this.source.functionCall(c.name,"call",c.callParams))},invokeAmbiguous:function(a,b){this.useRegister("helper");var c=this.popStack();this.emptyHash();var d=this.setupHelper(0,a,b),e=this.lastHelper=this.nameLookup("helpers",a,"helper"),f=["(","(helper = ",e," || ",c,")"];this.options.strict||(f[0]="(helper = ",f.push(" != null ? helper : ",this.aliasable("helpers.helperMissing"))),this.push(["(",f,d.paramsInit?["),(",d.paramsInit]:[],"),","(typeof helper === ",this.aliasable('"function"')," ? ",this.source.functionCall("helper","call",d.callParams)," : helper))"])},invokePartial:function(a,b,c){var d=[],e=this.setupParams(b,1,d);a&&(b=this.popStack(),delete e.name),c&&(e.indent=JSON.stringify(c)),e.helpers="helpers",e.partials="partials",e.decorators="container.decorators",a?d.unshift(b):d.unshift(this.nameLookup("partials",b,"partial")),this.options.compat&&(e.depths="depths"),e=this.objectLiteral(e),d.push(e),this.push(this.source.functionCall("container.invokePartial","",d))},assignToHash:function(a){var b=this.popStack(),c=void 0,d=void 0,e=void 0;this.trackIds&&(e=this.popStack()),this.stringParams&&(d=this.popStack(),c=this.popStack());var f=this.hash;c&&(f.contexts[a]=c),d&&(f.types[a]=d),e&&(f.ids[a]=e),f.values[a]=b},pushId:function(a,b,c){"BlockParam"===a?this.pushStackLiteral("blockParams["+b[0]+"].path["+b[1]+"]"+(c?" + "+JSON.stringify("."+c):"")):"PathExpression"===a?this.pushString(b):"SubExpression"===a?this.pushStackLiteral("true"):this.pushStackLiteral("null")},compiler:e,compileChildren:function(a,b){for(var c=a.children,d=void 0,e=void 0,f=0,g=c.length;f<g;f++){d=c[f],e=new this.compiler;var h=this.matchExistingProgram(d);if(null==h){this.context.programs.push("");var i=this.context.programs.length;d.index=i,d.name="program"+i,this.context.programs[i]=e.compile(d,b,this.context,!this.precompile),this.context.decorators[i]=e.decorators,this.context.environments[i]=d,this.useDepths=this.useDepths||e.useDepths,this.useBlockParams=this.useBlockParams||e.useBlockParams,d.useDepths=this.useDepths,d.useBlockParams=this.useBlockParams}else d.index=h.index,d.name="program"+h.index,this.useDepths=this.useDepths||h.useDepths,this.useBlockParams=this.useBlockParams||h.useBlockParams}},matchExistingProgram:function(a){for(var b=0,c=this.context.environments.length;b<c;b++){var d=this.context.environments[b];if(d&&d.equals(a))return d}},programExpression:function(a){var b=this.environment.children[a],c=[b.index,"data",b.blockParams];return(this.useBlockParams||this.useDepths)&&c.push("blockParams"),this.useDepths&&c.push("depths"),"container.program("+c.join(", ")+")"},useRegister:function(a){this.registers[a]||(this.registers[a]=!0,this.registers.list.push(a))},push:function(a){return a instanceof d||(a=this.source.wrap(a)),this.inlineStack.push(a),a},pushStackLiteral:function(a){this.push(new d(a))},pushSource:function(a){this.pendingContent&&(this.source.push(this.appendToBuffer(this.source.quotedString(this.pendingContent),this.pendingLocation)),this.pendingContent=void 0),a&&this.source.push(a)},replaceStack:function(a){var b=["("],c=void 0,e=void 0,f=void 0;if(!this.isInline())throw new j["default"]("replaceStack on non-inline");var g=this.popStack(!0);if(g instanceof d)c=[g.value],b=["(",c],f=!0;else{e=!0;var h=this.incrStack();b=["((",this.push(h)," = ",g,")"],c=this.topStack()}var i=a.call(this,c);f||this.popStack(),e&&this.stackSlot--,this.push(b.concat(i,")"))},incrStack:function(){return this.stackSlot++,this.stackSlot>this.stackVars.length&&this.stackVars.push("stack"+this.stackSlot),this.topStackName()},topStackName:function(){return"stack"+this.stackSlot},flushInline:function(){var a=this.inlineStack;this.inlineStack=[];for(var b=0,c=a.length;b<c;b++){var e=a[b];if(e instanceof d)this.compileStack.push(e);else{var f=this.incrStack();this.pushSource([f," = ",e,";"]),this.compileStack.push(f)}}},isInline:function(){return this.inlineStack.length},popStack:function(a){var b=this.isInline(),c=(b?this.inlineStack:this.compileStack).pop();if(!a&&c instanceof d)return c.value;if(!b){if(!this.stackSlot)throw new j["default"]("Invalid stack pop");this.stackSlot--}return c},topStack:function(){var a=this.isInline()?this.inlineStack:this.compileStack,b=a[a.length-1];return b instanceof d?b.value:b},contextName:function(a){return this.useDepths&&a?"depths["+a+"]":"depth"+a},quotedString:function(a){return this.source.quotedString(a)},objectLiteral:function(a){return this.source.objectLiteral(a)},aliasable:function(a){var b=this.aliases[a];return b?(b.referenceCount++,b):(b=this.aliases[a]=this.source.wrap(a),b.aliasable=!0,b.referenceCount=1,b)},setupHelper:function(a,b,c){var d=[],e=this.setupHelperArgs(b,a,d,c),f=this.nameLookup("helpers",b,"helper"),g=this.aliasable(this.contextName(0)+" != null ? "+this.contextName(0)+" : (container.nullContext || {})");return{params:d,paramsInit:e,name:f,callParams:[g].concat(d)}},setupParams:function(a,b,c){var d={},e=[],f=[],g=[],h=!c,i=void 0;h&&(c=[]),d.name=this.quotedString(a),d.hash=this.popStack(),this.trackIds&&(d.hashIds=this.popStack()),this.stringParams&&(d.hashTypes=this.popStack(),d.hashContexts=this.popStack());var j=this.popStack(),k=this.popStack();(k||j)&&(d.fn=k||"container.noop",d.inverse=j||"container.noop");for(var l=b;l--;)i=this.popStack(),c[l]=i,this.trackIds&&(g[l]=this.popStack()),this.stringParams&&(f[l]=this.popStack(),e[l]=this.popStack());return h&&(d.args=this.source.generateArray(c)),this.trackIds&&(d.ids=this.source.generateArray(g)),this.stringParams&&(d.types=this.source.generateArray(f),d.contexts=this.source.generateArray(e)),this.options.data&&(d.data="data"),this.useBlockParams&&(d.blockParams="blockParams"),d},setupHelperArgs:function(a,b,c,d){var e=this.setupParams(a,b,c);return e=this.objectLiteral(e),d?(this.useRegister("options"),c.push("options"),["options=",e]):c?(c.push(e),""):e}},function(){for(var a="break else new var case finally return void catch for switch while continue function this with default if throw delete in try do instanceof typeof abstract enum int short boolean export interface static byte extends long super char final native synchronized class float package throws const goto private transient debugger implements protected volatile double import public let yield await null true false".split(" "),b=e.RESERVED_WORDS={},c=0,d=a.length;c<d;c++)b[a[c]]=!0}(),e.isValidJavaScriptVariableName=function(a){return!e.RESERVED_WORDS[a]&&/^[a-zA-Z_$][0-9a-zA-Z_$]*$/.test(a)},b["default"]=e,a.exports=b["default"]},function(a,b,c){"use strict";function d(a,b,c){if(f.isArray(a)){for(var d=[],e=0,g=a.length;e<g;e++)d.push(b.wrap(a[e],c));return d}return"boolean"==typeof a||"number"==typeof a?a+"":a}function e(a){this.srcFile=a,this.source=[]}b.__esModule=!0;var f=c(5),g=void 0;try{}catch(h){}g||(g=function(a,b,c,d){this.src="",d&&this.add(d)},g.prototype={add:function(a){f.isArray(a)&&(a=a.join("")),this.src+=a},prepend:function(a){f.isArray(a)&&(a=a.join("")),this.src=a+this.src},toStringWithSourceMap:function(){return{code:this.toString()}},toString:function(){return this.src}}),e.prototype={isEmpty:function(){return!this.source.length},prepend:function(a,b){this.source.unshift(this.wrap(a,b))},push:function(a,b){this.source.push(this.wrap(a,b))},merge:function(){var a=this.empty();return this.each(function(b){a.add(["  ",b,"\n"])}),a},each:function(a){for(var b=0,c=this.source.length;b<c;b++)a(this.source[b])},empty:function(){var a=this.currentLocation||{start:{}};return new g(a.start.line,a.start.column,this.srcFile)},wrap:function(a){var b=arguments.length<=1||void 0===arguments[1]?this.currentLocation||{start:{}}:arguments[1];return a instanceof g?a:(a=d(a,this,b),new g(b.start.line,b.start.column,this.srcFile,a))},functionCall:function(a,b,c){return c=this.generateList(c),this.wrap([a,b?"."+b+"(":"(",c,")"])},quotedString:function(a){return'"'+(a+"").replace(/\\/g,"\\\\").replace(/"/g,'\\"').replace(/\n/g,"\\n").replace(/\r/g,"\\r").replace(/\u2028/g,"\\u2028").replace(/\u2029/g,"\\u2029")+'"'},objectLiteral:function(a){var b=[];for(var c in a)if(a.hasOwnProperty(c)){var e=d(a[c],this);"undefined"!==e&&b.push([this.quotedString(c),":",e])}var f=this.generateList(b);return f.prepend("{"),f.add("}"),f},generateList:function(a){for(var b=this.empty(),c=0,e=a.length;c<e;c++)c&&b.add(","),b.add(d(a[c],this));return b},generateArray:function(a){var b=this.generateList(a);return b.prepend("["),b.add("]"),b}},b["default"]=e,a.exports=b["default"]}])});
 
 /***/ }),
-/* 52 */
+/* 58 */
+/***/ (function(module, exports) {
+
+module.exports = function(list, options) {
+    if(list.length) {
+        return options.fn(this);
+    } else {
+        return options.inverse(this);
+    }
+};
+
+/***/ }),
+/* 59 */
+/***/ (function(module, exports) {
+
+module.exports = function() {
+    var outStr = '';
+    for(var arg in arguments){
+        arguments[arg] = arguments[arg].toString();
+        if(arguments[arg] !== '[object Object]'){
+            if(arguments[arg] == 'base_url') {
+                arguments[arg] = globals.base_url;
+            }
+            outStr += arguments[arg];
+        }
+    }
+    return outStr;
+};
+
+/***/ }),
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Handlebars = __webpack_require__(3);
+var Handlebars = __webpack_require__(2);
 function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
 module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
@@ -13754,7 +14207,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + "\r\n                             "
     + alias2(alias1((depth0 != null ? depth0.change : depth0), depth0))
     + "\r\n                        </td>\r\n                        <td>"
-    + alias2(__default(__webpack_require__(53)).call(alias3,(depth0 != null ? depth0.date : depth0),{"name":"stringDate","hash":{},"data":data}))
+    + alias2(__default(__webpack_require__(61)).call(alias3,(depth0 != null ? depth0.date : depth0),{"name":"stringDate","hash":{},"data":data}))
     + "</td>\r\n                        <td class=\"details-icon "
     + ((stack1 = __default(__webpack_require__(0)).call(alias3,((stack1 = (depth0 != null ? depth0.details : depth0)) != null ? stack1.notes : stack1),"!=","",{"name":"ifCond","hash":{},"fn":container.program(16, data, 0),"inverse":container.program(18, data, 0),"data":data})) != null ? stack1 : "")
     + "><i class=\"fas fa-file-alt\"></i></td>\r\n                    </tr>\r\n";
@@ -13791,7 +14244,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true});
 
 /***/ }),
-/* 53 */
+/* 61 */
 /***/ (function(module, exports) {
 
 module.exports = function(epoch) {
@@ -13820,10 +14273,10 @@ module.exports = function(epoch) {
 };
 
 /***/ }),
-/* 54 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Handlebars = __webpack_require__(3);
+var Handlebars = __webpack_require__(2);
 function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
 module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1, alias1=container.lambda, alias2=container.escapeExpression;
@@ -13850,10 +14303,10 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true,"useDepths":true});
 
 /***/ }),
-/* 55 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Handlebars = __webpack_require__(3);
+var Handlebars = __webpack_require__(2);
 function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
 module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var alias1=container.escapeExpression;
@@ -13861,7 +14314,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
   return "    <tr class=\"added\" data-id=\""
     + alias1(container.lambda((data && data.key), depth0))
     + "\">\r\n        <td class=\"action\"><span class=\"edit-item-button\"><i class=\"fas fa-pencil-alt\"></i></span><span class=\"delete-item-button\"><i class=\"far fa-trash-alt\"></i></span></td>\r\n        "
-    + alias1(__default(__webpack_require__(31)).call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,(depths[1] != null ? depths[1].columns : depths[1]),{"name":"tableHandler","hash":{},"data":data}))
+    + alias1(__default(__webpack_require__(35)).call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,(depths[1] != null ? depths[1].columns : depths[1]),{"name":"tableHandler","hash":{},"data":data}))
     + "\r\n    </tr>\r\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1;
@@ -13870,10 +14323,20 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true,"useDepths":true});
 
 /***/ }),
-/* 56 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Handlebars = __webpack_require__(3);
+var Handlebars = __webpack_require__(2);
+function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
+module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    return "<div id=\"operation-popup-wrapper\">\r\n    <div class=\"operation-title\">Create Store</div>\r\n    <p class=\"operation-description\">Create stores to separate inventory</p>\r\n    <div class=\"operation-create-store-wrapper\">\r\n        <label for=\"store-name-input\">Store Name</label>\r\n        <div class=\"error\"></div>\r\n        <input id=\"store-name-input\" />\r\n        <button class=\"operation-submit add\" id=\"create-store-submit\">Create Store</button>\r\n    </div>\r\n</div>";
+},"useData":true});
+
+/***/ }),
+/* 65 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Handlebars = __webpack_require__(2);
 function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
 module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
@@ -13888,7 +14351,9 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                    <div class=\"operation-button-wrapper\">\r\n                        <div class=\"error permission\"></div>\r\n                        <button class=\"operation-submit add\" id=\"add-item-submit\">Add Item</button>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n            <div id=\"add-column-wrapper\" class=\"operation-body-container "
     + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"unless","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "\">\r\n                <div class=\"operation-title\">Add Column</div>\r\n                <div class=\"operation-description\">Create a new column.</div>\r\n                <div class=\"operation-add-column-wrapper\">\r\n                    <label for=\"add-column-input\">Column Name:</label>\r\n                    <div class=\"error\"></div>\r\n                    <input class=\"operation-text-input\" id=\"add-column-input\" />\r\n                    <button class=\"operation-submit add\" id=\"add-column-submit\">Add Column</button>\r\n                </div>\r\n            </div>\r\n        </div>\r\n";
+    + "\">\r\n                <div class=\"operation-title\">Add Column</div>\r\n                <div class=\"operation-description\">Create a new column.</div>\r\n                <div class=\"operation-add-column-wrapper\">\r\n                    <label for=\"add-column-input\">Column Name:</label>\r\n                    <div class=\"error\"></div>\r\n                    <input class=\"operation-text-input\" id=\"add-column-input\" />\r\n                    <button class=\"operation-submit add\" id=\"add-column-submit\">Add Column</button>\r\n                </div>\r\n"
+    + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.picture_column : depth0),{"name":"unless","hash":{},"fn":container.program(8, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "            </div>\r\n        </div>\r\n";
 },"2":function(container,depth0,helpers,partials,data) {
     return "active";
 },"4":function(container,depth0,helpers,partials,data) {
@@ -13903,30 +14368,33 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + "\"></div>\r\n                            <input class=\"operation-text-input add-item-input\" data-column=\""
     + alias2(alias1(depth0, depth0))
     + "\" />\r\n                        </div>\r\n";
-},"8":function(container,depth0,helpers,partials,data,blockParams,depths) {
+},"8":function(container,depth0,helpers,partials,data) {
+    return "                <div class=\"or-separator\">or</div>\r\n                <div class=\"operation-title\">Add Picture Column</div>\r\n                <div class=\"operation-description\">Create a column to contain pictures.</div>\r\n                <div class=\"operation-picture-column-wrapper\">\r\n                    <label for=\"add-column-input\">Picture Column Name:</label>\r\n                    <div class=\"error\"></div>\r\n                    <input class=\"operation-text-input\" id=\"add-picture-column-input\" />\r\n                    <button class=\"operation-submit add\" id=\"add-picture-column-submit\">Add Picture Column</button>\r\n                </div>\r\n";
+},"10":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
   return "        <div id=\"operation-tab-wrapper\">\r\n            <span class=\"operation-tab "
     + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.inventory_length : depth0),{"name":"unless","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + " "
     + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"unless","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\" id=\"edit-column-tab\" data-wrapper=\"#edit-column-wrapper\">Edit Column</span>\r\n            <span class=\"operation-tab "
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.inventory_length : depth0),{"name":"if","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.program(4, data, 0, blockParams, depths),"data":data})) != null ? stack1 : "")
     + "\" id=\"edit-item-tab\" data-wrapper=\"#edit-item-wrapper\">Edit Item</span>\r\n        </div>\r\n\r\n        <div class=\"operation-body-wrapper\">\r\n            <div id=\"edit-item-wrapper\" class=\"operation-body-container "
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.inventory_length : depth0),{"name":"if","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\">\r\n                <div class=\"operation-title\">Edit Item</div>\r\n                <div class=\"active\" id=\"edit-step-1\">\r\n                    <div class=\"operation-description\">Pick an item to edit.</div>\r\n                    <div id=\"search-wrapper\">\r\n                        <input id=\"operation-search-input\" data-table=\"#operation-table\"/>\r\n                        <div class=\"search-filter-wrapper\">\r\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(9, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "                        </div>\r\n                    </div>\r\n                    <div class=\"table-scroll-wrapper\">\r\n                        <table id=\"operation-table\" class=\"table-container edit\">\r\n                            <thead>\r\n                                <tr>\r\n                                    <th class=\"action\">Action</th>\r\n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(11, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "                        </div>\r\n                    </div>\r\n                    <div class=\"table-scroll-wrapper\">\r\n                        <table id=\"operation-table\" class=\"table-container edit\">\r\n                            <thead>\r\n                                <tr>\r\n                                    <th class=\"action\">Action</th>\r\n"
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(13, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                                </tr>\r\n                            </thead>\r\n\r\n                            <tbody>\r\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.inventory : depth0),{"name":"each","hash":{},"fn":container.program(13, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.inventory : depth0),{"name":"each","hash":{},"fn":container.program(15, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                            </tbody>\r\n                        </table>\r\n                    </div>\r\n                </div>\r\n                <div id=\"edit-step-2\">\r\n                    <div class=\"operation-description\">Edit an existing item.</div>\r\n                    <div class=\"operation-edit-item-wrapper\">\r\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(15, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(17, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                        <div class=\"operation-button-wrapper\">\r\n                            <div class=\"error permission\"></div>\r\n                            <button id=\"edit-back-button\">Back</button>\r\n                            <button class=\"operation-submit edit\" id=\"edit-item-submit\">Edit Item</button>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n\r\n            <div id=\"edit-column-wrapper\" class=\"operation-body-container "
     + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.inventory : depth0),{"name":"unless","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\">\r\n                <div class=\"operation-title\">Edit Column</div>\r\n                <div class=\"operation-description\">Edit an existing column.</div>\r\n                <div id=\"operation-edit-column-wrapper\">\r\n                    <div class=\"error permission\"></div>\r\n                    <select id=\"edit-prev-column-input\">\r\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(17, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(19, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                    </select> to\r\n                    <input class=\"operation-text-input\" id=\"edit-column-input\" />\r\n                </div>\r\n                <div class=\"operation-button-wrapper\">\r\n                    <button class=\"operation-submit edit\" id=\"edit-column-submit\">Edit Column</button>\r\n                </div>\r\n            </div>\r\n        </div>\r\n";
-},"9":function(container,depth0,helpers,partials,data) {
+},"11":function(container,depth0,helpers,partials,data) {
     var alias1=container.lambda, alias2=container.escapeExpression;
 
   return "                                <span class=\"check-box-container\">\r\n                                    <input type=\"checkbox\" id=\""
@@ -13938,7 +14406,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + "-operation-checkbox\" class=\"check-box-wrapper\">\r\n                                        <span class=\"check-box\">\r\n                                            <svg width=\"12px\" height=\"10px\">\r\n                                                <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                                            </svg>\r\n                                        </span>\r\n                                        <span class=\"check-box-label\">"
     + alias2(alias1(depth0, depth0))
     + "</span>\r\n                                    </label>\r\n                                </span>\r\n";
-},"11":function(container,depth0,helpers,partials,data) {
+},"13":function(container,depth0,helpers,partials,data) {
     var alias1=container.lambda, alias2=container.escapeExpression;
 
   return "                                        <th class=\"custom-column\" data-value=\""
@@ -13946,15 +14414,15 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + "\"><span class=\"column-text\">"
     + alias2(alias1(depth0, depth0))
     + "</span><span class=\"inline action\"><span class=\"edit-column-button\"><i class=\"fas fa-pencil-alt\"></i></span><span class=\"column-delete-button\"><i class=\"far fa-trash-alt\"></i></span></span></th>\r\n";
-},"13":function(container,depth0,helpers,partials,data,blockParams,depths) {
+},"15":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var alias1=container.escapeExpression;
 
   return "                                    <tr data-id=\""
     + alias1(container.lambda((depth0 != null ? depth0["0"] : depth0), depth0))
     + "\">\r\n                                        <td class=\"action\"><span class=\"edit-item-button\"><i class=\"fas fa-pencil-alt\"></i></span><span class=\"delete-item-button\"><i class=\"far fa-trash-alt\"></i></span></td>\r\n                                        "
-    + alias1(__default(__webpack_require__(31)).call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0["1"] : depth0),(depths[1] != null ? depths[1].columns : depths[1]),{"name":"tableHandler","hash":{},"data":data}))
+    + alias1(__default(__webpack_require__(35)).call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0["1"] : depth0),(depths[1] != null ? depths[1].columns : depths[1]),{"name":"tableHandler","hash":{},"data":data}))
     + "\r\n                                    </tr>\r\n";
-},"15":function(container,depth0,helpers,partials,data) {
+},"17":function(container,depth0,helpers,partials,data) {
     var alias1=container.lambda, alias2=container.escapeExpression;
 
   return "                            <div id=\"edit-item-container\">\r\n                                <label for=\"edit-item-input\">"
@@ -13964,7 +14432,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + "\"></div>\r\n                                <input class=\"operation-text-input edit-item-input\" data-column=\""
     + alias2(alias1(depth0, depth0))
     + "\" />\r\n                            </div>\r\n";
-},"17":function(container,depth0,helpers,partials,data) {
+},"19":function(container,depth0,helpers,partials,data) {
     var alias1=container.lambda, alias2=container.escapeExpression;
 
   return "                            <option value=\""
@@ -13972,7 +14440,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + "\">"
     + alias2(alias1(depth0, depth0))
     + "</option>\r\n";
-},"19":function(container,depth0,helpers,partials,data,blockParams,depths) {
+},"21":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
   return "        <div id=\"operation-tab-wrapper\">\r\n            <span class=\"operation-tab "
@@ -13983,29 +14451,29 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + "\" id=\"delete-item-tab\" data-wrapper=\"#delete-item-wrapper\">Delete Item</span>\r\n        </div>\r\n\r\n        <div class=\"operation-body-wrapper\">\r\n            <div id=\"delete-item-wrapper\" class=\"operation-body-container "
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.inventory_length : depth0),{"name":"if","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\">\r\n                <div class=\"operation-title\">Delete Item</div>\r\n                <div class=\"active\" id=\"delete-step-1\">\r\n                    <div class=\"operation-description\">Pick an item to delete.</div>\r\n                    <div id=\"search-wrapper\">\r\n                        <input id=\"operation-search-input\" data-table=\"#operation-table\"/>\r\n                        <div class=\"search-filter-wrapper\">\r\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(9, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "                        </div>\r\n                    </div>\r\n                    <div class=\"table-scroll-wrapper\">\r\n                        <table id=\"operation-table\" class=\"table-container delete\">\r\n                            <thead>\r\n                                <tr>\r\n                                    <th class=\"action\">Action</th>\r\n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(11, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "                        </div>\r\n                    </div>\r\n                    <div class=\"table-scroll-wrapper\">\r\n                        <table id=\"operation-table\" class=\"table-container delete\">\r\n                            <thead>\r\n                                <tr>\r\n                                    <th class=\"action\">Action</th>\r\n"
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(13, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                                </tr>\r\n                            </thead>\r\n\r\n                            <tbody>\r\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.inventory : depth0),{"name":"each","hash":{},"fn":container.program(13, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.inventory : depth0),{"name":"each","hash":{},"fn":container.program(15, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                            </tbody>\r\n                        </table>\r\n                    </div>\r\n                </div>\r\n                <div id=\"delete-step-2\">\r\n                    <div class=\"operation-description\">Delete an existing item.</div>\r\n                    <div class=\"operation-delete-item-wrapper\">\r\n                        <table id=\"delete-item-container\" class=\"table-container\">\r\n\r\n                        </table>\r\n                        <div class=\"operation-button-wrapper\">\r\n                            <div class=\"error permission\"></div>\r\n                            <button id=\"delete-back-button\">Back</button>\r\n                            <button class=\"operation-submit delete\" id=\"delete-item-submit\">Delete Item</button>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n\r\n            <div id=\"delete-column-wrapper\" class=\"operation-body-container "
     + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.inventory_length : depth0),{"name":"unless","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\">\r\n                <div class=\"operation-title\">Delete Column</div>\r\n                <div class=\"operation-description\">Delete an existing column.</div>\r\n                <div id=\"operation-delete-column-wrapper\">\r\n                    <div class=\"error permission\"></div>\r\n                    <select id=\"delete-column-input\">\r\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(17, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(19, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                    </select>\r\n                    <button class=\"operation-submit delete\" id=\"delete-column-submit\">Delete Column</button>\r\n                </div>\r\n            </div>\r\n        </div>\r\n";
-},"21":function(container,depth0,helpers,partials,data) {
-    return "        <div class=\"operation-body-wrapper\">\r\n            <div class=\"operation-title\">Import</div>\r\n            <p class=\"operation-description\">Import a excel or csv file.</p>\r\n            <div id=\"file-upload-wrapper\">\r\n                <a id=\"file-upload-link\">Choose a file</a>\r\n                <input type=\"file\" id=\"file-upload\" />\r\n            </div>\r\n        </div>\r\n";
 },"23":function(container,depth0,helpers,partials,data) {
+    return "        <div class=\"operation-body-wrapper\">\r\n            <div class=\"operation-title\">Import</div>\r\n            <p class=\"operation-description\">Import a excel or csv file.</p>\r\n            <div id=\"file-upload-wrapper\">\r\n                <a id=\"file-upload-link\">Choose a file</a>\r\n                <input type=\"file\" id=\"file-upload\" />\r\n            </div>\r\n        </div>\r\n";
+},"25":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
   return "        <div id=\"import-wrapper\" class=\"operation-body-wrapper\">\r\n            <div class=\"operation-title\">Confirm data</div>\r\n            <p class=\"operation-description\">Map each column to an existing field or add a new field.</p>\r\n            <div class=\"table-scroll-wrapper import\">\r\n                <table id=\"import-table\" class=\"table-container\">\r\n                    <thead>\r\n                        <tr>\r\n"
-    + ((stack1 = helpers.each.call(alias1,((stack1 = (depth0 != null ? depth0.import_data : depth0)) != null ? stack1.headers : stack1),{"name":"each","hash":{},"fn":container.program(24, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "                        </tr>\r\n                        <tr>\r\n"
     + ((stack1 = helpers.each.call(alias1,((stack1 = (depth0 != null ? depth0.import_data : depth0)) != null ? stack1.headers : stack1),{"name":"each","hash":{},"fn":container.program(26, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "                        </tr>\r\n                        <tr>\r\n"
+    + ((stack1 = helpers.each.call(alias1,((stack1 = (depth0 != null ? depth0.import_data : depth0)) != null ? stack1.headers : stack1),{"name":"each","hash":{},"fn":container.program(28, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                        </tr>\r\n                    </thead>\r\n                    <tbody>\r\n"
-    + ((stack1 = helpers.each.call(alias1,((stack1 = (depth0 != null ? depth0.import_data : depth0)) != null ? stack1.data : stack1),{"name":"each","hash":{},"fn":container.program(28, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(alias1,((stack1 = (depth0 != null ? depth0.import_data : depth0)) != null ? stack1.data : stack1),{"name":"each","hash":{},"fn":container.program(30, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                    </tbody>\r\n                </table>\r\n            </div>\r\n            <div class=\"operation-button-wrapper\">\r\n                <div class=\"error permission\"></div>\r\n                <button id=\"import-submit-button\" class=\"add\">Submit</button>\r\n            <div>\r\n        <div>\r\n";
-},"24":function(container,depth0,helpers,partials,data) {
+},"26":function(container,depth0,helpers,partials,data) {
     var alias1=container.lambda, alias2=container.escapeExpression;
 
   return "                                <th><input class=\"header-input\" value=\""
@@ -14013,71 +14481,71 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + "\" data-column=\""
     + alias2(alias1((data && data.index), depth0))
     + "\"/></th>\r\n";
-},"26":function(container,depth0,helpers,partials,data) {
+},"28":function(container,depth0,helpers,partials,data) {
     return "                                <th><input class=\"include-input\" type=\"checkbox\" data-column=\""
     + container.escapeExpression(container.lambda((data && data.index), depth0))
     + "\" checked /> Include</th>\r\n";
-},"28":function(container,depth0,helpers,partials,data) {
+},"30":function(container,depth0,helpers,partials,data) {
     var stack1;
 
   return "                            <tr>\r\n"
-    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,{"name":"each","hash":{},"fn":container.program(29, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),depth0,{"name":"each","hash":{},"fn":container.program(31, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                            </tr>\r\n";
-},"29":function(container,depth0,helpers,partials,data) {
+},"31":function(container,depth0,helpers,partials,data) {
     return "                                    <td class=\"included\">"
     + container.escapeExpression(container.lambda(depth0, depth0))
     + "</td>\r\n";
-},"31":function(container,depth0,helpers,partials,data) {
-    return "        <div id=\"export-wrapper\">\r\n            <div class=\"operation-title\">Export</div>\r\n            <p class=\"operation-description\">Export as a excel file, csv file, or json.</p>\r\n            <div id=\"export-error\" class=\"error\"></div>\r\n            <div id=\"file-upload-wrapper\">\r\n                <select class=\"select-input\" id=\"export-type-input\">\r\n                    <option value=\"json\">json</option>\r\n                    <option value=\"excel\">excel</option>\r\n                    <option value=\"csv\">csv</option>\r\n                </select>\r\n                <button id=\"export-submit\">Export</button>\r\n                <a id=\"export-download\"></a>\r\n            </div>\r\n        </div>\r\n";
 },"33":function(container,depth0,helpers,partials,data) {
+    return "        <div id=\"export-wrapper\">\r\n            <div class=\"operation-title\">Export</div>\r\n            <p class=\"operation-description\">Export as a excel file, csv file, or json.</p>\r\n            <div id=\"export-error\" class=\"error\"></div>\r\n            <div id=\"file-upload-wrapper\">\r\n                <select class=\"select-input\" id=\"export-type-input\">\r\n                    <option value=\"json\">json</option>\r\n                    <option value=\"excel\">excel</option>\r\n                    <option value=\"csv\">csv</option>\r\n                </select>\r\n                <button id=\"export-submit\">Export</button>\r\n                <a id=\"export-download\"></a>\r\n            </div>\r\n        </div>\r\n";
+},"35":function(container,depth0,helpers,partials,data) {
     return "        <div id=\"drop-table-wrapper\">\r\n            <div class=\"operation-title\">Drop Table</div>\r\n            <p class=\"operation-description\">Delete ALL data/columns</p>\r\n            <p class=\"operation-description\">This can't be UNDONE!</p>\r\n            <div class=\"operation-button-wrapper\">\r\n                <div class=\"error permission\"></div>\r\n                <button class=\"delete\" id=\"drop-table-submit\">DELETE TABLE</button>\r\n            </div>\r\n        </div>\r\n";
-},"35":function(container,depth0,helpers,partials,data,blockParams,depths) {
+},"37":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
   return "        <div class=\"operation-body-wrapper\">\r\n            <div id=\"received-item-wrapper\" class=\"operation-body-container "
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.inventory_length : depth0),{"name":"if","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\">\r\n                <div class=\"operation-title\">Received</div>\r\n                <div class=\"active\" id=\"received-step-1\">\r\n                    <div class=\"operation-description\">Pick an item that was received.</div>\r\n                    <div id=\"search-wrapper\">\r\n                        <input id=\"operation-search-input\" data-table=\"#operation-table\"/>\r\n                        <div class=\"search-filter-wrapper\">\r\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(9, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "                        </div>\r\n                    </div>\r\n                    <div class=\"table-scroll-wrapper\">\r\n                        <table id=\"operation-table\" class=\"table-container add\">\r\n                            <thead>\r\n                                <tr>\r\n                                    <th class=\"action\">Action</th>\r\n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(11, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "                        </div>\r\n                    </div>\r\n                    <div class=\"table-scroll-wrapper\">\r\n                        <table id=\"operation-table\" class=\"table-container add\">\r\n                            <thead>\r\n                                <tr>\r\n                                    <th class=\"action\">Action</th>\r\n"
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(13, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                                </tr>\r\n                            </thead>\r\n\r\n                            <tbody>\r\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.inventory : depth0),{"name":"each","hash":{},"fn":container.program(13, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.inventory : depth0),{"name":"each","hash":{},"fn":container.program(15, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                            </tbody>\r\n                        </table>\r\n                    </div>\r\n                </div>\r\n                <div id=\"received-step-2\">\r\n                    <div class=\"operation-description\">How many have you received?</div>\r\n                    <div class=\"operation-received-item-wrapper\">\r\n                        <table id=\"received-item-container\" class=\"table-container\">\r\n\r\n                        </table>\r\n                        <div class=\"operation-button-wrapper\">\r\n                            <label for=\"details-input\">Quantity Received:</label>\r\n                            <div class=\"error\"></div>\r\n                            <input type=\"number\" id=\"received-input\" min=\"1\" class=\"operation-text-input\" />\r\n                            <label for=\"details-input\">Extra Details:</label>\r\n                            <textarea id=\"details-input\" class=\"operation-textarea-input\"></textarea>\r\n                        </div>\r\n                        <div class=\"operation-button-wrapper\">\r\n                            <button id=\"received-back-button\">Back</button>\r\n                            <button class=\"operation-submit add\" id=\"received-item-submit\">Submit</button>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n";
-},"37":function(container,depth0,helpers,partials,data,blockParams,depths) {
+},"39":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
   return "        <div class=\"operation-body-wrapper\">\r\n            <div id=\"damaged-item-wrapper\" class=\"operation-body-container "
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.inventory_length : depth0),{"name":"if","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\">\r\n                <div class=\"operation-title\">Damaged</div>\r\n                <div class=\"active\" id=\"damaged-step-1\">\r\n                    <div class=\"operation-description\">Pick an item that was damaged.</div>\r\n                    <div id=\"search-wrapper\">\r\n                        <input id=\"operation-search-input\" data-table=\"#operation-table\"/>\r\n                        <div class=\"search-filter-wrapper\">\r\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(9, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "                        </div>\r\n                    </div>\r\n                    <div class=\"table-scroll-wrapper\">\r\n                        <table id=\"operation-table\" class=\"table-container delete\">\r\n                            <thead>\r\n                                <tr>\r\n                                    <th class=\"action\">Action</th>\r\n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(11, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "                        </div>\r\n                    </div>\r\n                    <div class=\"table-scroll-wrapper\">\r\n                        <table id=\"operation-table\" class=\"table-container delete damaged\">\r\n                            <thead>\r\n                                <tr>\r\n                                    <th class=\"action\">Action</th>\r\n"
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(13, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                                </tr>\r\n                            </thead>\r\n\r\n                            <tbody>\r\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.inventory : depth0),{"name":"each","hash":{},"fn":container.program(13, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.inventory : depth0),{"name":"each","hash":{},"fn":container.program(15, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                            </tbody>\r\n                        </table>\r\n                    </div>\r\n                </div>\r\n                <div id=\"damaged-step-2\">\r\n                    <div class=\"operation-description\">How many are damaged?</div>\r\n                    <div class=\"operation-damaged-item-wrapper\">\r\n                        <table id=\"damaged-item-container\" class=\"table-container\">\r\n\r\n                        </table>\r\n                        <div class=\"operation-button-wrapper\">\r\n                            <label for=\"details-input\">Quantity Damaged:</label>\r\n                            <div class=\"error\"></div>\r\n                            <input type=\"number\" id=\"damaged-input\" min=\"1\" class=\"operation-text-input\" />\r\n                            <label for=\"details-input\">Extra Details:</label>\r\n                            <textarea id=\"details-input\" class=\"operation-textarea-input\"></textarea>\r\n                        </div>\r\n                        <div class=\"operation-button-wrapper\">\r\n                            <button id=\"damaged-back-button\">Back</button>\r\n                            <button class=\"operation-submit delete\" id=\"damaged-item-submit\">Submit</button>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n";
-},"39":function(container,depth0,helpers,partials,data,blockParams,depths) {
+},"41":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
   return "        <div class=\"operation-body-wrapper\">\r\n            <div id=\"reset-cost-item-wrapper\" class=\"operation-body-container "
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.inventory_length : depth0),{"name":"if","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\">\r\n                <div class=\"operation-title\">Reset Cost</div>\r\n                <div class=\"active\" id=\"reset-cost-step-1\">\r\n                    <div class=\"operation-description\">Pick an item to reset the cost.</div>\r\n                    <div id=\"search-wrapper\">\r\n                        <input id=\"operation-search-input\" data-table=\"#operation-table\"/>\r\n                        <div class=\"search-filter-wrapper\">\r\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(9, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "                        </div>\r\n                    </div>\r\n                    <div class=\"table-scroll-wrapper\">\r\n                        <table id=\"operation-table\" class=\"table-container edit\">\r\n                            <thead>\r\n                                <tr>\r\n                                    <th class=\"action\">Action</th>\r\n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(11, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "                        </div>\r\n                    </div>\r\n                    <div class=\"table-scroll-wrapper\">\r\n                        <table id=\"operation-table\" class=\"table-container edit reset-cost\">\r\n                            <thead>\r\n                                <tr>\r\n                                    <th class=\"action\">Action</th>\r\n"
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(13, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                                </tr>\r\n                            </thead>\r\n\r\n                            <tbody>\r\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.inventory : depth0),{"name":"each","hash":{},"fn":container.program(13, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.inventory : depth0),{"name":"each","hash":{},"fn":container.program(15, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                            </tbody>\r\n                        </table>\r\n                    </div>\r\n                </div>\r\n                <div id=\"reset-cost-step-2\">\r\n                    <div class=\"operation-description\">Edit the cost</div>\r\n                    <div class=\"operation-reset-cost-item-wrapper\">\r\n                        <table id=\"reset-cost-item-container\" class=\"table-container\">\r\n\r\n                        </table>\r\n                        <div class=\"operation-button-wrapper\">\r\n                            <label for=\"details-input\">New Cost:</label>\r\n                            <div class=\"error\"></div>\r\n                            <input type=\"number\" id=\"reset-cost-input\" min=\"1\" class=\"operation-text-input\" />\r\n                            <label for=\"details-input\">Extra Details:</label>\r\n                            <textarea id=\"details-input\" class=\"operation-textarea-input\"></textarea>\r\n                        </div>\r\n                        <div class=\"operation-button-wrapper\">\r\n                            <button id=\"reset-cost-back-button\">Back</button>\r\n                            <button class=\"operation-submit edit\" id=\"reset-cost-item-submit\">Submit</button>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n";
-},"41":function(container,depth0,helpers,partials,data,blockParams,depths) {
+},"43":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
   return "        <div class=\"operation-body-wrapper\">\r\n            <div id=\"reset-price-item-wrapper\" class=\"operation-body-container "
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.inventory_length : depth0),{"name":"if","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\">\r\n                <div class=\"operation-title\">Reset Price</div>\r\n                <div class=\"active\" id=\"reset-price-step-1\">\r\n                    <div class=\"operation-description\">Pick an item to reset the price.</div>\r\n                    <div id=\"search-wrapper\">\r\n                        <input id=\"operation-search-input\" data-table=\"#operation-table\"/>\r\n                        <div class=\"search-filter-wrapper\">\r\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(9, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "                        </div>\r\n                    </div>\r\n                    <div class=\"table-scroll-wrapper\">\r\n                        <table id=\"operation-table\" class=\"table-container edit\">\r\n                            <thead>\r\n                                <tr>\r\n                                    <th class=\"action\">Action</th>\r\n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(11, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "                        </div>\r\n                    </div>\r\n                    <div class=\"table-scroll-wrapper\">\r\n                        <table id=\"operation-table\" class=\"table-container edit reset-price\">\r\n                            <thead>\r\n                                <tr>\r\n                                    <th class=\"action\">Action</th>\r\n"
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(13, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                                </tr>\r\n                            </thead>\r\n\r\n                            <tbody>\r\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.inventory : depth0),{"name":"each","hash":{},"fn":container.program(13, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.inventory : depth0),{"name":"each","hash":{},"fn":container.program(15, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "                            </tbody>\r\n                        </table>\r\n                    </div>\r\n                </div>\r\n                <div id=\"reset-price-step-2\">\r\n                    <div class=\"operation-description\">Edit the price.</div>\r\n                    <div class=\"operation-reset-price-item-wrapper\">\r\n                        <table id=\"reset-price-item-container\" class=\"table-container\">\r\n\r\n                        </table>\r\n                        <div class=\"operation-button-wrapper\">\r\n                            <label for=\"details-input\">New Price:</label>\r\n                            <div class=\"error\"></div>\r\n                            <input type=\"number\" id=\"reset-price-input\" min=\"1\" class=\"operation-text-input\" />\r\n                            <label for=\"details-input\">Extra Details:</label>\r\n                            <textarea id=\"details-input\" class=\"operation-textarea-input\"></textarea>\r\n                        </div>\r\n                        <div class=\"operation-button-wrapper\">\r\n                            <button id=\"reset-price-back-button\">Back</button>\r\n                            <button class=\"operation-submit edit\" id=\"reset-price-item-submit\">Submit</button>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
@@ -14085,33 +14553,33 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
   return "<div id=\"operation-popup-wrapper\">\r\n"
     + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","add",{"name":"ifCond","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
-    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","edit",{"name":"ifCond","hash":{},"fn":container.program(8, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","edit",{"name":"ifCond","hash":{},"fn":container.program(10, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
-    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","delete",{"name":"ifCond","hash":{},"fn":container.program(19, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","delete",{"name":"ifCond","hash":{},"fn":container.program(21, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
-    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","import",{"name":"ifCond","hash":{},"fn":container.program(21, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","import",{"name":"ifCond","hash":{},"fn":container.program(23, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
-    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","import2",{"name":"ifCond","hash":{},"fn":container.program(23, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","import2",{"name":"ifCond","hash":{},"fn":container.program(25, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
-    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","export",{"name":"ifCond","hash":{},"fn":container.program(31, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","export",{"name":"ifCond","hash":{},"fn":container.program(33, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
-    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","drop_table",{"name":"ifCond","hash":{},"fn":container.program(33, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","drop_table",{"name":"ifCond","hash":{},"fn":container.program(35, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
-    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","received",{"name":"ifCond","hash":{},"fn":container.program(35, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","received",{"name":"ifCond","hash":{},"fn":container.program(37, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
-    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","damaged",{"name":"ifCond","hash":{},"fn":container.program(37, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","damaged",{"name":"ifCond","hash":{},"fn":container.program(39, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
-    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","reset_cost",{"name":"ifCond","hash":{},"fn":container.program(39, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","reset_cost",{"name":"ifCond","hash":{},"fn":container.program(41, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
-    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","reset_price",{"name":"ifCond","hash":{},"fn":container.program(41, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(alias1,(depth0 != null ? depth0.type : depth0),"==","reset_price",{"name":"ifCond","hash":{},"fn":container.program(43, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "</div>";
 },"useData":true,"useDepths":true});
 
 /***/ }),
-/* 57 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var Handlebars = __webpack_require__(3);
+var Handlebars = __webpack_require__(2);
 function __default(obj) { return obj && (obj.__esModule ? obj["default"] : obj); }
 module.exports = (Handlebars["default"] || Handlebars).template({"1":function(container,depth0,helpers,partials,data) {
     var stack1;
@@ -14168,7 +14636,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true});
 
 /***/ }),
-/* 58 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var $ = __webpack_require__(5);
@@ -14216,4 +14684,4 @@ $(document).ready(function() {
 });
 
 /***/ })
-],[47]);
+],[53]);

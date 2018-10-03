@@ -260,7 +260,11 @@
     color: #eaeaea;
 }
 
-.business-name.active {
+.business-item {
+    background: #2e2e2e;
+}
+
+.establishment.active {
     background: #6577cf;
 }
 
@@ -277,7 +281,7 @@
     color: #e8e6e6;
 }
 
-.create-store-button {
+#create-store-button {
     padding: 4px 0 4px 0;
     color: #ffffff;
     text-align: center;
@@ -320,10 +324,18 @@
     padding: 20px;
     color: #6c7fdb;
 }
+
+#create-store-link {
+    color: #94faf7;
+    text-decoration: underline;
+    text-align: center;
+    margin: 13px 0 0 -21px;
+    cursor: pointer;
+}
 /* EMPTY INVENTORY */
 
 /* OPERATION OVERLAY */
-.operation-add-column-wrapper {
+.operation-add-column-wrapper, .operation-create-store-wrapper {
     width: 279px;
     margin: 25px auto;
 }
@@ -331,6 +343,10 @@
 .operation-add-item-wrapper, .operation-edit-item-wrapper {
     width: 167px;
     margin: 25px auto;
+}
+
+#add-column-wrapper {
+    overflow-y: auto;
 }
 
 #add-column-input {
@@ -344,6 +360,17 @@
 
 .add-item-input, .edit-item-input {
     margin: 10px 0;
+}
+
+.or-separator {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 17px;
+}
+
+.operation-picture-column-wrapper {
+    width: 304px;
+    margin: 25px auto;
 }
 
 #operation-edit-column-wrapper {
@@ -419,7 +446,16 @@
     cursor: pointer;
 }
 
-#file-upload {
+.picture-icon {
+    text-align: center;
+}
+
+.file-upload-button {
+    padding: 6px 10px;
+    cursor: pointer;
+}
+
+#file-upload, #item-file-upload {
     display: none;
 }
 

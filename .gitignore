@@ -103,3 +103,4 @@ node_modules
 database.py
 settings_secret.py
 settings.py
+templates/bundle/assets/files/
