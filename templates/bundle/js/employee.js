@@ -11891,17 +11891,19 @@ module.exports = function() {
 /* 65 */,
 /* 66 */,
 /* 67 */,
-/* 68 */
+/* 68 */,
+/* 69 */,
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(27);
-__webpack_require__(69);
+__webpack_require__(71);
 __webpack_require__(8);
 
 //handlebars
 //var inventoryTemplate = require('./../handlebars/inventory/inventory.hbs');
 //var rowTemplate = require('./../handlebars/inventory/row.hbs');
-var employeeOperationTemplate = __webpack_require__(70);
+var employeeOperationTemplate = __webpack_require__(72);
 
 //libraries
 var $ = __webpack_require__(5);
@@ -12163,13 +12165,13 @@ $(document).ready(function() {
 });
 
 /***/ }),
-/* 69 */
+/* 71 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 70 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(2);
@@ -12365,4 +12367,4 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true});
 
 /***/ })
-],[68]);
+],[70]);

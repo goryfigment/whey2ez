@@ -7,6 +7,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^register/$', site.register, name='register_page'),
     url(r'^login/$', site.login, name='login_page'),
+    url(r'^forgot_password/$', site.forgot_password, name='forgot_password'),
     url(r'^inventory/$', site.inventory, name='inventory_page'),
     url(r'^store/$', site.store, name='store_page'),
     url(r'^employee/$', site.employee, name='employee_page'),
@@ -19,6 +20,8 @@ urlpatterns = [
     url(r'^account/login/$', account_handler.user_login, name='login'),
     url(r'^account/settings/$', account_handler.settings, name='settings'),
     url(r'^account/save_settings/$', account_handler.save_settings, name='save_settings'),
+    url(r'^account/reset_password/$', account_handler.reset_password, name='reset_password'),
+    url(r'^account/change_password/$', account_handler.change_password, name='change_password'),
     url(r'^logout/$', account_handler.user_logout, name='logout'),
 
     # Operation

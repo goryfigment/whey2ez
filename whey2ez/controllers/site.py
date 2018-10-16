@@ -5,6 +5,7 @@ from django.forms.models import model_to_dict
 from whey2ez.modules.base import decimal_format, get_boss
 from whey2ez.models import UserType, Employee, User, ItemLog, Store
 import json
+import time
 
 
 def error_page(request):
@@ -57,6 +58,29 @@ def login(request):
         return HttpResponseRedirect('/inventory/')
 
     return render(request, 'login.html', data)
+
+
+def forgot_password(request):
+    data = {
+        'base_url': get_base_url(),
+        'expired': False
+    }
+
+    if 'code' in request.GET:
+        current_user = User.objects.get(reset_link=request.GET['code'])
+
+        print current_user.reset_date
+        print int(round(time.time()))
+        print (current_user.reset_date - int(round(time.time())))
+
+        if (int(round(time.time())) - current_user.reset_date) > 86400:
+            data['expired'] = True
+
+    # If user is login redirect to overview
+    if request.user.is_authenticated():
+        return HttpResponseRedirect('/inventory/')
+
+    return render(request, 'forgot_password.html', data)
 
 
 def inventory(request):
@@ -136,8 +160,6 @@ def employee(request):
         store_id = str(current_store['id'])
         store_dict[store_id] = current_store
         store_dict[store_id]['transactions'] = []
-
-    print employees_list
 
     data = {
         'base_url': get_base_url(),

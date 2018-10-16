@@ -294,6 +294,10 @@
     padding: 5px 0;
 }
 
+.bulletin-wrapper {
+    padding: 0 2px 0 0;
+}
+
 .separator {
     margin: auto 0 5px 0;
 }
@@ -444,6 +448,15 @@
 
 #file-upload-link {
     cursor: pointer;
+}
+
+.link-columns-button {
+    padding: 8px;
+    color: yellow;
+}
+
+.store-icon-wrapper {
+    float: right;
 }
 
 .picture-icon {

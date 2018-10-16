@@ -12635,19 +12635,21 @@ module.exports = function(elem, list, options) {
 /* 70 */,
 /* 71 */,
 /* 72 */,
-/* 73 */
+/* 73 */,
+/* 74 */,
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(27);
-__webpack_require__(74);
+__webpack_require__(76);
 __webpack_require__(8);
 
 //handlebars
-var transactionTemplate = __webpack_require__(75);
-var emptyTransactionTemplate = __webpack_require__(76);
-var transactionOperationTemplate = __webpack_require__(77);
-var receiptSettingsTemplate = __webpack_require__(78);
-var transactionSettingsTemplate = __webpack_require__(80);
+var transactionTemplate = __webpack_require__(77);
+var emptyTransactionTemplate = __webpack_require__(78);
+var transactionOperationTemplate = __webpack_require__(79);
+var receiptSettingsTemplate = __webpack_require__(80);
+var transactionSettingsTemplate = __webpack_require__(82);
 var storeItemTemplate = __webpack_require__(26);
 
 //libraries
@@ -13119,13 +13121,13 @@ $(document).ready(function() {
 });
 
 /***/ }),
-/* 74 */
+/* 76 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 75 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(2);
@@ -13203,7 +13205,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true,"useDepths":true});
 
 /***/ }),
-/* 76 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(2);
@@ -13231,7 +13233,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true});
 
 /***/ }),
-/* 77 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(2);
@@ -13291,7 +13293,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true});
 
 /***/ }),
-/* 78 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(2);
@@ -13393,7 +13395,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=container.escapeExpression;
 
   return "\r\n        <div id=\"receipt-item-wrapper\" class=\"font-1\">\r\n            <div class=\"receipt-item\">\r\n                <span class=\"transaction-item\">"
-    + alias2(__default(__webpack_require__(79)).call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1),(depth0 != null ? depth0.example_item : depth0),{"name":"nameRegex","hash":{},"data":data}))
+    + alias2(__default(__webpack_require__(81)).call(alias1,((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.name : stack1),(depth0 != null ? depth0.example_item : depth0),{"name":"nameRegex","hash":{},"data":data}))
     + "</span>\r\n                <span>"
     + alias2(__default(__webpack_require__(7)).call(alias1,400,"-",__default(__webpack_require__(7)).call(alias1,2,"*",helpers.lookup.call(alias1,(depth0 != null ? depth0.example_item : depth0),((stack1 = (depth0 != null ? depth0.link_columns : depth0)) != null ? stack1.price : stack1),{"name":"lookup","hash":{},"data":data}),{"name":"currencyMath","hash":{},"data":data}),{"name":"currencyMath","hash":{},"data":data}))
     + "</span>\r\n            </div>\r\n\r\n            <div class=\"receipt-item-details\">\r\n                <span class=\"transaction-quantity\">(2 @ "
@@ -13424,7 +13426,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true});
 
 /***/ }),
-/* 79 */
+/* 81 */
 /***/ (function(module, exports) {
 
 module.exports = function(name_regex, item) {
@@ -13439,7 +13441,7 @@ module.exports = function(name_regex, item) {
 };
 
 /***/ }),
-/* 80 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(2);
@@ -13486,4 +13488,4 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true,"useDepths":true});
 
 /***/ })
-],[73]);
+],[75]);

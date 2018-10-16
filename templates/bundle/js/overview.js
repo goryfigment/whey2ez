@@ -12558,21 +12558,23 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 /* 41 */,
 /* 42 */,
 /* 43 */,
-/* 44 */
+/* 44 */,
+/* 45 */,
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(27);
-__webpack_require__(45);
+__webpack_require__(47);
 __webpack_require__(8);
 
 //handlebars
-var emptyTemplate = __webpack_require__(46);
-var overviewOperationTemplate = __webpack_require__(47);
-var overviewTemplate = __webpack_require__(48);
-var salesSummaryTemplate = __webpack_require__(49);
-var productTemplate = __webpack_require__(50);
-var dateHeaderTemplate = __webpack_require__(51);
-var overviewTotalTemplate = __webpack_require__(52);
+var emptyTemplate = __webpack_require__(48);
+var overviewOperationTemplate = __webpack_require__(49);
+var overviewTemplate = __webpack_require__(50);
+var salesSummaryTemplate = __webpack_require__(51);
+var productTemplate = __webpack_require__(52);
+var dateHeaderTemplate = __webpack_require__(53);
+var overviewTotalTemplate = __webpack_require__(54);
 
 //libraries
 var $ = __webpack_require__(5);
@@ -13200,13 +13202,13 @@ function createPieChart(array, wrapper) {
 }
 
 /***/ }),
-/* 45 */
+/* 47 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
 
 /***/ }),
-/* 46 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(2);
@@ -13265,7 +13267,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true});
 
 /***/ }),
-/* 47 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(2);
@@ -13325,7 +13327,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true});
 
 /***/ }),
-/* 48 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(2);
@@ -13335,7 +13337,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,"
 },"useData":true});
 
 /***/ }),
-/* 49 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(2);
@@ -13405,7 +13407,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"useData":true});
 
 /***/ }),
-/* 50 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(2);
@@ -13415,7 +13417,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,"
 },"useData":true});
 
 /***/ }),
-/* 51 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(2);
@@ -13431,7 +13433,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,"
 },"useData":true});
 
 /***/ }),
-/* 52 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Handlebars = __webpack_require__(2);
@@ -13449,4 +13451,4 @@ module.exports = (Handlebars["default"] || Handlebars).template({"compiler":[7,"
 },"useData":true});
 
 /***/ })
-],[44]);
+],[46]);

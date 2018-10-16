@@ -1,5 +1,11 @@
 import json
 import re
+import uuid
+import time
+import smtplib
+from whey2ez.settings_secret import GMAIL, GMAIL_PASSWORD
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from django.http import HttpResponseRedirect, HttpResponseBadRequest, JsonResponse
 from whey2ez.modules.base import render_json
 import whey2ez.modules.checker as checker
@@ -171,3 +177,102 @@ def save_settings(request):
     store.save()
 
     return JsonResponse(model_to_dict(store), safe=False)
+
+
+@data_required(['username', 'base_url'], 'POST')
+def reset_password(request):
+    username = request.POST['username']
+
+    try:
+        if '@' in username:
+            current_user = User.objects.get(email=username)
+        else:
+            current_user = User.objects.get(username=username)
+    except:
+        data = {'success': False,  'error_msg': 'User does not exists.'}
+        return HttpResponseBadRequest(json.dumps(data), 'application/json')
+
+    reset_link = uuid.uuid4().hex
+
+    current_user.reset_link = reset_link
+    current_user.reset_date = int(round(time.time()))
+    current_user.save()
+
+    from_email = "whey2ez@noreply.com"
+    to_email = current_user.email
+    name = current_user.first_name
+    link = request.POST['base_url'] + '/forgot_password?code=' + reset_link
+
+    # Create message container - the correct MIME type is multipart/alternative.
+    msg = MIMEMultipart('alternative')
+    msg['Subject'] = "Whey2eZ - Forgotten Password"
+    msg['From'] = from_email
+    msg['To'] = to_email
+
+    # Create the body of the message (a plain-text and an HTML version).
+    text = "Hi " + name + "!\nWe received a request to reset your Whey2eZ password.\n\n" \
+           "Click the link to change your password: " + link
+    html = """\
+    <html>
+      <head></head>
+      <body>
+        <div>
+        <p>Hi """ + name + """!<br><br>
+           We received a request to reset your Whey2eZ password.<br><br>
+           <a href='""" + link + """'>Click here to change your password.</a>
+        </p>
+      </body>
+    </html>
+    """
+
+    # Record the MIME types of both parts - text/plain and text/html.
+    part1 = MIMEText(text, 'plain')
+    part2 = MIMEText(html, 'html')
+    msg.attach(part1)
+    msg.attach(part2)
+
+    # Send the message via local SMTP server.
+    s = smtplib.SMTP('smtp.gmail.com', 587)
+    s.ehlo()
+    s.starttls()
+    s.login(GMAIL, GMAIL_PASSWORD)
+
+    # sendmail function takes 3 arguments: sender's address, recipient's address
+    s.sendmail(from_email, to_email, msg.as_string())
+    s.quit()
+
+    return JsonResponse({'success': True}, safe=False)
+
+
+@data_required(['password1', 'password2', 'code'], 'POST')
+def change_password(request):
+    password1 = request.POST['password1']
+    password2 = request.POST['password2']
+    current_user = User.objects.get(reset_link=request.POST['code'])
+
+    if (int(round(time.time())) - current_user.reset_date) > 86400:
+        data = {'success': False,  'error_msg': 'Password recovery expired.'}
+        return HttpResponseBadRequest(json.dumps(data), 'application/json')
+
+    if password1 == password2:
+        if not len(password1) >= 8:
+            data = {'success': False,  'error_msg': 'Password must be 8 characters or more.'}
+            return HttpResponseBadRequest(json.dumps(data), 'application/json')
+
+        if not bool(re.search(r'\d', password1)) or not bool(re.search(r'[a-zA-Z]', password1)):
+            data = {'success': False,  'error_msg': 'Invalid password.'}
+            return HttpResponseBadRequest(json.dumps(data), 'application/json')
+
+        current_user.password = helper.create_password(password1)
+        current_user.reset_link = ''
+        current_user.reset_date = 0
+        current_user.save()
+    else:
+        data = {'success': False,  'error_msg': 'Both passwords do not match.'}
+        return HttpResponseBadRequest(json.dumps(data), 'application/json')
+
+    return JsonResponse({'success': True}, safe=False)
+
+
+
+

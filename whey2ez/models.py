@@ -14,7 +14,7 @@ class Store(models.Model):
     link_columns = JSONField()
     include_columns = JSONField()
     columns = JSONField()
-    picture_column = models.CharField(max_length=100, default=None)
+    picture_column = models.CharField(max_length=100, blank=True)
     inventory = JSONField()
     # settings
     order_by = models.CharField(max_length=100, default='none')
@@ -111,6 +111,8 @@ class User(AbstractBaseUser):
     username = models.CharField(max_length=15, unique=True)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
+    reset_link = models.CharField(default=None, max_length=255)
+    reset_date = models.IntegerField(default=None, blank=True)
     is_staff = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=True)
     boss = models.OneToOneField(Boss, default=None, null=True, on_delete=models.CASCADE)
