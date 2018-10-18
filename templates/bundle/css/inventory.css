@@ -459,6 +459,10 @@
     float: right;
 }
 
+.create-transaction-button {
+    padding: 8px;
+}
+
 .picture-icon {
     text-align: center;
 }

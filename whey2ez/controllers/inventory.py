@@ -351,7 +351,6 @@ def import_submit(request):
 
     store.inventory.update(post_inventory)
     store.save()
-
     store.inventory = sort_inventory(store, store.inventory)
 
     return JsonResponse({'store': model_to_dict(store)}, safe=False)

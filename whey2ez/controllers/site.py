@@ -69,10 +69,6 @@ def forgot_password(request):
     if 'code' in request.GET:
         current_user = User.objects.get(reset_link=request.GET['code'])
 
-        print current_user.reset_date
-        print int(round(time.time()))
-        print (current_user.reset_date - int(round(time.time())))
-
         if (int(round(time.time())) - current_user.reset_date) > 86400:
             data['expired'] = True
 

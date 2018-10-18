@@ -1350,6 +1350,14 @@ $(document).ready(function() {
             type: "POST",
             success: function (response) {
                 console.log(JSON.stringify(response));
+                var storeId = response['id'].toString();
+                var $storeContainer = $('.store-container');
+                globals.stores[storeId] = response;
+
+                $storeContainer.empty();
+                $storeContainer.append(storeItemTemplate({'stores': globals.stores}));
+                $('.store-item[data-id="' + storeId + '"]').click();
+                $('#operation-overlay').removeClass('active');
             },
             error: function (response) {
                 if(response.status && response.status == 403) {
