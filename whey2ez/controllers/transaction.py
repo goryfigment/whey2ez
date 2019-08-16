@@ -36,6 +36,7 @@ def inventory_search(request):
             current_data = re.sub(r'[^\w]', '', str(item[data])).lower()
             if search_value in current_data:
                 # Create new data defined by the user
+                print item[price_key]
                 new_data = {'price': item[price_key], 'name': transaction_name_regex(name_key, item), 'id': key}
                 search_results.append(new_data)
                 break

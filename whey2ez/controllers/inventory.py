@@ -139,7 +139,7 @@ def edit_column(request):
     user_settings = current_boss.settings
 
     # Check transaction filters
-    user_settings.transaction_filter['filter'] = [w.replace(prev_column_name, new_column_name) for w in columns]
+    store.transaction_filter = [w.replace(prev_column_name, new_column_name) for w in columns]
 
     if prev_column_name == store.order_by:
         store.order_by = new_column_name
@@ -217,7 +217,7 @@ def delete_column(request):
             linked_columns[key] = False
 
     user_settings = current_boss.settings
-    transaction_filter = user_settings.transaction_filter['filter']
+    transaction_filter = store.transaction_filter
 
     if column_name == store.order_by:
         store.order_by = "none"
