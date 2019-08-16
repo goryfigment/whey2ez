@@ -1,7 +1,6 @@
 # Inventory Management & Point of Sale System
 
-[**Demo Website**](https://sollvmcdemo.pythonanywhere.com/)
-⚠️ Currently getting reworked!
+⚠️ Currently getting reworked! [**Demo Website**](https://sollvmcdemo.pythonanywhere.com/)
 
 ## 📝 Description
 This app allows users to upload resources and files to keep all in one place and easily search or retrieve any resource
