@@ -34,7 +34,7 @@ function init() {
 
     if(globals.active_store != '') {
         var $settingsWrapper = $inventoryWrapper.siblings('#settings-wrapper');
-        $settingsWrapper.append(settingsTemplate({'columns': activeStore['columns'], 'settings': activeStore['settings']}));
+        $settingsWrapper.append(settingsTemplate({'store': activeStore}));
     }
 }
 
@@ -1249,50 +1249,52 @@ $(document).ready(function() {
 
 
     // SAVE SETTINGS
-    //$(document).on('click', '#inventory-settings-submit', function () {
-    //    //Get filters, Get default tax, Get every store tax
-    //    var $orderByInput = $('#order-by-input');
-    //    var $reverseCheckbox = $('#reverse-checkbox');
-    //    var $activeInventory = $('.establishment.active');
-    //
-    //    var postData = {
-    //        id: $activeInventory.attr('data-id'),
-    //        'order_by': $orderByInput.val(),
-    //        'reverse': $reverseCheckbox.is(":checked")
-    //    };
-    //
-    //    $.ajax({
-    //        headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
-    //        url: globals.base_url + '/inventory/save_settings/',
-    //        data: JSON.stringify(postData),
-    //        dataType: 'json',
-    //        type: "POST",
-    //        success: function (response) {
-    //            globals.inventory = response['inventory'];
-    //
-    //            var $inventoryWrapper = $('#inventory-wrapper');
-    //            $inventoryWrapper.empty();
-    //            $inventoryWrapper.append(inventoryTemplate({'columns': globals.columns, 'inventory': globals.inventory}));
-    //
-    //            var $settingResult = $('#settings-result');
-    //            $settingResult.removeClass('denied');
-    //            $settingResult.addClass('success');
-    //            $settingResult.text('Saved!');
-    //            $settingResult.show();
-    //            $settingResult.fadeOut(2000);
-    //        },
-    //        error: function (response) {
-    //            if(response.status && response.status == 403) {
-    //                var $settingResult = $('#settings-result');
-    //                $settingResult.removeClass('success');
-    //                $settingResult.addClass('denied');
-    //                $settingResult.text('Permission Denied');
-    //                $settingResult.show();
-    //                $settingResult.fadeOut(2000);
-    //            }
-    //        }
-    //    });
-    //});
+    $(document).on('click', '#inventory-settings-submit', function () {
+        //Get filters, Get default tax, Get every store tax
+        var $orderByInput = $('#order-by-input');
+        var $reverseCheckbox = $('#reverse-checkbox');
+        var $activeInventory = $('.establishment.active');
+
+        var postData = {
+            id: $activeInventory.attr('data-id'),
+            'order_by': $orderByInput.val(),
+            'reverse': $reverseCheckbox.is(":checked")
+        };
+
+        $.ajax({
+            headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
+            url: globals.base_url + '/inventory/save_settings/',
+            data: JSON.stringify(postData),
+            dataType: 'json',
+            type: "POST",
+            success: function (response) {
+                console.log(JSON.stringify(response))
+
+                globals.stores[response['store_id']]['inventory'] = response['inventory'];
+
+                var $inventoryWrapper = $('#inventory-wrapper');
+                $inventoryWrapper.empty();
+                $inventoryWrapper.append(inventoryTemplate({'store': globals.stores[response['store_id']], 'boss_username': globals.boss_username}));
+
+                var $settingResult = $('#settings-result');
+                $settingResult.removeClass('denied');
+                $settingResult.addClass('success');
+                $settingResult.text('Saved!');
+                $settingResult.show();
+                $settingResult.fadeOut(2000);
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    var $settingResult = $('#settings-result');
+                    $settingResult.removeClass('success');
+                    $settingResult.addClass('denied');
+                    $settingResult.text('Permission Denied');
+                    $settingResult.show();
+                    $settingResult.fadeOut(2000);
+                }
+            }
+        });
+    });
     // SAVE SETTINGS
 
 

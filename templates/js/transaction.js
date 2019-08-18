@@ -436,11 +436,12 @@ $(document).ready(function() {
     }).on('change','.font-alignment-input', function() {
         var $this = $(this);
         var lineId = $this.closest('.receipt-input-wrapper').attr('data-number');
-        var $receiptLine = $('#receipt-header-wrapper').find('[data-receipt_id="' + lineId + '"]');
+        var lineType = $this.closest('.receipt-input-wrapper').attr('data-type');
+        var $receiptLine = $('#receipt-'+lineType+'-wrapper').find('[data-receipt_id="' + lineId + '"]');
 
-        $receiptLine.removeClass('align-'+$(this).data('val'));
-        $receiptLine.addClass('align-'+$(this).val());
-        $this.data('val', $(this).val());
+        $receiptLine.removeClass('align-'+ $this.data('val'));
+        $receiptLine.addClass('align-'+ $this.val());
+        $this.attr('data-value', $this.val());
     });
 
     $(document).on('focusin', '.font-size-input', function() {
@@ -448,11 +449,12 @@ $(document).ready(function() {
     }).on('change','.font-size-input', function() {
         var $this = $(this);
         var lineId = $this.closest('.receipt-input-wrapper').attr('data-number');
-        var $receiptLine = $('#receipt-header-wrapper').find('[data-receipt_id="' + lineId + '"]');
+        var lineType = $this.closest('.receipt-input-wrapper').attr('data-type');
+        var $receiptLine = $('#receipt-'+lineType+'-wrapper').find('[data-receipt_id="' + lineId + '"]');
 
-        $receiptLine.removeClass('font-'+$(this).data('val'));
-        $receiptLine.addClass('font-'+$(this).val());
-        $this.data('val', $(this).val());
+        $receiptLine.removeClass('font-'+$this.data('val'));
+        $receiptLine.addClass('font-'+$this.val());
+        $this.data('val', $this.val());
     });
     //RECEIPT PREVIEW//
 

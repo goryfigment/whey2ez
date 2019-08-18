@@ -5,11 +5,11 @@
         <div id="order-by-wrapper">
             <select id="order-by-input">
                 <option value="none" >None</option>
-                {{#each columns}}
-                    <option value="{{this}}" {{#ifCond ../settings.order_by "==" this}}selected{{/ifCond}}>{{this}}</option>
+                {{#each store.columns}}
+                    <option value="{{this}}" {{#ifCond ../store.order_by "==" this}}selected{{/ifCond}}>{{this}}</option>
                 {{/each}}
             </select>
-            <input type="checkbox" id="reverse-checkbox" data-type="columns" class="checkbox-input" style="display: none" {{#if settings.reverse}}checked{{/if}}/>
+            <input type="checkbox" id="reverse-checkbox" data-type="columns" class="checkbox-input" style="display: none" {{#if store.reverse}}checked{{/if}}/>
             <label for="reverse-checkbox" class="check-box-wrapper">
                 <span class="check-box">
                     <svg width="12px" height="10px">

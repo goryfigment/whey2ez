@@ -39,8 +39,7 @@ def link_columns(request):
                 item[column] = 0
 
     store.save()
-    user_settings = current_boss.settings
-    store.inventory = sort_inventory(user_settings, store.inventory)
+    store.inventory = sort_inventory(store, store.inventory)
 
     return JsonResponse({'store': model_to_dict(store)}, safe=False)
 
@@ -77,8 +76,7 @@ def inventory_operation(request, action, operation, link_column, callback_functi
         'user__first_name', 'user__last_name', 'action', 'operation', 'item_name', 'change', 'previous_value',
         'date', 'details', 'id'))
 
-    user_settings = current_boss.settings
-    store.inventory = sort_inventory(user_settings, store.inventory)
+    store.inventory = sort_inventory(store, store.inventory)
 
     return {'store': model_to_dict(store), 'item_log': item_logs}
 

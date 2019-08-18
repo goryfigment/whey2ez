@@ -505,9 +505,9 @@ def save_settings(request):
     store.reverse = request.BODY["reverse"]
     store.save()
 
-    store_inventory = sort_inventory(store, store.inventory)
+    store_inventory = sorted(store.inventory.items(), key=lambda (k, v): v[store.order_by], reverse=store.reverse)
 
-    return JsonResponse({'store': model_to_dict(store), 'inventory': store_inventory}, safe=False)
+    return JsonResponse({'store_id': str(store.id), 'inventory': store_inventory}, safe=False)
 
 
 @login_required

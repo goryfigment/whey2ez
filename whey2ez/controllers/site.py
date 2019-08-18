@@ -108,7 +108,7 @@ def inventory(request):
         store_inventory = current_store['inventory']
 
         if current_store['order_by'] != 'none':
-            current_store['inventory'] = sorted(store_inventory.items(), key=lambda (k, v): v[current_store['order_by']], reverse=current_store.reverse)
+            current_store['inventory'] = sorted(store_inventory.items(), key=lambda (k, v): v[current_store['order_by']], reverse=current_store['reverse'])
         else:
             current_store['inventory'] = sorted(store_inventory.items(), key=lambda (k, v): int(k), reverse=False)
 

@@ -12629,7 +12629,7 @@ function init() {
 
     if(globals.active_store != '') {
         var $settingsWrapper = $inventoryWrapper.siblings('#settings-wrapper');
-        $settingsWrapper.append(settingsTemplate({'columns': activeStore['columns'], 'settings': activeStore['settings']}));
+        $settingsWrapper.append(settingsTemplate({'store': activeStore}));
     }
 }
 
@@ -13844,50 +13844,52 @@ $(document).ready(function() {
 
 
     // SAVE SETTINGS
-    //$(document).on('click', '#inventory-settings-submit', function () {
-    //    //Get filters, Get default tax, Get every store tax
-    //    var $orderByInput = $('#order-by-input');
-    //    var $reverseCheckbox = $('#reverse-checkbox');
-    //    var $activeInventory = $('.establishment.active');
-    //
-    //    var postData = {
-    //        id: $activeInventory.attr('data-id'),
-    //        'order_by': $orderByInput.val(),
-    //        'reverse': $reverseCheckbox.is(":checked")
-    //    };
-    //
-    //    $.ajax({
-    //        headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
-    //        url: globals.base_url + '/inventory/save_settings/',
-    //        data: JSON.stringify(postData),
-    //        dataType: 'json',
-    //        type: "POST",
-    //        success: function (response) {
-    //            globals.inventory = response['inventory'];
-    //
-    //            var $inventoryWrapper = $('#inventory-wrapper');
-    //            $inventoryWrapper.empty();
-    //            $inventoryWrapper.append(inventoryTemplate({'columns': globals.columns, 'inventory': globals.inventory}));
-    //
-    //            var $settingResult = $('#settings-result');
-    //            $settingResult.removeClass('denied');
-    //            $settingResult.addClass('success');
-    //            $settingResult.text('Saved!');
-    //            $settingResult.show();
-    //            $settingResult.fadeOut(2000);
-    //        },
-    //        error: function (response) {
-    //            if(response.status && response.status == 403) {
-    //                var $settingResult = $('#settings-result');
-    //                $settingResult.removeClass('success');
-    //                $settingResult.addClass('denied');
-    //                $settingResult.text('Permission Denied');
-    //                $settingResult.show();
-    //                $settingResult.fadeOut(2000);
-    //            }
-    //        }
-    //    });
-    //});
+    $(document).on('click', '#inventory-settings-submit', function () {
+        //Get filters, Get default tax, Get every store tax
+        var $orderByInput = $('#order-by-input');
+        var $reverseCheckbox = $('#reverse-checkbox');
+        var $activeInventory = $('.establishment.active');
+
+        var postData = {
+            id: $activeInventory.attr('data-id'),
+            'order_by': $orderByInput.val(),
+            'reverse': $reverseCheckbox.is(":checked")
+        };
+
+        $.ajax({
+            headers: {"X-CSRFToken": $('input[name="csrfmiddlewaretoken"]').attr('value')},
+            url: globals.base_url + '/inventory/save_settings/',
+            data: JSON.stringify(postData),
+            dataType: 'json',
+            type: "POST",
+            success: function (response) {
+                console.log(JSON.stringify(response))
+
+                globals.stores[response['store_id']]['inventory'] = response['inventory'];
+
+                var $inventoryWrapper = $('#inventory-wrapper');
+                $inventoryWrapper.empty();
+                $inventoryWrapper.append(inventoryTemplate({'store': globals.stores[response['store_id']], 'boss_username': globals.boss_username}));
+
+                var $settingResult = $('#settings-result');
+                $settingResult.removeClass('denied');
+                $settingResult.addClass('success');
+                $settingResult.text('Saved!');
+                $settingResult.show();
+                $settingResult.fadeOut(2000);
+            },
+            error: function (response) {
+                if(response.status && response.status == 403) {
+                    var $settingResult = $('#settings-result');
+                    $settingResult.removeClass('success');
+                    $settingResult.addClass('denied');
+                    $settingResult.text('Permission Denied');
+                    $settingResult.show();
+                    $settingResult.fadeOut(2000);
+                }
+            }
+        });
+    });
     // SAVE SETTINGS
 
 
@@ -14294,7 +14296,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
   return "                    <option value=\""
     + alias2(alias1(depth0, depth0))
     + "\" "
-    + ((stack1 = __default(__webpack_require__(0)).call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depths[1] != null ? depths[1].settings : depths[1])) != null ? stack1.order_by : stack1),"==",depth0,{"name":"ifCond","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = __default(__webpack_require__(0)).call(depth0 != null ? depth0 : (container.nullContext || {}),((stack1 = (depths[1] != null ? depths[1].store : depths[1])) != null ? stack1.order_by : stack1),"==",depth0,{"name":"ifCond","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + ">"
     + alias2(alias1(depth0, depth0))
     + "</option>\r\n";
@@ -14306,9 +14308,9 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {});
 
   return "<div id=\"settings-scroll-wrapper\">\r\n    <div>\r\n        <div class=\"settings-title\">Inventory Order</div>\r\n        <div class=\"settings-description\">Default order when opening the inventory page.</div>\r\n        <div id=\"order-by-wrapper\">\r\n            <select id=\"order-by-input\">\r\n                <option value=\"none\" >None</option>\r\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.columns : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers.each.call(alias1,((stack1 = (depth0 != null ? depth0.store : depth0)) != null ? stack1.columns : stack1),{"name":"each","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "            </select>\r\n            <input type=\"checkbox\" id=\"reverse-checkbox\" data-type=\"columns\" class=\"checkbox-input\" style=\"display: none\" "
-    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.settings : depth0)) != null ? stack1.reverse : stack1),{"name":"if","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = helpers["if"].call(alias1,((stack1 = (depth0 != null ? depth0.store : depth0)) != null ? stack1.reverse : stack1),{"name":"if","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "/>\r\n            <label for=\"reverse-checkbox\" class=\"check-box-wrapper\">\r\n                <span class=\"check-box\">\r\n                    <svg width=\"12px\" height=\"10px\">\r\n                        <polyline points=\"1.5 6 4.5 9 10.5 1\"></polyline>\r\n                    </svg>\r\n                </span>\r\n                <span class=\"check-box-label\">Reverse</span>\r\n            </label>\r\n        </div>\r\n    </div>\r\n</div>\r\n<div id=\"save-wrapper\">\r\n    <div id=\"settings-result\"></div>\r\n    <button id=\"inventory-settings-submit\" class=\"add\">Save Settings</button>\r\n</div>";
 },"useData":true,"useDepths":true});
 

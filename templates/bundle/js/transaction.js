@@ -13078,11 +13078,12 @@ $(document).ready(function() {
     }).on('change','.font-alignment-input', function() {
         var $this = $(this);
         var lineId = $this.closest('.receipt-input-wrapper').attr('data-number');
-        var $receiptLine = $('#receipt-header-wrapper').find('[data-receipt_id="' + lineId + '"]');
+        var lineType = $this.closest('.receipt-input-wrapper').attr('data-type');
+        var $receiptLine = $('#receipt-'+lineType+'-wrapper').find('[data-receipt_id="' + lineId + '"]');
 
-        $receiptLine.removeClass('align-'+$(this).data('val'));
-        $receiptLine.addClass('align-'+$(this).val());
-        $this.data('val', $(this).val());
+        $receiptLine.removeClass('align-'+ $this.data('val'));
+        $receiptLine.addClass('align-'+ $this.val());
+        $this.attr('data-value', $this.val());
     });
 
     $(document).on('focusin', '.font-size-input', function() {
@@ -13090,11 +13091,12 @@ $(document).ready(function() {
     }).on('change','.font-size-input', function() {
         var $this = $(this);
         var lineId = $this.closest('.receipt-input-wrapper').attr('data-number');
-        var $receiptLine = $('#receipt-header-wrapper').find('[data-receipt_id="' + lineId + '"]');
+        var lineType = $this.closest('.receipt-input-wrapper').attr('data-type');
+        var $receiptLine = $('#receipt-'+lineType+'-wrapper').find('[data-receipt_id="' + lineId + '"]');
 
-        $receiptLine.removeClass('font-'+$(this).data('val'));
-        $receiptLine.addClass('font-'+$(this).val());
-        $this.data('val', $(this).val());
+        $receiptLine.removeClass('font-'+$this.data('val'));
+        $receiptLine.addClass('font-'+$this.val());
+        $this.data('val', $this.val());
     });
     //RECEIPT PREVIEW//
 
@@ -13342,7 +13344,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
 },"5":function(container,depth0,helpers,partials,data) {
     return "selected";
 },"7":function(container,depth0,helpers,partials,data) {
-    return "                    <div class=\"header-item receipt-input-wrapper\" data-number=\"1\" data-type=\"header\">\r\n                        <div class=\"delete-line-item\">x</div>\r\n                        <div class=\"receipt-input-container\">\r\n                            <label for=\"font-size-input\">Font Size</label>\r\n                            <select class=\"font-size-input\">\r\n                                <option value=\"1\">12</option>\r\n                                <option value=\"2\">24</option>\r\n                                <option value=\"3\">36</option>\r\n                                <option value=\"4\">48</option>\r\n                                <option value=\"5\">60</option>\r\n                                <option value=\"6\">72</option>\r\n                                <option value=\"7\">84</option>\r\n                                <option value=\"8\">96</option>\r\n                            </select>\r\n                        </div>\r\n                        <div class=\"receipt-input-container\">\r\n                            <label for=\"font-alignment-input\">Font Alignment</label>\r\n                            <select class=\"font-alignment-input\">\r\n                                <option value=\"left\">Left</option>\r\n                                <option value=\"middle\">Middle</option>\r\n                                <option value=\"right\">Right</option>\r\n                            </select>\r\n                        </div>\r\n                        <div class=\"receipt-input-container\">\r\n                            <label class=\"receipt-text-label\" for=\"receipt-text-input\">Text (Line 1)</label>\r\n                            <input class=\"receipt-text-input\" />\r\n                        </div>\r\n                    </div>\r\n";
+    return "                    <div class=\"header-item receipt-input-wrapper\" data-number=\"1\" data-type=\"header\">\r\n                        <div class=\"delete-line-item\">x</div>\r\n                        <div class=\"receipt-input-container\">\r\n                            <label for=\"font-size-input\">Font Size</label>\r\n                            <select class=\"font-size-input\">\r\n                                <option value=\"1\">12</option>\r\n                                <option value=\"2\">24</option>\r\n                                <option value=\"3\">36</option>\r\n                                <option value=\"4\">48</option>\r\n                                <option value=\"5\">60</option>\r\n                                <option value=\"6\">72</option>\r\n                                <option value=\"7\">84</option>\r\n                                <option value=\"8\">96</option>\r\n                            </select>\r\n                        </div>\r\n                        <div class=\"receipt-input-container\">\r\n                            <label for=\"font-alignment-input\">Font Alignment</label>\r\n                            <select class=\"font-alignment-input\">\r\n                                <option value=\"left\">Left</option>\r\n                                <option value=\"center\">Center</option>\r\n                                <option value=\"right\">Right</option>\r\n                            </select>\r\n                        </div>\r\n                        <div class=\"receipt-input-container\">\r\n                            <label class=\"receipt-text-label\" for=\"receipt-text-input\">Text (Line 1)</label>\r\n                            <input class=\"receipt-text-input\" />\r\n                        </div>\r\n                    </div>\r\n";
 },"9":function(container,depth0,helpers,partials,data) {
     var stack1, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=container.escapeExpression;
 
@@ -13376,7 +13378,7 @@ module.exports = (Handlebars["default"] || Handlebars).template({"1":function(co
     + alias2(container.lambda((depth0 != null ? depth0.text : depth0), depth0))
     + "\" />\r\n                        </div>\r\n                    </div>\r\n";
 },"11":function(container,depth0,helpers,partials,data) {
-    return "                    <div class=\"footer-item receipt-input-wrapper\" data-number=\"1\" data-type=\"footer\">\r\n                        <div class=\"delete-line-item\">x</div>\r\n                        <div class=\"receipt-input-container\">\r\n                            <label for=\"font-size-input\">Font Size</label>\r\n                            <select class=\"font-size-input\">\r\n                                <option value=\"1\">12</option>\r\n                                <option value=\"2\">24</option>\r\n                                <option value=\"3\">36</option>\r\n                                <option value=\"4\">48</option>\r\n                                <option value=\"5\">60</option>\r\n                                <option value=\"6\">72</option>\r\n                                <option value=\"7\">84</option>\r\n                                <option value=\"8\">96</option>\r\n                            </select>\r\n                        </div>\r\n                        <div class=\"receipt-input-container\">\r\n                            <label for=\"font-alignment-input\">Font Alignment</label>\r\n                            <select class=\"font-alignment-input\">\r\n                                <option value=\"left\">Left</option>\r\n                                <option value=\"middle\">Middle</option>\r\n                                <option value=\"right\">Right</option>\r\n                            </select>\r\n                        </div>\r\n                        <div class=\"receipt-input-container\">\r\n                            <label class=\"receipt-text-label\" for=\"receipt-text-input\">Text (Line 1)</label>\r\n                            <input class=\"receipt-text-input\" />\r\n                        </div>\r\n                    </div>\r\n";
+    return "                    <div class=\"footer-item receipt-input-wrapper\" data-number=\"1\" data-type=\"footer\">\r\n                        <div class=\"delete-line-item\">x</div>\r\n                        <div class=\"receipt-input-container\">\r\n                            <label for=\"font-size-input\">Font Size</label>\r\n                            <select class=\"font-size-input\">\r\n                                <option value=\"1\">12</option>\r\n                                <option value=\"2\">24</option>\r\n                                <option value=\"3\">36</option>\r\n                                <option value=\"4\">48</option>\r\n                                <option value=\"5\">60</option>\r\n                                <option value=\"6\">72</option>\r\n                                <option value=\"7\">84</option>\r\n                                <option value=\"8\">96</option>\r\n                            </select>\r\n                        </div>\r\n                        <div class=\"receipt-input-container\">\r\n                            <label for=\"font-alignment-input\">Font Alignment</label>\r\n                            <select class=\"font-alignment-input\">\r\n                                <option value=\"left\">Left</option>\r\n                                <option value=\"center\">Center</option>\r\n                                <option value=\"right\">Right</option>\r\n                            </select>\r\n                        </div>\r\n                        <div class=\"receipt-input-container\">\r\n                            <label class=\"receipt-text-label\" for=\"receipt-text-input\">Text (Line 1)</label>\r\n                            <input class=\"receipt-text-input\" />\r\n                        </div>\r\n                    </div>\r\n";
 },"13":function(container,depth0,helpers,partials,data) {
     var alias1=container.lambda, alias2=container.escapeExpression;
 
