@@ -2,6 +2,8 @@
 
 ⚠️ Currently getting reworked! [**Demo Website**](https://sollvmcdemo.pythonanywhere.com/)
 
+[**Excel Demo File to test Import feature**](https://www.solpadilla.com/templates/bundle/assets/resume/tires.xlsx)
+
 ## 📝 Description
 This app allows users to upload resources and files to keep all in one place and easily search or retrieve any resource
 
